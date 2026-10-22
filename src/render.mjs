@@ -110,6 +110,17 @@ if (ep.thumb) {
 }
 await browser.close();
 
+// 4b) thumbnail generator (docs/miniaturas.md): `thumbnail: { VIDEO_TITLE, ... }` or a path to a variables JSON.
+// Renders the three concepts to <out>/thumbs/ and the recommended one becomes thumb.jpg (what Make sets on YouTube).
+if (ep.thumbnail) {
+  const { plan } = await import('./thumbs/director.mjs');
+  const { renderPlan } = await import('./thumbs/render.mjs');
+  const vars = typeof ep.thumbnail === 'string' ? JSON.parse(fs.readFileSync(path.resolve(ROOT, ep.thumbnail), 'utf8')) : { VIDEO_TITLE: ep.title, ...ep.thumbnail };
+  const tp = await renderPlan(plan(vars), path.join(outDir, 'thumbs'));
+  fs.copyFileSync(path.join(outDir, 'thumbs', 'thumb.jpg'), path.join(outDir, 'thumb.jpg'));
+  console.log(`thumbnail: ${tp.recommended} recommended (${tp.variants.map(v => v.id + ' "' + v.text.lines.join(' ') + '"').join(', ')})`);
+}
+
 // 5) audio: voices + sfx + music bed ducked under the voice, then mux
 const plan = { total, clips, sfx, music: ep.music ? path.join(ROOT, 'assets/music', ep.music + '.wav') : null, musicGain: ep.musicGain ?? 0.12 };
 fs.writeFileSync(path.join(work, 'mix.json'), JSON.stringify(plan));

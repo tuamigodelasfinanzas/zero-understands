@@ -1,0 +1,63 @@
+name: Thumbnails
+
+# Generates the three thumbnail concepts (A curiosity, B consequence, C scale) for a video and commits them to
+# previews/thumbs/<name>/ on the branch it ran on: A.jpg B.jpg C.jpg, thumb.jpg (recommended), sheet.jpg, plan.json.
+# Two ways to run it:
+#   - Actions > Thumbnails > Run workflow, with just the video title (or a variables file in content/thumbs/)
+#   - push a new or changed content/thumbs/*.json (the variables of docs/miniaturas.md)
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "Video title (e.g. Why Airlines Overbook Flights) or a file like content/thumbs/v001-package.json"
+        required: true
+  push:
+    paths: [content/thumbs/*.json]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: thumbs-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  thumbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+          sudo apt-get install -y -qq ffmpeg >/dev/null
+      - name: Render
+        env:
+          TITLE: ${{ inputs.title }}
+        run: |
+          set -euo pipefail
+          slug() { echo "$1" | tr 'A-Z' 'a-z' | sed -E 's/[^a-z0-9]+/-/g; s/^-|-$//g' | cut -c1-60; }
+          if [ -n "${TITLE:-}" ]; then
+            if [ -f "$TITLE" ]; then node tools/thumbs.mjs "$TITLE" "previews/thumbs/$(basename "$TITLE" .json)"
+            else node tools/thumbs.mjs "$TITLE" "previews/thumbs/$(slug "$TITLE")"; fi
+          else
+            for f in $(git diff --name-only HEAD~1 HEAD -- 'content/thumbs/*.json'); do
+              [ -f "$f" ] && node tools/thumbs.mjs "$f" "previews/thumbs/$(basename "$f" .json)"
+            done
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: thumbnails
+          path: previews/thumbs
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add previews/thumbs
+          git commit -m "Thumbnails [skip ci]" && for i in 1 2 3; do git pull -q --rebase && git push -q && break || sleep 3; done || echo "nothing new"

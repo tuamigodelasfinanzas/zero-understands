@@ -1,0 +1,352 @@
+{
+ "title": "Where Your Package Goes While You Sleep",
+ "playbook": "package",
+ "category": "LOGISTICS / HOW THINGS MOVE",
+ "world": "warehouse",
+ "recommended": "A",
+ "why": "curiosity gap: the viewer has to click to find out where it goes",
+ "variants": [
+  {
+   "id": "A",
+   "angle": "curiosity",
+   "playbook": "package",
+   "concept": "The yellow box rides the belt into the mouth of the system",
+   "family": {
+    "name": "LOGISTICS / HOW THINGS MOVE",
+    "bg1": "#141A33",
+    "bg2": "#25304F",
+    "wall": "#25304F",
+    "floor": "#2A3048",
+    "accent": "#4FA8FF",
+    "key": "#FFE2A6",
+    "grade": "#FF9E45"
+   },
+   "accent": "#4FA8FF",
+   "world": "warehouse",
+   "hero": "mouth",
+   "heroOpts": {
+    "obj": "box"
+   },
+   "worldOpts": {
+    "clock": [
+     3,
+     10
+    ]
+   },
+   "zero": {
+    "side": "left",
+    "emotion": "curious"
+   },
+   "pix": {
+    "on": true
+   },
+   "text": {
+    "lines": [
+     "BY",
+     "MORNING?"
+    ],
+    "color": "#FFC93C"
+   }
+  },
+  {
+   "id": "B",
+   "angle": "consequence",
+   "playbook": "package",
+   "concept": "ZERO himself on the sorter, label on his chest, under the red scanner",
+   "family": {
+    "name": "LOGISTICS / HOW THINGS MOVE",
+    "bg1": "#141A33",
+    "bg2": "#25304F",
+    "wall": "#25304F",
+    "floor": "#2A3048",
+    "accent": "#4FA8FF",
+    "key": "#FFE2A6",
+    "grade": "#FF9E45"
+   },
+   "accent": "#4FA8FF",
+   "world": "warehouse",
+   "hero": "scanned",
+   "heroOpts": {},
+   "worldOpts": {},
+   "zero": {
+    "side": "right",
+    "emotion": "shocked"
+   },
+   "pix": {
+    "on": true
+   },
+   "text": {
+    "lines": [
+     "NO ONE",
+     "SLEEPS"
+    ],
+    "color": "#FF6B5B"
+   }
+  },
+  {
+   "id": "C",
+   "angle": "scale",
+   "playbook": "package",
+   "concept": "From a catwalk: endless belts, thousands of parcels, a plane at the door",
+   "family": {
+    "name": "LOGISTICS / HOW THINGS MOVE",
+    "bg1": "#141A33",
+    "bg2": "#25304F",
+    "wall": "#25304F",
+    "floor": "#2A3048",
+    "accent": "#4FA8FF",
+    "key": "#FFE2A6",
+    "grade": "#FF9E45"
+   },
+   "accent": "#4FA8FF",
+   "world": "hub",
+   "hero": "hub",
+   "heroOpts": {},
+   "worldOpts": {},
+   "zero": {
+    "side": "right",
+    "emotion": "impressed"
+   },
+   "pix": {
+    "on": true
+   },
+   "text": {
+    "lines": [
+     "ALL THIS IN",
+     "ONE NIGHT?"
+    ],
+    "color": "#FFC93C"
+   }
+  }
+ ],
+ "qa": {
+  "A": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (30-50 % of the height)",
+     "pass": true,
+     "value": "47%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 270
+    },
+    {
+     "q": "Text is 2-5 words",
+     "pass": true,
+     "value": 2
+    },
+    {
+     "q": "Text readable on a phone (font >= 84 px at 1280)",
+     "pass": true,
+     "value": 130
+    },
+    {
+     "q": "Text never covers ZERO",
+     "pass": true,
+     "value": 0
+    },
+    {
+     "q": "Text does not cover the main object",
+     "pass": true,
+     "value": "2%"
+    },
+    {
+     "q": "Text inside the safe margins",
+     "pass": true,
+     "value": "584,36,656,271"
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    },
+    {
+     "q": "PIX does not cover the text",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "boxes": {
+    "zero": [
+     167.328,
+     314.52000000000004,
+     205.344,
+     339.47999999999996
+    ],
+    "text": [
+     584.4719983107715,
+     36,
+     655.5280016892285,
+     271.23088670183523
+    ],
+    "hero": [
+     600,
+     300,
+     640,
+     300
+    ],
+    "pix": [
+     862.5,
+     321.48088670183523,
+     85,
+     85
+    ]
+   }
+  },
+  "B": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (30-50 % of the height)",
+     "pass": true,
+     "value": "45%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 950
+    },
+    {
+     "q": "Text is 2-5 words",
+     "pass": true,
+     "value": 3
+    },
+    {
+     "q": "Text readable on a phone (font >= 84 px at 1280)",
+     "pass": true,
+     "value": 150
+    },
+    {
+     "q": "Text never covers ZERO",
+     "pass": true,
+     "value": 0
+    },
+    {
+     "q": "Text does not cover the main object",
+     "pass": true,
+     "value": "0%"
+    },
+    {
+     "q": "Text inside the safe margins",
+     "pass": true,
+     "value": "40,36,561,312"
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    },
+    {
+     "q": "PIX does not cover the text",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "boxes": {
+    "zero": [
+     851.792,
+     227.27999999999997,
+     196.416,
+     324.72
+    ],
+    "text": [
+     40,
+     36,
+     561.0003662109375,
+     312
+    ],
+    "hero": [
+     780,
+     100,
+     330,
+     460
+    ],
+    "pix": [
+     275,
+     375,
+     90,
+     90
+    ]
+   }
+  },
+  "C": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (30-50 % of the height)",
+     "pass": true,
+     "value": "47%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 980
+    },
+    {
+     "q": "Text is 2-5 words",
+     "pass": true,
+     "value": 5
+    },
+    {
+     "q": "Text readable on a phone (font >= 84 px at 1280)",
+     "pass": true,
+     "value": 114
+    },
+    {
+     "q": "Text never covers ZERO",
+     "pass": true,
+     "value": 0
+    },
+    {
+     "q": "Text does not cover the main object",
+     "pass": true,
+     "value": "4%"
+    },
+    {
+     "q": "Text inside the safe margins",
+     "pass": true,
+     "value": "40,36,654,237"
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    },
+    {
+     "q": "PIX does not cover the text",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "boxes": {
+    "zero": [
+     877.328,
+     324.52000000000004,
+     205.344,
+     339.47999999999996
+    ],
+    "text": [
+     40,
+     36,
+     653.5384507587565,
+     236.74216341219716
+    ],
+    "hero": [
+     120,
+     260,
+     560,
+     300
+    ],
+    "pix": [
+     600,
+     380,
+     80,
+     80
+    ]
+   }
+  }
+ }
+}
