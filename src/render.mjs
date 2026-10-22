@@ -118,5 +118,19 @@ const wav = path.join(work, 'audio.wav');
 execFileSync('python3', [path.join(ROOT, 'tools/mix.py'), path.join(work, 'mix.json'), wav], { stdio: 'inherit' });
 const out = path.join(outDir, ep.format === 'short' ? 'short.mp4' : 'video.mp4');
 execFileSync('ffmpeg', ['-y', '-v', 'error', '-i', video, '-i', wav, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', out]);
+// closed captions for YouTube (long videos keep the picture clean; viewers turn them on with CC): one cue per
+// chunk of at most ~42 characters, timed by sharing the line's spoken duration in proportion to the text
+{
+  const ts = x => { const ms = Math.round(x * 1000), h = Math.floor(ms / 3600000), m = Math.floor(ms / 60000) % 60, sec = Math.floor(ms / 1000) % 60; return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')},${String(ms % 1000).padStart(3, '0')}`; };
+  const cues = [];
+  for (const b of beats) for (const l of b.lines) {
+    // balanced split, so a long line never leaves a one-word orphan cue
+    const target = l.text.length / Math.ceil(l.text.length / 42), chunks = [];
+    for (const w of l.text.split(/\s+/)) { const c = chunks[chunks.length - 1]; if (c && (c + ' ' + w).length <= Math.max(target + 6, 0) && (c + ' ' + w).length <= 42) chunks[chunks.length - 1] = c + ' ' + w; else chunks.push(w); }
+    let at = l.start; const total = chunks.reduce((n, c) => n + c.length, 0);
+    for (const c of chunks) { const d = l.dur * c.length / total; cues.push([at, at + d, c]); at += d; }
+  }
+  fs.writeFileSync(path.join(outDir, 'captions.srt'), cues.map(([a, b, t], i) => `${i + 1}\n${ts(a)} --> ${ts(b)}\n${t}\n`).join('\n'));
+}
 fs.writeFileSync(path.join(outDir, 'timing.json'), JSON.stringify({ total, beats: beats.map(b => ({ start: +b.start.toFixed(2), dur: +b.dur.toFixed(2), lines: b.lines.map(l => l.text) })) }, null, 1));
 console.log('OK', out, total.toFixed(1) + ' s');

@@ -31,7 +31,7 @@ jobs:
           NAME=$(basename "$(dirname "$EP")")-$(basename "$EP" .mjs)
           node src/render.mjs "$EP" "out/$NAME"
           mkdir -p "previews/$NAME"
-          cp out/$NAME/*.mp4 out/$NAME/timing.json "previews/$NAME/"
+          cp out/$NAME/*.mp4 out/$NAME/timing.json out/$NAME/captions.srt "previews/$NAME/"
       - name: Commit
         # another run may have pushed to the branch meanwhile: start from its latest state and add only our files
         run: |
