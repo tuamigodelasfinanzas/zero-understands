@@ -91,3 +91,17 @@ export const lab = (o = {}) => [
   prop('room', { x: 960, y: G, wall: '#EFE4CC', floor: '#E0D2B4', trim: '#F6EEDD' }, { id: 'set', z: -10, depth: 0.85 }),
   ...(o.board === false ? [] : [prop('board', { x: o.boardX ?? 1500, y: 330, s: 0.55, txt: o.txt ?? 'LAB|1950s', size: 80 }, { id: 'lb', z: -9, depth: 0.85 })]),
 ];
+
+// Level 2 (Shorts): a street with the city behind (sky wall, skyline, sidewalk)
+export const streetS = (o = {}) => [
+  prop('room', { x: 540, y: GS, wall: C.sky, floor: '#C9CED6', trim: '#DDE1E7' }, { id: 'set', z: -10, depth: 0.8 }),
+  prop('skyline', { x: 540, y: GS - 26, lit: o.lit ?? 0, color: '#B7C7DB' }, { id: 'city', z: -9, depth: 0.6 }),
+];
+
+// Level 2 (Shorts): a shop wall with shelves of products
+export const storeS = (o = {}) => [
+  prop('room', { x: 540, y: GS, wall: C.cream, floor: '#E6D8C2', trim: '#F7EBD8' }, { id: 'set', z: -10, depth: 0.8 }),
+  prop('shelf', { x: 270, y: 470, seed: 1 }, { id: 'sh1', z: -9, depth: 0.8 }),
+  prop('shelf', { x: 810, y: 470, seed: 3 }, { id: 'sh2', z: -9, depth: 0.8 }),
+  prop('plant', [{ x: 120, y: GS - 90, s: 0.9, sway: 0 }, { u: 0.5, sway: 3, e: 'io' }, { u: 1, sway: -2, e: 'io' }], { id: 'pl', z: -2 }),
+];
