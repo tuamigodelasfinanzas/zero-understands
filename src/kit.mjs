@@ -15,7 +15,8 @@ export const Z0 = (text, o = {}) => ({ who: 'zero', text, ...o });
 export const zero = (k, o = {}) => ({ id: o.id || 'z', type: 'zero', z: o.z ?? 5, depth: o.depth, k: withBase(k, { x: 960, y: G, s: ZS, pose: 'neutral', face: 0 }) });
 export const pix = (k, o = {}) => ({ id: o.id || 'p', type: 'pix', z: o.z ?? 8, k: withBase(k, { x: 1520, y: 300, s: 2.2, face: 0 }) });
 export const prop = (type, k, o = {}) => ({ id: o.id, type, z: o.z ?? 3, depth: o.depth, k: Array.isArray(k) ? k : [k] });
-export const floor = (y = G) => prop('floor', { x: 0, y }, { id: 'floor', z: 0 });
+// floor(): every plain shot stands in a stylized L1 set (bluegray wall + floor band), never on an empty white page
+export const floor = (y = G, o = {}) => prop('room', { x: 960, y, wall: o.wall ?? '#E4EBF3', floor: o.floor ?? '#D9E2EC', trim: o.trim ?? '#EEF3F8' }, { id: 'floor', z: -10, depth: 0.85 });
 
 function withBase(k, base) {
   const ks = Array.isArray(k) ? k : [k];
@@ -40,14 +41,19 @@ export const yellow = (txt, x, y, at, o = {}) => text(txt, x, y, at, { color: '#
 export const blue = (txt, x, y, at, o = {}) => text(txt, x, y, at, { color: '#2F80ED', stroke: 4, ...o });
 export const red = (txt, x, y, at, o = {}) => text(txt, x, y, at, { color: '#E63946', stroke: 4, ...o });
 
+import { room as roomSet } from './sets.mjs';
+
 // common sets
 export const deskSet = (o = {}) => [
-  floor(),
+  ...roomSet({ shelfX: 760, ...o }),
+  prop('shadow', { x: o.deskX ?? 1000, y: G + 4, w: 300, op: 0.12 }, { id: 'dsh', z: 4 }),
   prop('desk', { x: o.deskX ?? 1000, y: G - 172 }, { id: 'desk', z: 6 }),
   prop('laptop', { x: o.laptopX ?? 1150, y: G - 172, s: 0.75, fx: 1 }, { id: 'laptop', z: 6 }),
+  prop('pencup', { x: (o.deskX ?? 1000) + 240, y: G - 172, s: 0.7, messy: true }, { id: 'pens', z: 6 }),
 ];
 // brain view: ZERO's head as a giant frame, with gears and workers inside
 export const brainSet = (o = {}) => [
+  prop('rect', { x: 960, y: 540, w: 4000, h: 3000, fill: o.bg ?? '#E4EBF3' }, { id: 'bbg', z: -12, depth: 0.2 }),
   prop('logo', { x: 960, y: 610, s: 8.4, eyes: false }, { id: 'brain', z: 0 }),
   prop('gear', [{ x: 700, y: 520, s: 1.1, spin: 0 }, { u: 1, spin: 120, e: 'lin' }], { id: 'g1', z: 1 }),
   prop('gear', [{ x: 838, y: 420, s: 0.7, spin: 18 }, { u: 1, spin: -170, e: 'lin' }], { id: 'g2', z: 1 }),

@@ -78,3 +78,16 @@ export const casinoS = (o = {}) => [
   prop('lights', [{ x: 540, y: 300, n: 9, gap: 120, ph: 0 }, { u: 1, ph: o.speed ?? 3, e: 'lin' }], { id: 'mq1', z: -9, depth: 0.8 }),
   prop('lights', [{ x: 540, y: 420, n: 8, gap: 120, ph: 0.5 }, { u: 1, ph: (o.speed ?? 3) + 0.5, e: 'lin' }], { id: 'mq2', z: -9, depth: 0.8 }),
 ];
+
+// Level 3 (long videos): the casino inside the phone (deep purple, chasing marquee lights, a soft spotlight)
+export const casino = (o = {}) => [
+  prop('room', { x: 960, y: G, wall: C.deep, floor: '#1A1430', trim: '#352A55' }, { id: 'set', z: -10, depth: 0.8 }),
+  prop('lights', [{ x: 960, y: 110, n: 15, gap: 128, ph: 0 }, { u: 1, ph: o.speed ?? 4, e: 'lin' }], { id: 'mq1', z: -9, depth: 0.8 }),
+  prop('glow', { x: o.spotX ?? 700, y: G - 260, rr: 380, op: 0.12 }, { id: 'spot', z: -8, depth: 0.9 }),
+];
+
+// Level 2 (long videos): a 1950s psychology lab, sepia wall and a blackboard
+export const lab = (o = {}) => [
+  prop('room', { x: 960, y: G, wall: '#EFE4CC', floor: '#E0D2B4', trim: '#F6EEDD' }, { id: 'set', z: -10, depth: 0.85 }),
+  ...(o.board === false ? [] : [prop('board', { x: o.boardX ?? 1500, y: 330, s: 0.55, txt: o.txt ?? 'LAB|1950s', size: 80 }, { id: 'lb', z: -9, depth: 0.85 })]),
+];

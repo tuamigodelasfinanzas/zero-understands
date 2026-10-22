@@ -15,7 +15,7 @@ function feedShaft() {
 }
 const apps = () => Array.from({ length: 21 }, (_, i) => prop('app', [{ x: 1080 + (i % 7) * 120, y: 380 + Math.floor(i / 7) * 150, s: 0, i }, { t: 0.15 + i * 0.05, s: 1, e: 'pop' }, { u: 1, x: 1000 + (i % 7) * 120 }], { id: 'a' + i }));
 
-export default {
+const ep = {
   id: '001-phone',
   format: 'long',
   title: 'ZERO Tried to Check His Phone for Just 5 Minutes',
@@ -373,3 +373,35 @@ Sources: B.F. Skinner's variable reinforcement experiments (1950s); Ward et al.,
     },
   ],
 };
+export default ep;
+
+// ---------- visual direction pass (docs/direccion-visual.md) ----------
+// Sets by chapter, integrated transitions at the chapter turns and a slow purposeful push on long explanations.
+import { room, minimal, space, casino, lab } from '../../src/sets.mjs';
+{
+  const B = ep.beats;
+  const swap = (i, set) => { B[i].actors = [...set, ...B[i].actors.filter(a => a.id !== 'floor')]; };
+  const tr = (i, spec) => { B[i].tout = spec; B[i + 1].tin = spec; };
+  swap(2, room({ night: true }));
+  swap(3, space()); B[3].bg = '#241C3A';
+  swap(7, minimal());
+  swap(9, space()); B[9].bg = '#241C3A';
+  for (const i of [10, 11, 12]) swap(i, minimal({ wall: '#DCE8F7', floor: '#CCDBEE', trim: '#EAF1FA' }));   // blue: technology
+  for (const i of [13, 16, 17]) swap(i, casino());
+  swap(14, lab({ board: false })); swap(15, lab({ board: false }));
+  for (const i of [27]) swap(i, minimal({ wall: '#E3F2E8', floor: '#D3E8DA', trim: '#EEF8F1' }));              // green: what helps
+  swap(32, room());
+  B[1].bg = '#241C3A';
+  tr(2, { type: 'fall', dur: 0.7 });
+  tr(4, { type: 'zoom', x: 960, y: 500, z: 9, dur: 0.6, color: '#FFFFFF' });
+  tr(8, { type: 'fall', dur: 0.7 });
+  tr(12, { type: 'iris', x: 960, y: 560, dur: 0.5 });
+  tr(13, { type: 'wipe', dur: 0.5 });
+  tr(15, { type: 'wipe', dur: 0.5 });
+  tr(17, { type: 'iris', x: 960, y: 560, dur: 0.5 });
+  tr(21, { type: 'wipe', dur: 0.5 });
+  tr(24, { type: 'zoom', x: 960, y: 500, z: 9, dur: 0.6, color: '#FFFFFF' });
+  tr(26, { type: 'wipe', dur: 0.5 });
+  tr(28, { type: 'iris', x: 960, y: 560, dur: 0.5 });
+  for (const [i, b] of B.entries()) if (!b.cam && (b.lines || []).length >= 2 && i !== 9) b.cam = [{ z: 1, x: 960, y: 540 }, { u: 1, z: 1.07, x: 960, y: 560, e: 'io' }];
+}
