@@ -83,6 +83,7 @@ jobs:
             node src/render.mjs "$FILE" "out/$DIR"
             mkdir -p "site/media/$DIR"
             cp out/$DIR/*.mp4 "site/media/$DIR/"; [ -f "out/$DIR/thumb.jpg" ] && cp "out/$DIR/thumb.jpg" "site/media/$DIR/"
+            [ -d "out/$DIR/thumbs" ] && mkdir -p "site/media/$DIR/thumbs" && cp out/$DIR/thumbs/[ABC].jpg "site/media/$DIR/thumbs/"
             node src/meta.mjs "$FILE" "$DATE" "$BASEURL/media/$DIR" "site/queue/$DATE.json"
             jq --arg k "$DATE|$FILE" '.[$k] = now' site/state/rendered.json > s.tmp && mv s.tmp site/state/rendered.json
             ls -1dt site/media/*/ | tail -n +13 | xargs -r rm -rf
