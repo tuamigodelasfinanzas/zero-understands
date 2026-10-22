@@ -31,7 +31,7 @@ export const PLAYBOOKS = [
     id: 'package', family: 'logistics', world: 'warehouse',
     keywords: ['amazon', 'package', 'packages', 'parcel', 'delivery', 'deliver', 'delivered', 'shipping', 'shipped', 'warehouse', 'fulfillment', 'courier', 'ups', 'fedex', 'dhl', 'usps', 'mail', 'postal', 'returns', 'return', 'prime', 'next day', 'same day', 'logistics', 'order', 'online order'],
     concepts: {
-      A: { hero: 'mouth', emotion: 'curious', concept: 'The yellow box rides the belt into the mouth of the system', worldOpts: { clock: [3, 10] }, worldWhen: /sleep|night|overnight|morning/, text: [T(['BY', 'MORNING?'], /sleep|night|overnight|morning/), T(['HOW?!'], /fast|quick|so fast|speed/), T(['WHERE DOES', 'IT GO?'])] },
+      A: { hero: 'cutaway', emotion: 'surprised', concept: 'ZERO has just put the yellow box on the belt; it shoots off into a wall cut open on an enormous hidden machine (scan, sort, routes, docks, a door onto the dawn). 11:47 PM on the clock', worldOpts: { clock: [11, 47] }, worldWhen: /sleep|night|overnight|morning/, text: [T(['BY', 'MORNING?'], /sleep|night|overnight|morning/), T(['HOW?!'], /fast|quick|so fast|speed/), T(['WHERE DOES', 'IT GO?'])] },
       B: { hero: 'scanned', emotion: 'shocked', concept: 'ZERO himself on the sorter, label on his chest, under the red scanner', text: [T(['NO ONE', 'SLEEPS'], /sleep|night|overnight/), T(['IT NEVER', 'STOPS'])] },
       C: { hero: 'hub', world: 'hub', emotion: 'impressed', side: 'right', concept: 'From a catwalk: endless belts, thousands of parcels, a plane at the door', text: [T(['ALL THIS IN', 'ONE NIGHT?'], /sleep|night|overnight/), T(['THIS IS', 'ONE BUILDING'])] },
     },
@@ -259,7 +259,7 @@ export function plan(input) {
       pix: { on: I.OPTIONAL_PIX === false || I.OPTIONAL_PIX === 'no' ? false : true },
       text: { lines: tx.lines, hl: tx.hl, color: TEXT_COLOR[angle] },
     };
-    if (obj && ['mouth', 'pipe', 'ride', 'two', 'giant'].includes(v.hero)) v.heroOpts[{ mouth: 'obj', pipe: 'src', ride: 'src', two: 'obj', giant: 'obj' }[v.hero]] = obj;
+    if (obj && ['mouth', 'cutaway', 'pipe', 'ride', 'two', 'giant'].includes(v.hero)) v.heroOpts[{ mouth: 'obj', cutaway: 'obj', pipe: 'src', ride: 'src', two: 'obj', giant: 'obj' }[v.hero]] = obj;
     // fixed variables apply to the recommended concept
     if (id === recommended) {
       if (I.THUMBNAIL_TEXT) v.text.lines = Array.isArray(I.THUMBNAIL_TEXT) ? I.THUMBNAIL_TEXT : lines(I.THUMBNAIL_TEXT);

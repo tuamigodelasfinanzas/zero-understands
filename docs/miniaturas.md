@@ -110,7 +110,7 @@ Si alguna respuesta es no, se rediseña: cambiar texto o emoción con `VARIANTS`
 
 - `src/thumbs/kit.js`: piezas (cajas, cintas, boca del sistema, monedas, tarjetas, datáfono, bancos, cámaras acorazadas, aviones, asientos, estanterías, máquinas tragaperras, servidores, gráficos, paraguas, recibos, gente diminuta, luz).
 - `src/thumbs/worlds.js`: los 15 mundos de fondo.
-- `src/thumbs/heroes.js`: las 22 mini-historias (`mouth`, `ride`, `pipe`, `corridor`, `watcher`, `scanned`, `slices`, `empty`, `wheel`, `gate`, `swarm`, `umbrella`, `stamp`, `chart`, `overload`, `shrink`, `hub`, `giant`, `web`, `machine`, `funnel`, `two`).
+- `src/thumbs/heroes.js`: las 23 mini-historias (`cutaway`, `mouth`, `ride`, `pipe`, `corridor`, `watcher`, `scanned`, `slices`, `empty`, `wheel`, `gate`, `swarm`, `umbrella`, `stamp`, `chart`, `overload`, `shrink`, `hub`, `giant`, `web`, `machine`, `funnel`, `two`). `cutaway` es la firma del canal (vídeo 001, A): ZERO acaba de soltar el objeto en la cinta, que se mete en una pared cortada en sección que deja ver la máquina enorme escondida detrás (escanear, clasificar, rutas, muelles, una puerta abierta al amanecer); el reloj cuelga junto al texto. Patrón reutilizable: ZERO + objeto en movimiento + sistema gigante visto en corte + pregunta.
 - `src/thumbs/compose.js`: capas, ZERO y sus emociones, PIX, texto, luz, QA.
 - `src/thumbs/director.mjs`: familias, manuales de tema y decisiones automáticas.
 - `src/thumbs/render.mjs` + `tools/thumbs.mjs`: render con Chromium y hoja de revisión.

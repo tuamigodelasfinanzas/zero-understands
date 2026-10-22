@@ -82,7 +82,7 @@
     K.reset();
     const m = spec.zero.side === 'right';
     const fam = spec.family;
-    const ctx = { W, H, m, fam, accent: spec.accent ?? fam.accent, floor: 640, opts: spec.heroOpts || {}, wopts: spec.worldOpts || {} };
+    const ctx = { W, H, m, fam, accent: spec.accent ?? fam.accent, floor: 640, opts: spec.heroOpts || {}, wopts: spec.worldOpts || {}, hero: spec.hero };
     const world = window.TWORLDS[spec.world] || window.TWORLDS.machine;
     const w = world(ctx);
     ctx.floor = w.floor ?? ctx.floor;

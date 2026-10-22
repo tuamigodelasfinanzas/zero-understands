@@ -10,7 +10,7 @@
    "id": "A",
    "angle": "curiosity",
    "playbook": "package",
-   "concept": "The yellow box rides the belt into the mouth of the system",
+   "concept": "ZERO has just put the yellow box on the belt; it shoots off into a wall cut open on an enormous hidden machine (scan, sort, routes, docks, a door onto the dawn). 11:47 PM on the clock",
    "family": {
     "name": "LOGISTICS / HOW THINGS MOVE",
     "bg1": "#141A33",
@@ -23,19 +23,19 @@
    },
    "accent": "#4FA8FF",
    "world": "warehouse",
-   "hero": "mouth",
+   "hero": "cutaway",
    "heroOpts": {
     "obj": "box"
    },
    "worldOpts": {
     "clock": [
-     3,
-     10
+     11,
+     47
     ]
    },
    "zero": {
     "side": "left",
-    "emotion": "curious"
+    "emotion": "surprised"
    },
    "pix": {
     "on": true
@@ -126,12 +126,12 @@
     {
      "q": "ZERO is immediately visible (30-50 % of the height)",
      "pass": true,
-     "value": "47%"
+     "value": "43%"
     },
     {
      "q": "ZERO is not in the dead centre",
      "pass": true,
-     "value": 270
+     "value": 205
     },
     {
      "q": "Text is 2-5 words",
@@ -141,7 +141,7 @@
     {
      "q": "Text readable on a phone (font >= 84 px at 1280)",
      "pass": true,
-     "value": 130
+     "value": 126
     },
     {
      "q": "Text never covers ZERO",
@@ -151,12 +151,12 @@
     {
      "q": "Text does not cover the main object",
      "pass": true,
-     "value": "2%"
+     "value": "0%"
     },
     {
      "q": "Text inside the safe margins",
      "pass": true,
-     "value": "584,36,656,271"
+     "value": "605,30,635,263"
     },
     {
      "q": "Nothing important under the YouTube timestamp",
@@ -171,28 +171,28 @@
    ],
    "boxes": {
     "zero": [
-     167.328,
-     314.52000000000004,
-     205.344,
-     339.47999999999996
+     111.25600000000001,
+     344.04,
+     187.48799999999997,
+     309.96
     ],
     "text": [
-     584.4719983107715,
-     36,
-     655.5280016892285,
-     271.23088670183523
+     604.8993507958108,
+     30,
+     635.1006492041892,
+     262.7549214924029
     ],
     "hero": [
-     600,
-     300,
-     640,
-     300
+     370,
+     380,
+     260,
+     170
     ],
     "pix": [
-     862.5,
-     321.48088670183523,
-     85,
-     85
+     709,
+     317,
+     70,
+     70
     ]
    }
   },
