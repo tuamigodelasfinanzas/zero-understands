@@ -1,2 +1,2 @@
 episodes/v001-package/part1.mjs
-# v2: background jokes, adult sound, continuity fixes
+# v2 (retry): background jokes, adult sound, continuity fixes

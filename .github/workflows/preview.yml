@@ -33,8 +33,13 @@ jobs:
           mkdir -p "previews/$NAME"
           cp out/$NAME/*.mp4 out/$NAME/timing.json "previews/$NAME/"
       - name: Commit
+        # another run may have pushed to the branch meanwhile: start from its latest state and add only our files
         run: |
+          mkdir -p /tmp/keep && cp -r previews /tmp/keep/
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset -q --hard "origin/$GITHUB_REF_NAME"
+          cp -r /tmp/keep/previews .
           git add previews
-          git commit -m "Preview render [skip ci]" && git pull --rebase && git push
+          git commit -m "Preview render [skip ci]" && git push origin "HEAD:$GITHUB_REF_NAME"
