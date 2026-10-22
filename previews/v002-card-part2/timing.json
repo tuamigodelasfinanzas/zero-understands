@@ -1,5 +1,5 @@
 {
- "total": 195.458,
+ "total": 197.29800000000003,
  "beats": [
   {
    "start": 0,
@@ -30,7 +30,7 @@
   },
   {
    "start": 28.17,
-   "dur": 13.49,
+   "dur": 13.63,
    "lines": [
     "Because thousands of banks issue cards,",
     "and millions of shops take them.",
@@ -40,7 +40,7 @@
    ]
   },
   {
-   "start": 41.66,
+   "start": 41.8,
    "dur": 13.55,
    "lines": [
     "In the U.S., that's mostly Visa or Mastercard.",
@@ -49,8 +49,8 @@
    ]
   },
   {
-   "start": 55.2,
-   "dur": 11.88,
+   "start": 55.35,
+   "dur": 12.21,
    "lines": [
     "All of it runs through four giant data centers,",
     "with spare power,",
@@ -60,13 +60,13 @@
    ]
   },
   {
-   "start": 67.08,
+   "start": 67.56,
    "dur": 3.6,
    "lines": []
   },
   {
-   "start": 70.68,
-   "dur": 6.81,
+   "start": 71.16,
+   "dur": 7.53,
    "lines": [
     "Here's the strange part.",
     "The network doesn't move money either.",
@@ -74,8 +74,8 @@
    ]
   },
   {
-   "start": 77.49,
-   "dur": 13,
+   "start": 78.69,
+   "dur": 13.56,
    "lines": [
     "Last stop: ZERO's bank.",
     "The one that gave him the card.",
@@ -85,8 +85,8 @@
    ]
   },
   {
-   "start": 90.49,
-   "dur": 13.77,
+   "start": 92.25,
+   "dur": 13.48,
    "lines": [
     "For the second one, it doesn't ask ZERO.",
     "It asks his habits.",
@@ -95,7 +95,7 @@
    ]
   },
   {
-   "start": 104.25,
+   "start": 105.72,
    "dur": 10.5,
    "lines": [
     "But ZERO's card is brand new.",
@@ -105,16 +105,16 @@
    ]
   },
   {
-   "start": 114.75,
-   "dur": 5.42,
+   "start": 116.22,
+   "dur": 5.2,
    "lines": [
     "Back in the coffee shop,",
     "the clock says one point one seconds."
    ]
   },
   {
-   "start": 120.17,
-   "dur": 12.81,
+   "start": 121.43,
+   "dur": 12.14,
    "lines": [
     "If a bank ever takes too long, or goes down,",
     "the network can answer for it,",
@@ -124,8 +124,8 @@
    ]
   },
   {
-   "start": 132.99,
-   "dur": 12,
+   "start": 133.57,
+   "dur": 12.44,
    "lines": [
     "Then the evidence adds up.",
     "A real chip,",
@@ -135,8 +135,8 @@
    ]
   },
   {
-   "start": 144.99,
-   "dur": 14.46,
+   "start": 146.01,
+   "dur": 14.82,
    "lines": [
     "Credit: yes.",
     "And now look at what the bank actually does.",
@@ -146,7 +146,7 @@
    ]
   },
   {
-   "start": 159.45,
+   "start": 160.83,
    "dur": 10.5,
    "lines": [
     "And the promise works both ways.",
@@ -156,8 +156,8 @@
    ]
   },
   {
-   "start": 169.95,
-   "dur": 8.67,
+   "start": 171.33,
+   "dur": 9.13,
    "lines": [
     "The answer rides back the same way.",
     "Bank,",
@@ -167,14 +167,14 @@
    ]
   },
   {
-   "start": 178.62,
+   "start": 180.46,
    "dur": 4.2,
    "lines": [
     "Two seconds."
    ]
   },
   {
-   "start": 182.82,
+   "start": 184.66,
    "dur": 12.64,
    "lines": [
     "ZERO thinks he just paid.",
