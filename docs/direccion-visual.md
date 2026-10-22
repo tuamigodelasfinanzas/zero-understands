@@ -93,4 +93,5 @@ No "un vídeo de stickman", no "una animación de IA": **una serie animada recon
 | 9 · Cámara | Claves de cámara con `ease` suaves; `push`, `pull`, `pan` en `kit.mjs`. |
 | 11 · Color | `PALETTE` en `kit.mjs` (los mismos tonos en `puppets.js`). |
 | 14 · Transiciones | `tin`/`tout` por beat en `stage.js`: `zoom` (la cámara entra en un objeto), `wipe` (un objeto cruza el plano), `iris`, `fall`. |
+| 15 · Legibilidad | ZERO lleva siempre un contorno crema fino con un brillo suave (filtro `zrim` en `stage.js`). Sobre fondos oscuros (negro, azul noche, espacio) separa su cuerpo del fondo; sobre fondos claros no se nota. `ZERO_RIM=0` o `rim: false` en el episodio lo desactiva. |
 | 15 · Consistencia | ZERO solo se dibuja desde `puppets.js` (geometría de la Biblia). La capa de vida nunca cambia proporciones: solo mueve articulaciones y aplica squash ≤ 7 %. |

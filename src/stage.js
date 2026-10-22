@@ -7,6 +7,8 @@
   const root = document.getElementById('stage');
   // the life layer (see alive() below) is on unless the episode sets life: false or the render runs with ZERO_LIFE=0
   const LIFE = D.ep.life ?? D.life ?? true;
+  // light rim around ZERO so his black body reads on dark sets; invisible on light ones (ZERO_RIM=0 or ep.rim: false turns it off)
+  const RIM = D.ep.rim ?? D.rim ?? true;
 
   const EASE = {
     lin: x => x, step: () => 0,
@@ -177,7 +179,7 @@
         if (st.blink === false) st.blink = 0;
         const sp = speaking(beat, 'zero', gt);
         if (sp >= 0 && st.bounce !== false) st.squash = (st.squash ?? 1) * (1 + 0.03 * Math.sin(sp * 20));
-        svg = zero(LIFE && st.life !== false ? alive(a, st, beat, lt, gt, sp) : st);
+        svg = zero(Object.assign(LIFE && st.life !== false ? alive(a, st, beat, lt, gt, sp) : { ...st }, { rim: RIM ? st.rim ?? 1 : 0 }));
       } else if (a.type === 'pix') {
         const sp = speaking(beat, 'pix', gt);
         st.talk = sp >= 0 ? 0.5 + 0.5 * Math.sin(sp * 19) : 0;
@@ -198,7 +200,13 @@
     const bg = spec.bg ?? '#FFFFFF';
     const gray = cam.gray ? `filter="url(#gray)"` : '';
     let html = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
-      <defs><filter id="gray"><feColorMatrix type="saturate" values="${1 - (cam.gray ?? 0)}"/></filter></defs>
+      <defs><filter id="zrim" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+        <feMorphology in="SourceAlpha" operator="dilate" radius="2.4" result="d"/>
+        <feFlood flood-color="#FFF4E3"/><feComposite in2="d" operator="in" result="rim"/>
+        <feGaussianBlur in="d" stdDeviation="7" result="b"/>
+        <feFlood flood-color="#FFF4E3" flood-opacity="0.32"/><feComposite in2="b" operator="in" result="glow"/>
+        <feMerge><feMergeNode in="glow"/><feMergeNode in="rim"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="gray"><feColorMatrix type="saturate" values="${1 - (cam.gray ?? 0)}"/></filter></defs>
       <rect width="${W}" height="${H}" fill="${bg}"/>
       <g ${gray}><g transform="${shake} translate(${W / 2} ${H / 2}) scale(${cz}) translate(${-cx} ${-cy})">${world}</g>${overlay}</g>`;
     if (cam.flash) html += `<rect width="${W}" height="${H}" fill="#fff" opacity="${cam.flash}"/>`;
