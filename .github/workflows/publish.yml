@@ -1,8 +1,9 @@
 name: Render
 
 # Every day at 09:00 UTC: renders what content/schedule.json has for today or tomorrow (Madrid time),
-# puts the video on GitHub Pages and writes queue/<date>.json. Make reads that file at 17:00 Madrid on the
-# publishing day and uploads the video to YouTube (@zerounderstands).
+# puts the video on GitHub Pages and writes queue/<date>.json. At 17:00 Madrid the day BEFORE publishing,
+# Make uploads it to YouTube (@zerounderstands) as private, scheduled to go public at 17:00 on its date:
+# Chiño has 24 hours to review it in YouTube Studio.
 on:
   schedule:
     - cron: "0 9 * * *"
