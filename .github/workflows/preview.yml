@@ -48,6 +48,10 @@ jobs:
           mkdir -p "previews/$NAME"
           cp out/$NAME/*.mp4 out/$NAME/timing.json out/$NAME/captions.srt "previews/$NAME/"
           if [ -f "out/$NAME/thumb.jpg" ]; then cp "out/$NAME/thumb.jpg" "previews/$NAME/"; fi
+          # GitHub refuses files over 100 MB: a long video is committed in 90 MB pieces (cat video.mp4.part* > video.mp4)
+          for f in previews/$NAME/*.mp4; do
+            if [ "$(stat -c %s "$f")" -gt 95000000 ]; then split -b 90m -d "$f" "$f.part"; rm "$f"; fi
+          done
           echo "NAME=$NAME" >> "$GITHUB_ENV"
       - name: Commit
         # other renders push to the branch meanwhile: start from its latest state, add only our folder, retry on a race
