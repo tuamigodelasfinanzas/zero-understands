@@ -23,7 +23,7 @@ fs.writeFileSync(out, JSON.stringify({
   category: ep.category === 'EDUCATION' ? '27' : '24',
   video_url: `${base}/${short ? 'short.mp4' : 'video.mp4'}`,
   thumb_url: short ? '' : `${base}/thumb.jpg`,
-  // the other two concepts from the thumbnail generator, for YouTube's thumbnail test (Test & Compare)
+  // the best version of each concept from the Thumbnail Engine, for YouTube's thumbnail test (Test & Compare)
   thumb_variants: !short && ep.thumbnail ? ['A', 'B', 'C'].map(id => `${base}/thumbs/${id}.jpg`) : [],
 }, null, 1));
 console.log('queue entry', out, title);
