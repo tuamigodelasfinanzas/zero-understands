@@ -7,7 +7,7 @@ Dirección visual v2 del canal (22-10-2026). Complementa `direccion-visual.md`, 
 
 Se reutiliza en todos los episodios, para que un vídeo se reconozca antes de ver el logo.
 
-1. **ZERO entra físicamente en el sistema.** No lo explica desde fuera: salta a la cinta, se sienta en la caja, viaja en el camión.
+1. **"ZERO has been dropped inside the system."** Es la identidad diferencial del canal. ZERO no explica el sistema desde fuera: cae dentro y lo recorre montado en lo que seguimos (salta a la cinta, se sienta en la caja, viaja en el camión; en tarjetas de crédito, va subido a la transacción desde el datáfono por cables, redes, procesador y bancos). Prueba de cada tema: ¿sobre qué se monta ZERO y por dónde pasa?
 2. **El objeto amarillo.** Lo que seguimos (la caja de 001) es amarillo; todo lo demás del sistema es marrón o gris. Siempre se encuentra en el plano.
 3. **La boca del sistema.** Cada sistema tiene una entrada oscura (cortina de tiras, compuerta, túnel) con marco de rayas amarillas y negras.
 4. **SYSTEM VIEW.** PIX cambia el mundo a la capa que lee la máquina: rejilla azul, línea de escaneo, solo los datos en amarillo. Lo humano (el corazón que dibujó ZERO) aparece como "NOT SCANNED".

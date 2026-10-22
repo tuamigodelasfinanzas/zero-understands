@@ -43,7 +43,7 @@ const shop = (o = {}) => [
   P('storefront', { x: 300, y: 470, w: 640, h: 440, txt: 'OPEN LATE' }, 'street', -16),
   P('bench', { x: 300, y: G - 10, s: 0.9 }, 'bench', -9),
   P('menuboard', [{ x: 1040, y: 230, hl: -1 }, ...(o.menuKeys || [])], 'menu', -15),
-  P('wallclock', { x: 1560, y: 210, s: 0.75, h: 6, m: o.min ?? 47, s0: 5 }, 'clock', -15),
+  P('wallclock', { x: 1420, y: 200, s: 0.75, h: 6, m: o.min ?? 47, s0: 5 }, 'clock', -15),
   P('pool', { x: 1040, y: 330, rx: 520, ry: 300, kind: 'cool', op: 0.4 }, 'menuglow', -16),
   P('pendant', { x: 820, y: 60, cord: 300, len: 620, spread: 640, color: '#2D6E7E' }, 'lamp1', -10),
   P('pendant', { x: 1220, y: 60, cord: 300, len: 620, spread: 640, color: '#2D6E7E' }, 'lamp2', -10),
@@ -136,7 +136,7 @@ export default {
     {
       lines: [], min: 0.6, bg: '#151833',
       cam: cam({ z: 1.5, x: 2300, y: 600 }),
-      actors: [...kitchen({ keyKeys: [{ t: 0.15, swing: 1, since: 0, e: 'step' }] }),
+      actors: [...kitchen({ keyKeys: [{ t: 0.15, swing: 1, since: 0, keys: false, e: 'step' }] }),
         zero([{ x: 2000, pose: 'run', face: 3 }, { t: 0.55, x: 2440, pose: 'run', e: 'lin' }]), vig(0.7)],
       sfx: [sfx('click', 0.15, { g: 0.7 })],
     },
@@ -155,7 +155,7 @@ export default {
     // ===== s04a: insert on the clock, then pull back to reveal the store; ZERO comes in from the rain =====
     {
       lines: [N('Six forty-seven PM.', { at: 0.6 })], min: 3.6, bg: '#10131F',
-      cam: cam({ z: 3.2, x: 1560, y: 210 }, { t: 1.5, z: 3.0, x: 1560, y: 220 }, { t: 2.8, z: 0.8, x: 1300, y: 500, e: 'io' }),
+      cam: cam({ z: 3.2, x: 1420, y: 200 }, { t: 1.5, z: 3.0, x: 1420, y: 210 }, { t: 2.8, z: 0.8, x: 1300, y: 500, e: 'io' }),
       actors: [...shop(), zero([{ x: 120, face: 0, pose: 'neutral', hl: [126, 150], hr: [140, 150], holdR: { type: 'giftbox', s: BOX / 2.6, w: 150, h: 120 } }, ...walk(120, 600, 1.8, 1.6).map(k => ({ ...k, hl: [126, 150], hr: [140, 150] }))]),
         P('person', [{ x: 860, y: G + 40, s: 2.3, pose: 'walk', flip: true, shirt: '#6B5A8A', skin: '#D2A07E', hair: '#5A3A2A', seed: 5, hold: { type: 'parcel', v: 3, s: 0.5 } }, { u: 1, x: -200, e: 'lin' }], 'cust', 8), vig(0.65)],
       sfx: [sfx('tick', 0.3, { g: 0.5 }), sfx('tick', 1.3, { g: 0.5 }), sfx('rain', 0, { g: 0.25, bed: true }), sfx('whoosh', 1.6, { g: 0.3 })],
@@ -229,11 +229,12 @@ export default {
       tout: { type: 'zoom', x: 2480, y: 470, dur: 0.75, color: '#05060D' },
       actors: [...shop({ min: 49, clerkKeys: [{ pose: 'type', look: -0.3 }, { t: 1.6, pose: 'stand', look: 1, headR: 10 }, { t: 2.0, pose: 'shrug' }],
         mouthKeys: [{ t: 2.6, push: 0 }, { t: 3.0, push: 1, e: 'out' }] }),
-        P('giftbox', [{ x: 2108, y: 668, s: BOX, label: true, stamp: 1 }, { u: 1, x: 2108 + 40 * 3.6, e: 'lin' }], 'box', -5),
+        P('giftbox', [{ x: 2108, y: 668, s: BOX, label: true, stamp: 1 }, { t: 2.6, x: 2210, e: 'lin' }, { u: 1, x: 2440, e: 'in' }], 'box', -5),
+        ...[0, 1, 2].map(i => P('parcel', [{ x: 1880 - i * 150, y: 668, s: 1.1, v: i + 1 }, { u: 1, x: 1880 - i * 150 + 150, e: 'lin' }], 'p' + i, -5)),
         pix([{ x: 2320, y: 330, s: 1.6, face: 4 }, { t: 2.2, x: 2480, y: 420, s: 1.2, e: 'in' }, { t: 2.8, o: 0, e: 'step' }]),
         zero([{ x: 1420, face: 9, look: [8, -1] }, { t: 0.5, look: [-2, -8], headR: -10 }, { t: 0.9, look: [8, 0], headR: 0, face: 8, squash: 1 },
           { t: 1.15, squash: 0.82, y: G + 8, pose: 'back', e: 'out' }, { t: 1.35, squash: 1.1, y: 520, x: 1640, pose: 'celebrate', e: 'out' }, { t: 1.65, y: 690, x: 1820, squash: 0.88, pose: 'neutral', e: 'in' },
-          { t: 1.8, squash: 1, y: 675, pose: 'run' }, { t: 2.4, x: 2150, y: 675, pose: 'run', e: 'lin' }, { t: 2.6, x: 2200, y: 575, pose: 'neutral', fl: [118, 196], fr: [132, 200], hl: [86, 160], hr: [124, 150], face: 2, e: 'out' }, { u: 1, x: 2240 }]), vig(0.6)],
+          { t: 1.8, squash: 1, y: 675, pose: 'run' }, { t: 2.4, x: 2150, y: 675, pose: 'run', e: 'lin' }, { t: 2.6, x: 2200, y: 575, pose: 'neutral', fl: [118, 196], fr: [132, 200], hl: [86, 160], hr: [124, 150], face: 2, e: 'out' }, { u: 1, x: 2430, e: 'in' }]), vig(0.6)],
       sfx: [sfx('whoosh', 1.3, { g: 0.6 }), sfx('thud', 1.65, { g: 0.6 }), sfx('belt', 0, { g: 0.35, bed: true }), sfx('whoosh', 2.9, { g: 0.6 })],
     },
     // ===== s07: the tunnel. ZERO sits on his box; PIX is the only warm light. Three questions, three projections =====
