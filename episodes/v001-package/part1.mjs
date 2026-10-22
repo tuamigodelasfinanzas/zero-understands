@@ -2,6 +2,7 @@
 // Direction: docs/mundo-vivo.md. Simple character, rich world: every shot has a foreground, a middle ground with
 // action and a background with its own life; something changes every 3-6 s; ZERO acts, the world corrects him.
 import { G, N, zero, pix, prop, sfx, cam, walk, lookCam, stepBack, leanIn } from '../../src/kit.mjs';
+import { brandBeat, openKeys } from '../../src/zeroopen.mjs';
 
 const BOX = 1.15;                // the yellow box's scale next to ZERO (s 2.6): a shoebox he can sit on
 const P = (type, k, id, z = 0, o = {}) => prop(type, k, { id, z, ...o });
@@ -75,6 +76,13 @@ const road = (o = {}) => [
   ...(o.close ? [] : [P('rain', { x: 960, y: 500, w: 2600, h: 1300, n: 40, ang: -14, op: 0.18 }, 'rainfg', 20)]),
 ];
 
+// ZeroOpen pieces in the store: the screen on the counter (what the system promises) and the hidden layer in the
+// wall beside the mouth (what's behind it). screen: 'shown' after the anomaly
+const openSet = (o = {}) => [
+  P('screen', [{ x: 1230, y: 467, s: 0.9, w: 340, l1: 'NEXT DAY AIR', l2: o.screen === 'shown' ? 'PORTLAND, ME' : '…', l3: o.screen === 'shown' ? 'TOMORROW · 10:30 AM' : '', c3: '#C63D46' }, ...(o.screenKeys || [])], 'scr', -3.8),
+  P('hiddenlayer', [{ x: 1960, y: 330, w: 700, h: 380, kind: 'logistics', open: 0, wall: '#2F5260' }, ...(o.layerKeys || [])], 'layer', -13),
+];
+
 const sysOn = (at, id = 'sys') => P('sysview', [{ x: 0, y: 0, ui: true, op: 0 }, { ...at, op: 0, e: 'step' }, { ...at, t: (at.t ?? 0) + 0.5, op: 1, e: 'out' }], id, 40);
 const ui = a => ({ ...a, k: a.k.map(k => ({ ...k, ui: true })) });
 
@@ -91,162 +99,84 @@ export default {
   // a softer rim (ZERO belongs to the scene instead of looking cut out) and a real contact shadow on dark floors
   rimGlow: 0.14, rimWidth: 2.0, zshadow: 0.38,
   beats: [
-    // ===== s01: wide establishing shot of the kitchen; ZERO walks past the calendar, stops, comes back =====
+    // ===== ZeroOpen (docs/zeroopen.md), plan: content/opens/v001-package.json =====
+    // EVENT. No logo, no greeting: the first frame is ZERO landing the box on the counter at 6:47 PM
     {
-      lines: [N("ZERO forgot his mom's birthday.", { at: 1.0 })], min: 4.6, bg: '#151833',
-      cam: cam({ z: 0.64, x: 1420, y: 470 }, { t: 2.3, z: 0.68, x: 1520, y: 480 }, { t: 3.3, z: 1.35, x: 1900, y: 520, e: 'io' }, { end: 0, z: 1.45, x: 1900, y: 500 }),
-      actors: [...kitchen({ fg: true }), zero([{ x: 700, face: 0, look: [4, 0] }, ...walk(700, 2160, 0, 2.2), { t: 2.35, look: [0, -2], headR: -6 }, { t: 2.55, flip: true, look: [3, -3] }, ...walk(2160, 1980, 2.6, 0.55).map(k => ({ ...k, flip: true })),
-        { t: 3.3, look: [2, -6], headR: -10, face: 3, pose: 'back', e: 'out' }, { t: 4.2, face: 3, pose: 'neutral', look: [2, -7] }]), vig(0.7)],
-      sfx: [sfx('hum', 0, { g: 0.3, bed: true }), sfx('zero-boop', 3.3, { g: 0.6 })],
+      zo: 'event', lines: [N("ZERO forgot his mom's birthday.", { at: 1.1 }), N("It's tomorrow.", { gap: 0.3 })], min: 4.6, bg: '#10131F',
+      cam: cam({ z: 1.12, x: 980, y: 480 }, { end: 0, z: 1.18, x: 1000, y: 470, e: 'lin' }),
+      actors: [...shop({ kg: '0.00 kg', menuKeys: [{ t: 2.4, hl: 2, e: 'step' }], clerkKeys: [{ t: 0.5, pose: 'stand', look: -1, headR: 10 }, { t: 1.4, pose: 'type', headR: 0 }],
+        counterKeys: [{ t: 0.5, kg: '1.20 kg', e: 'step' }, { t: 3.4, paid: true, e: 'step' }] }), ...openSet(),
+        P('giftbox', [{ x: 700, y: 470, s: BOX, label: false, o: 1 }, { t: 0.4, x: 820, y: 609, e: 'in' }], 'box', -3),
+        zero([{ x: 600, face: 8, look: [6, -2], pose: 'reach', hr: [150, 60], hl: [120, 60] }, { t: 0.4, pose: 'neutral', hr: null, hl: null, squash: 0.9, face: 2, e: 'out' }, { t: 0.6, squash: 1 }, { t: 2.3, pose: 'point', hr: [150, 96], look: [6, -7], headR: -8, face: 0, e: 'back' }, { t: 3.6, pose: 'neutral', headR: 0, look: [8, 0] }]), vig(0.65)],
+      sfx: [sfx('rain', 0, { g: 0.22, bed: true }), sfx('thud', 0.42, { g: 0.9 }), sfx('beep', 0.6, { g: 0.3 }), sfx('ping', 2.45, { g: 0.4 }), sfx('coin', 3.45, { g: 0.6 })],
     },
-    // ===== s02a: close: the day he circled weeks ago, and his face =====
+    // ANOMALY. The screen answers before anyone asks: Portland, Maine, tomorrow by 10:30 AM (F16). The clock says
+    // 6:47 PM. ZERO looks from one to the other. Nobody speaks
     {
-      lines: [N("It's tomorrow.")], min: 2.4, bg: '#151833',
-      cam: cam({ z: 2.0, x: 1990, y: 470 }, { end: 0, z: 2.15, x: 2000, y: 480, e: 'lin' }),
-      actors: [...kitchen({ calKeys: [{ t: 0.2, circ: 0.3 }, { t: 1.0, circ: 1, e: 'io' }] }),
-        zero([{ x: 2150, flip: true, face: 3, look: [6, -5], headR: -8 }, { l: 0, t: 1.1, face: 9, look: [3, -2], headR: -3, e: 'io' }]), vig(0.7)],
-      sfx: [sfx('swipe', 0.2, { g: 0.3 })],
-    },
-    // ===== s02b: insert on the fridge magnet. His finger follows the distance, and keeps going =====
-    {
-      lines: [N('And she lives on the other side of the country.')], min: 3.6, bg: '#151833',
-      cam: cam({ z: 3.1, x: 1572, y: 728 }, { end: 0, z: 3.25, x: 1580, y: 726, e: 'lin' }),
-      actors: [...kitchen({ fridgeKeys: [{ x: 1560, y: G, mapProg: 0 }, { l: 0, t: 0.5, mapProg: 0 }, { l: 0, t: 2.3, mapProg: 1, e: 'io' }] }),
-        P('arm', [{ x: 0, y: 0, x0: 1230, y0: 900, x1: 1504, y1: 732, w: 23 }, { l: 0, t: 0.5, x0: 1230, x1: 1504, y1: 732 },
-          ...[0.2, 0.4, 0.6, 0.8, 1].map(t => { const [rx, ry] = route(t); return { l: 0, t: 0.5 + 1.8 * t, x0: 1230 + 160 * t, x1: 1570 + (rx - 206) * 0.42, y1: 735 + (ry - 122) * 0.42 - 4, e: 'lin' }; })], 'zarm', 5), vig(0.6)],
-      sfx: [sfx('roll', 0.9, { g: 0.2 })],
-    },
-    // ===== s02c: the pause. He looks at us =====
-    {
-      lines: [], min: 1.5, bg: '#151833',
-      cam: cam({ z: 1.7, x: 1460, y: 600 }),
-      actors: [...kitchen({ fridgeKeys: { x: 1560, y: G, mapProg: 1 } }),
-        zero([{ x: 1360, face: 0, pose: 'point', hr: [146, 132], look: [8, 0] }, { t: 0.25, pose: 'neutral', hr: null }, ...lookCam(0.35, { face: 1 })]), vig(0.7)],
-    },
-    // ===== s03: the only fast montage. Tape (top-down), bow + heart, keys, door slam, the cat =====
-    {
-      lines: [], min: 0.8, bg: '#6B4A35',
-      actors: [P('rect', { x: 960, y: 540, w: 2400, h: 1400, fill: '#6B4A35' }, 'table', -10), P('pool', { x: 960, y: 540, rx: 900, ry: 700, kind: 'warm', op: 0.5 }, 'tp', -9),
-        P('topbox', [{ x: 960, y: 560, s: 2.2, tape: 0 }, { t: 0.1, tape: 0 }, { t: 0.65, tape: 1, e: 'out' }], 'tb', 0),
-        P('tapegun', [{ x: 520, y: 560, s: 1.6, tilt: 0 }, { t: 0.1, x: 520 }, { t: 0.65, x: 1450, e: 'out' }], 'tg', 2),
-        P('arm', [{ x: 0, y: 0, x0: 380, y0: 1300, x1: 520, y1: 660, w: 34 }, { t: 0.1, x1: 520 }, { t: 0.65, x0: 1200, x1: 1450, e: 'out' }], 'a1', 1), vig(0.6)],
-      sfx: [sfx('tape', 0.1, { g: 0.9 })],
-    },
-    {
-      lines: [], min: 0.7, bg: '#6B4A35',
-      actors: [P('rect', { x: 960, y: 540, w: 2400, h: 1400, fill: '#6B4A35' }, 'table', -10), P('pool', { x: 960, y: 540, rx: 900, ry: 700, kind: 'warm', op: 0.5 }, 'tp', -9),
-        P('topbox', [{ x: 960, y: 560, s: 2.2, tape: 1, bow: false, heart: false }, { t: 0.15, bow: true, e: 'step' }, { t: 0.4, heart: true, e: 'step' }], 'tb', 0),
-        P('arm', [{ x: 0, y: 0, x0: 1500, y0: 1300, x1: 1300, y1: 900, w: 34 }, { t: 0.3, x1: 760, y1: 820, e: 'out' }, { t: 0.6, x1: 840, y1: 860 }], 'a1', 1), vig(0.6)],
-      sfx: [sfx('click', 0.15, { g: 0.6 })],
-    },
-    {
-      lines: [], min: 0.6, bg: '#151833',
-      cam: cam({ z: 1.5, x: 2300, y: 600 }),
-      actors: [...kitchen({ keyKeys: [{ t: 0.15, swing: 1, since: 0, keys: false, e: 'step' }] }),
-        zero([{ x: 2000, pose: 'run', face: 3 }, { t: 0.55, x: 2440, pose: 'run', e: 'lin' }]), vig(0.7)],
-      sfx: [sfx('click', 0.15, { g: 0.7 })],
-    },
-    {
-      lines: [], min: 0.55, bg: '#151833',
-      cam: cam({ z: 1.3, x: 2470, y: 640, shake: 0 }, { t: 0.18, shake: 9, e: 'step' }, { t: 0.45, shake: 0 }),
-      actors: [...kitchen({ doorKeys: [{ t: 0, open: 0.9 }, { t: 0.17, open: 0, e: 'in' }] }), vig(0.7)],
-      sfx: [sfx('door', 0.17, { g: 1 })],
-    },
-    {
-      lines: [], min: 0.9, bg: '#151833',
-      cam: cam({ z: 2.4, x: 440, y: 520 }),
-      actors: [...kitchen({ cat: { mode: 'jump', y: 560 }, catKeys: [{ t: 0.5, mode: 'sit', y: 590 }] }), vig(0.7)],
-      sfx: [sfx('whoosh', 0.0, { g: 0.25 })],
-    },
-    // ===== s04a: insert on the clock, then pull back to reveal the store; ZERO comes in from the rain =====
-    {
-      lines: [N('Six forty-seven PM.', { at: 0.6 })], min: 3.6, bg: '#10131F',
-      cam: cam({ z: 3.2, x: 1420, y: 200 }, { t: 1.5, z: 3.0, x: 1420, y: 210 }, { t: 2.8, z: 0.8, x: 1300, y: 500, e: 'io' }),
-      actors: [...shop(), zero([{ x: 120, face: 0, pose: 'neutral', hl: [126, 150], hr: [140, 150], holdR: { type: 'giftbox', s: BOX / 2.6, w: 150, h: 120 } }, ...walk(120, 600, 1.8, 1.6).map(k => ({ ...k, hl: [126, 150], hr: [140, 150] }))]),
-        P('person', [{ x: 860, y: G + 40, s: 2.3, pose: 'walk', flip: true, shirt: '#6B5A8A', skin: '#D2A07E', hair: '#5A3A2A', seed: 5, hold: { type: 'parcel', v: 3, s: 0.5 } }, { u: 1, x: -200, e: 'lin' }], 'cust', 8), vig(0.65)],
-      sfx: [sfx('tick', 0.3, { g: 0.5 }), sfx('tick', 1.3, { g: 0.5 }), sfx('rain', 0, { g: 0.25, bed: true }), sfx('whoosh', 1.6, { g: 0.3 })],
-    },
-    // ===== s04b: he points at the most expensive row; the clerk wakes up; the card terminal goes green =====
-    {
-      lines: [N('ZERO pays for the fastest thing on the menu.')], min: 3.6, bg: '#10131F',
-      cam: cam({ z: 1.1, x: 1000, y: 470 }, { end: 0, z: 1.16, x: 1020, y: 460, e: 'lin' }),
-      actors: [...shop({ kg: '1.20 kg', menuKeys: [{ l: 0, t: 1.4, hl: 2, e: 'step' }], clerkKeys: [{ l: 0, t: 1.0, pose: 'stand', look: -1 }, { l: 0, t: 2.0, pose: 'type' }], counterKeys: [{ l: 0, t: 2.6, paid: true, e: 'step' }] }),
+      zo: 'anomaly', lines: [], min: 4.2, bg: '#10131F',
+      cam: cam({ z: 2.7, x: 1230, y: 460 }, { t: 1.7, z: 2.7, x: 1230, y: 460 }, { t: 2.0, z: 3.0, x: 1420, y: 210, e: 'io' }, { t: 2.8, z: 3.0, x: 1420, y: 210 }, { t: 3.1, z: 2.0, x: 640, y: 520, e: 'io' }),
+      actors: [...shop({ kg: '1.20 kg', counterKeys: [{ paid: true }], clerkKeys: [{ pose: 'type' }] }), ...openSet({ screenKeys: [{ t: 0.5, l2: 'PORTLAND, ME', l3: 'TOMORROW · 10:30 AM', e: 'step' }, { t: 0.6, alert: 0 }, { t: 0.9, alert: 1, e: 'out' }] }),
         P('giftbox', { x: 820, y: 609, s: BOX, label: false }, 'box', -3),
-        zero([{ x: 600, face: 0, look: [3, -2] }, { l: 0, t: 1.0, pose: 'point', hr: [150, 96], look: [6, -7], headR: -8, face: 0, e: 'back' }, { l: 0, t: 2.4, pose: 'neutral', look: [8, 0], headR: 0, face: 6 }]), vig(0.65)],
-      sfx: [sfx('ping', 1.75, { g: 0.4 }), sfx('coin', 2.95, { g: 0.6 })],
+        zero([{ x: 600, face: 0, look: [8, -4] }, { t: 2.0, look: [8, -8], headR: -12, face: 3 }, { t: 2.9, look: [8, -3], headR: 0, face: 3 }, { t: 3.5, look: [0, 1], face: 9 }])],
+      sfx: [sfx('rain', 0, { g: 0.2, bed: true }), sfx('beep', 0.5, { g: 0.45 }), sfx('tick', 2.1, { g: 0.5 }), sfx('tick', 2.6, { g: 0.5 })],
     },
-    // ===== s04c: close on the box: the stamp falls, then the clerk slaps the label on =====
+    // QUESTION. Said by the narrator only after the viewer has already thought it
     {
-      lines: [N('Next day.'), N('By morning.', { gap: 0.2 })], min: 2.8, bg: '#10131F',
-      cam: cam({ z: 2.4, x: 860, y: 470 }, { l: 0, t: 0.32, shake: 7, e: 'step' }, { l: 0, t: 0.6, shake: 0 }),
-      actors: [...shop({ kg: '1.20 kg', counterKeys: [{ paid: true }] }),
-        P('giftbox', [{ x: 820, y: 609, s: BOX, label: false, stamp: 0 }, { l: 0, t: 0.3, stamp: 1, e: 'step' }, { l: 1, label: true, e: 'step' }], 'box', -3),
-        P('stamp', [{ x: 880, y: -200, s: 1.2 }, { l: 0, t: 0, y: -200 }, { l: 0, t: 0.3, y: 560, e: 'in' }, { l: 0, t: 0.55, y: 540 }, { l: 0, t: 1.0, y: -260, e: 'in' }], 'stamp', 6),
-        P('arm', [{ x: 0, y: 0, x0: 1300, y0: 200, x1: 1300, y1: 200, w: 30, color: '#2D6E7E', hand: '#B9876A', o: 0 }, { l: 1, t: -0.3, o: 1, e: 'step' }, { l: 1, x1: 790, y1: 540, e: 'out' }, { l: 1, t: 0.5, x1: 1300, y1: 200, e: 'in' }], 'clerkarm', 7),
-        zero([{ x: 600, face: 0, look: [8, 2] }, { l: 0, t: 0.3, face: 3, squash: 0.92 }, { l: 0, t: 0.6, squash: 1, face: 2 }]), vig(0.65)],
-      sfx: [sfx('thud', 0.62, { g: 0.9 }), sfx('peck', 0, { l: 1, g: 0.5 })],
+      zo: 'question', lines: [N('She lives on the other side of the country.', { at: 0.3 }), N('So how is that even possible?', { gap: 0.7 })], min: 4.6, bg: '#10131F',
+      cam: cam({ z: 1.7, x: 700, y: 500 }, { end: 0, z: 1.8, x: 700, y: 500, e: 'lin' }),
+      actors: [...shop({ kg: '1.20 kg', counterKeys: [{ paid: true }], clerkKeys: [{ pose: 'type' }] }), ...openSet({ screen: 'shown' }),
+        P('giftbox', { x: 820, y: 609, s: BOX, label: false }, 'box', -3),
+        zero([{ x: 600, face: 9, look: [0, 1] }, { l: 1, face: 9 }, ...lookCam({ l: 1, t: 0.1 }, { face: 4, tilt: 8 })])],
+      sfx: [sfx('rain', 0, { g: 0.2, bed: true })],
     },
-    // ===== s05a: the clerk puts the box on the belt. PIX comes out of the mouth, scans it and projects the night ahead =====
+    // PIX REVEALS. The label goes on, the box goes on the belt, PIX comes out of the system's mouth, scans it, and the
+    // wall beside the mouth slides open on what's behind it: belts, scanners, boxes changing lanes, trucks leaving
     {
-      lines: [N('Tonight, this box will ride a truck, catch a plane, and land in a building that sorts more than four hundred thousand packages an hour.')], min: 8, bg: '#10131F',
-      cam: cam({ z: 0.84, x: 1500, y: 500 }, { end: 0, z: 0.88, x: 1580, y: 490, e: 'lin' }),
-      actors: [...shop({ clerkKeys: [{ t: 0, pose: 'carry', hold: { type: 'giftbox', s: BOX / 2.3, label: true, stamp: 1 }, look: 1 }, { t: 0.9, x: 1400, e: 'io' }, { t: 1.2, pose: 'stand', hold: null, e: 'step' }, { t: 2.5, x: 1250, flip: true, e: 'io' }, { t: 3.2, flip: false, pose: 'type' }],
-        mouthKeys: [{ t: 1.4, push: 0 }, { t: 1.8, push: 1, e: 'out' }, { t: 2.6, push: 0, e: 'io' }] }),
-        P('giftbox', [{ x: 1500, y: 668, s: BOX, label: true, stamp: 1, o: 0 }, { t: 1.2, o: 1, e: 'step' }, { u: 1, x: 1500 + 40 * 6.6, e: 'lin' }], 'box', -5),
-        pix([{ x: 2480, y: 500, s: 1.1, face: 0, o: 0 }, { t: 1.6, o: 1, e: 'step' }, { t: 2.3, x: 2080, y: 360, s: 1.6, face: 2, e: 'back' }, { t: 3.0, face: 3 }, { l: 0, t: 6, face: 1 }]),
-        P('scanbeam', [{ x: 2080, y: 360, dx: -380, dy: 300, w: 200, o: 0 }, { t: 2.5, o: 1, e: 'step' }, { t: 3.6, o: 0, e: 'step' }], 'beam', 9),
-        P('holo', [{ x: 1640, y: 250, w: 260, h: 210, icon: 'truck', txt: 'TRUCK', size: 30, on: 0 }, { l: 0, t: 1.4, on: 0 }, { l: 0, t: 1.8, on: 1, e: 'out' }], 'h1', 9),
-        P('holo', [{ x: 1940, y: 250, w: 260, h: 210, icon: 'plane', txt: 'PLANE', size: 30, on: 0 }, { l: 0, t: 2.6, on: 0 }, { l: 0, t: 3.0, on: 1, e: 'out' }], 'h2', 9),
-        P('holo', [{ x: 2280, y: 250, w: 340, h: 210, icon: 'hub', txt: '400,000+ / HOUR', size: 30, on: 0 }, { l: 0, t: 4.4, on: 0 }, { l: 0, t: 4.8, on: 1, e: 'out' }], 'h3', 9),
-        zero([{ x: 600, face: 0, look: [8, 0] }, ...stepBack({ t: 1.9 }, 600, { face: 3 }), { t: 3.4, face: 4, headR: 10, look: [8, -4] }, ...leanIn({ l: 0, t: 4.6 }, 530, { face: 6, look: [8, -6] })]), vig(0.6)],
-      sfx: [sfx('belt', 0, { g: 0.35, bed: true }), sfx('rain', 0, { g: 0.18, bed: true }), sfx('pix-ting', 1.8, { g: 0.6 }), sfx('scan', 2.6, { g: 0.5 })],
+      zo: 'reveal', lines: [], min: 4.8, bg: '#10131F',
+      cam: cam({ z: 0.9, x: 1500, y: 480 }, { end: 0, z: 0.95, x: 1640, y: 470, e: 'io' }),
+      actors: [...shop({ kg: '1.20 kg', counterKeys: [{ paid: true }], clerkKeys: [{ t: 0, pose: 'carry', hold: { type: 'giftbox', s: BOX / 2.3, label: true, stamp: 1 }, look: 1 }, { t: 0.8, x: 1400, e: 'io' }, { t: 1.1, pose: 'stand', hold: null, e: 'step' }, { t: 2.4, x: 1250, flip: true, e: 'io' }, { t: 3.0, flip: false, pose: 'type' }],
+        mouthKeys: [{ t: 1.2, push: 0 }, { t: 1.6, push: 1, e: 'out' }, { t: 2.4, push: 0, e: 'io' }] }), ...openSet({ screen: 'shown', layerKeys: openKeys(2.4, 1.1) }),
+        P('giftbox', [{ x: 1500, y: 668, s: BOX, label: true, stamp: 1, o: 0 }, { t: 1.1, o: 1, e: 'step' }, { u: 1, x: 1500 + 40 * 4.8, e: 'lin' }], 'box', -5),
+        pix([{ x: 2480, y: 500, s: 1.1, face: 0, o: 0 }, { t: 1.4, o: 1, e: 'step' }, { t: 2.0, x: 1780, y: 400, s: 1.5, face: 2, e: 'back' }, { t: 2.4, face: 3 }, { t: 3.6, x: 2380, y: 560, face: 1, e: 'io' }]),
+        P('scanbeam', [{ x: 1780, y: 400, dx: -160, dy: 230, w: 170, o: 0 }, { t: 1.9, o: 1, e: 'step' }, { t: 2.5, o: 0, e: 'step' }], 'beam', 9),
+        zero([{ x: 1150, face: 3, look: [8, -3] }, ...stepBack({ t: 2.6 }, 1150, { face: 3 }), ...leanIn({ t: 3.7 }, 1090, { face: 6, look: [8, -6] })]), vig(0.6)],
+      sfx: [sfx('belt', 0, { g: 0.35, bed: true }), sfx('rain', 0, { g: 0.15, bed: true }), sfx('pix-ting', 1.5, { g: 0.6 }), sfx('scan', 2.0, { g: 0.5 }), sfx('swipe', 2.4, { g: 0.5 }), sfx('hub', 2.6, { g: 0.35, bed: true })],
     },
-    // ===== s05b-c: everybody's boxes join; nobody opens it, nobody carries it: the belt does =====
+    // ZERO ENTERS. Anticipation, jump, sprint along the belt, onto the box, into the mouth
     {
-      lines: [N('Nobody will open it.'), N('Nobody will carry it across the country.')], min: 4.4, bg: '#10131F', pre: 0.2,
-      cam: cam({ z: 1.25, x: 1880, y: 540 }, { l: 1, t: 0.2, z: 1.0, x: 1800, y: 470, e: 'io' }),
-      actors: [...shop({ clerkKeys: [{ pose: 'sit', y: G - 10, look: -0.3 }, { l: 1, pose: 'yawn' }] }),
-        P('giftbox', [{ x: 1764, y: 668, s: BOX, label: true, stamp: 1 }, { u: 1, x: 1764 + 40 * 4.6, e: 'lin' }], 'box', -5),
-        ...[0, 1, 2].map(i => P('parcel', [{ x: 1540 - i * 150, y: 300, s: 1.1, v: i + 1, o: 0 }, { t: 0.3 + i * 0.5, o: 1, e: 'step' }, { t: 0.55 + i * 0.5, y: 668, e: 'in' }, { u: 1, x: 1540 - i * 150 + 40 * (4.6 - 0.55 - i * 0.5), e: 'lin' }], 'p' + i, -5)),
-        pix([{ x: 2080, y: 360, s: 1.6, face: 1 }, { l: 1, t: 0.2, x: 2160, y: 300 }]),
-        P('holo', [{ x: 1940, y: 260, w: 520, h: 300, icon: null, on: 0 }, { l: 1, t: 0.2, on: 1, e: 'out' }], 'hmap', 9),
-        P('usmap', [{ x: 1940, y: 250, s: 1.1, tone: 'holo', prog: 0, a: 1, o: 0 }, { l: 1, t: 0.2, o: 1, e: 'step' }, { l: 1, t: 0.4, prog: 0 }, { l: 1, t: 1.6, prog: 1, e: 'io' }], 'map', 10),
-        zero([{ x: 1300, face: 0, look: [8, -3] }, { l: 1, t: 0.6, face: 4, headR: 8, look: [6, -8] }]), vig(0.6)],
-      sfx: [sfx('belt', 0, { g: 0.35, bed: true }), sfx('thud', 0.55, { g: 0.35 }), sfx('thud', 1.05, { g: 0.35 }), sfx('thud', 1.55, { g: 0.35 }), sfx('swipe', 0.4, { l: 1, g: 0.3 })],
+      zo: 'entry', lines: [], min: 3.4, bg: '#10131F',
+      cam: cam({ z: 0.95, x: 1640, y: 470 }, { t: 0.9, z: 0.95, x: 1700, y: 470 }, { t: 2.5, z: 1.25, x: 2300, y: 520, e: 'io' }),
+      tout: { type: 'zoom', x: 2480, y: 470, dur: 0.7, color: '#05060D' },
+      actors: [...shop({ clerkKeys: [{ pose: 'type', look: -0.3 }, { t: 1.4, pose: 'stand', look: 1, headR: 10 }, { t: 1.8, pose: 'shrug' }], mouthKeys: [{ t: 2.5, push: 0 }, { t: 2.9, push: 1, e: 'out' }] }), ...openSet({ screen: 'shown', layerKeys: [{ open: 1 }] }),
+        P('giftbox', [{ x: 1692, y: 668, s: BOX, label: true, stamp: 1 }, { t: 2.4, x: 2210, e: 'lin' }, { u: 1, x: 2440, e: 'in' }], 'box', -5),
+        ...[0, 1].map(i => P('parcel', [{ x: 1480 - i * 170, y: 668, s: 1.1, v: i + 1 }, { u: 1, x: 1480 - i * 170 + 500, e: 'lin' }], 'p' + i, -5)),
+        pix([{ x: 2380, y: 560, s: 1.5, face: 4 }, { t: 2.2, x: 2480, y: 450, s: 1.1, e: 'in' }, { t: 2.7, o: 0, e: 'step' }]),
+        zero([{ x: 1090, face: 6, look: [8, -6] }, { t: 0.3, face: 8, look: [8, -1] }, { t: 0.55, squash: 0.82, y: G + 8, pose: 'back', e: 'out' }, { t: 0.75, squash: 1.1, y: 520, x: 1320, pose: 'celebrate', e: 'out' }, { t: 1.05, y: 690, x: 1560, squash: 0.88, pose: 'neutral', e: 'in' },
+          { t: 1.2, squash: 1, y: 675, pose: 'run' }, { t: 2.2, x: 2150, y: 675, pose: 'run', e: 'lin' }, { t: 2.4, x: 2200, y: 575, pose: 'neutral', fl: [118, 196], fr: [132, 200], hl: [86, 160], hr: [124, 150], face: 2, e: 'out' }, { u: 1, x: 2430, e: 'in' }]), vig(0.6)],
+      sfx: [sfx('belt', 0, { g: 0.35, bed: true }), sfx('whoosh', 0.7, { g: 0.6 }), sfx('thud', 1.05, { g: 0.6 }), sfx('whoosh', 2.7, { g: 0.6 })],
     },
-    // ===== s05d: before breakfast. He checks the clock; PIX shows a house and a coffee =====
+    // CLICK · ZERO UNDERSTANDS. 1.2 s over the tunnel rushing past; the story doesn't stop for it
+    brandBeat({ behind: tunnel({ speed: 1400 }) }),
+    // THE PROMISE. Straight on, already inside: ZERO on his box, PIX projecting the night ahead
     {
-      lines: [N("And somehow, it's supposed to be at her door before breakfast.")], min: 3.8, bg: '#10131F',
-      cam: cam({ z: 0.95, x: 1650, y: 480 }, { end: 0, z: 1.0, x: 1700, y: 470, e: 'lin' }),
-      actors: [...shop({ min: 49, clerkKeys: [{ pose: 'type', look: -0.3 }] }),
-        P('giftbox', [{ x: 1948, y: 668, s: BOX, label: true, stamp: 1 }, { u: 1, x: 1948 + 40 * 4, e: 'lin' }], 'box', -5),
-        ...[0, 1, 2].map(i => P('parcel', [{ x: 1720 - i * 150, y: 668, s: 1.1, v: i + 1 }, { u: 1, x: 1720 - i * 150 + 160, e: 'lin' }], 'p' + i, -5)),
-        pix([{ x: 2160, y: 300, s: 1.6, face: 3 }, { t: 1.2, x: 2320, y: 330, face: 0 }]),
-        P('holo', [{ x: 2060, y: 250, w: 380, h: 190, on: 0 }, { t: 0.6, on: 1, e: 'out' }], 'hb', 9),
-        P('icon', [{ x: 1960, y: 240, k: 'house', color: '#7CC2FF', o: 0 }, { t: 0.9, o: 1, e: 'step' }], 'i1', 10),
-        P('icon', [{ x: 2160, y: 250, k: 'cup', color: '#FFC93C', o: 0 }, { t: 1.4, o: 1, e: 'step' }], 'i2', 10),
-        zero([{ x: 1300, face: 4, look: [8, -6] }, ...walk(1300, 1420, 0.2, 0.7), { t: 1.2, look: [-3, -8], headR: -12, face: 9 }, { t: 2.4, look: [8, -2], headR: 0, face: 9 }]), vig(0.6)],
-      sfx: [sfx('belt', 0, { g: 0.35, bed: true }), sfx('tick', 1.2, { g: 0.5 }), sfx('tick', 2.2, { g: 0.5 })],
-    },
-    // ===== s06: ZERO is going with it. Anticipation, jump, landing, sprint, onto the box, into the dark =====
-    {
-      lines: [N('ZERO is going with it.', { at: 0.3 })], min: 3.6, bg: '#10131F',
-      cam: cam({ z: 1.0, x: 1700, y: 470 }, { t: 1.0, z: 1.0, x: 1760, y: 470 }, { t: 2.6, z: 1.25, x: 2300, y: 520, e: 'io' }),
-      tout: { type: 'zoom', x: 2480, y: 470, dur: 0.75, color: '#05060D' },
-      actors: [...shop({ min: 49, clerkKeys: [{ pose: 'type', look: -0.3 }, { t: 1.6, pose: 'stand', look: 1, headR: 10 }, { t: 2.0, pose: 'shrug' }],
-        mouthKeys: [{ t: 2.6, push: 0 }, { t: 3.0, push: 1, e: 'out' }] }),
-        P('giftbox', [{ x: 2108, y: 668, s: BOX, label: true, stamp: 1 }, { t: 2.6, x: 2210, e: 'lin' }, { u: 1, x: 2440, e: 'in' }], 'box', -5),
-        ...[0, 1, 2].map(i => P('parcel', [{ x: 1880 - i * 150, y: 668, s: 1.1, v: i + 1 }, { u: 1, x: 1880 - i * 150 + 150, e: 'lin' }], 'p' + i, -5)),
-        pix([{ x: 2320, y: 330, s: 1.6, face: 4 }, { t: 2.2, x: 2480, y: 420, s: 1.2, e: 'in' }, { t: 2.8, o: 0, e: 'step' }]),
-        zero([{ x: 1420, face: 9, look: [8, -1] }, { t: 0.5, look: [-2, -8], headR: -10 }, { t: 0.9, look: [8, 0], headR: 0, face: 8, squash: 1 },
-          { t: 1.15, squash: 0.82, y: G + 8, pose: 'back', e: 'out' }, { t: 1.35, squash: 1.1, y: 520, x: 1640, pose: 'celebrate', e: 'out' }, { t: 1.65, y: 690, x: 1820, squash: 0.88, pose: 'neutral', e: 'in' },
-          { t: 1.8, squash: 1, y: 675, pose: 'run' }, { t: 2.4, x: 2150, y: 675, pose: 'run', e: 'lin' }, { t: 2.6, x: 2200, y: 575, pose: 'neutral', fl: [118, 196], fr: [132, 200], hl: [86, 160], hr: [124, 150], face: 2, e: 'out' }, { u: 1, x: 2430, e: 'in' }]), vig(0.6)],
-      sfx: [sfx('whoosh', 1.3, { g: 0.6 }), sfx('thud', 1.65, { g: 0.6 }), sfx('belt', 0, { g: 0.35, bed: true }), sfx('whoosh', 2.9, { g: 0.6 })],
+      zo: 'promise', lines: [N('Between this counter and her front door, something enormous happens while the country sleeps.', { at: 0.05 }), N('A truck.', { gap: 0.4 }), N('A plane.', { gap: 0.2 }), N('A building that sorts more than four hundred thousand packages an hour.', { gap: 0.2 }), N('Tonight, ZERO is staying awake to see it.', { gap: 0.5 })],
+      min: 14, hold: 0.6, bg: '#06070F',
+      cam: cam({ z: 1.15, x: 960, y: 560, shake: 1.2 }, { end: 0, z: 1.0, x: 960, y: 540, e: 'io' }),
+      actors: [...tunnel(),
+        P('pool', { x: 700, y: 560, rx: 520, ry: 420, kind: 'pix', op: 0.7 }, 'pixlight', 1),
+        P('giftbox', { x: 1000, y: 930, s: BOX * 1.3, label: true, stamp: 1 }, 'box', 2),
+        zero([{ x: 1000, y: 930 - 120 * BOX * 1.3 + 125, face: 2, fl: [120, 196], fr: [134, 200], hl: [84, 166], hr: [118, 166], look: [-4, -2] }, { l: 1, look: [-6, -6], headR: -6, face: 0 }, { l: 3, look: [5, -6], headR: 8, face: 4 }, { l: 4, t: 0.2, look: [0, 1], headR: 0, face: 6 }], { z: 4 }),
+        pix([{ x: 640, y: 520, s: 1.5, face: 1 }, { l: 1, face: 3 }, { l: 3, face: 5 }]),
+        P('holo', [{ x: 620, y: 230, w: 260, h: 210, icon: 'truck', txt: 'TRUCK', size: 30, on: 0 }, { l: 1, on: 0 }, { l: 1, t: 0.3, on: 1, e: 'out' }], 'h1', 8),
+        P('holo', [{ x: 960, y: 200, w: 260, h: 210, icon: 'plane', txt: 'PLANE', size: 30, on: 0 }, { l: 2, on: 0 }, { l: 2, t: 0.3, on: 1, e: 'out' }], 'h2', 8),
+        P('holo', [{ x: 1340, y: 230, w: 340, h: 210, icon: 'hub', txt: '400,000+ / HOUR', size: 30, on: 0 }, { l: 3, t: 1.0, on: 0 }, { l: 3, t: 1.4, on: 1, e: 'out' }], 'h3', 8),
+        vig(0.85)],
+      sfx: [sfx('tunnel', 0, { g: 0.4, bed: true }), sfx('ping', 0.3, { l: 1, g: 0.3 }), sfx('ping', 0.3, { l: 2, g: 0.3 }), sfx('ping', 1.4, { l: 3, g: 0.35 })],
     },
     // ===== s07: the tunnel. ZERO sits on his box; PIX is the only warm light. Three questions, three projections =====
     {
       lines: [N('Three questions.'), N('How does the system know where this box is going?'), N('Who pays for a plane to fly through the night?'), N('And what happens when something goes wrong?'), N('Because tonight, something will.', { gap: 0.5 })],
-      min: 14, hold: 1.4, bg: '#06070F', tin: { type: 'iris', x: 960, y: 640, dur: 0.6, color: '#05060D' },
+      min: 14, hold: 1.4, bg: '#06070F',
       cam: cam({ z: 1.0, x: 960, y: 540, shake: 1.2 }, { l: 4, z: 1.05, x: 960, y: 560 }, { end: 0, z: 1.25, x: 990, y: 620, e: 'io' }),
       actors: [...tunnel({ tunKeys: [{ l: 4, t: 0.9, flick: 1, e: 'step' }, { l: 4, t: 1.6, flick: 0, e: 'step' }] }),
         P('pool', { x: 700, y: 560, rx: 520, ry: 420, kind: 'pix', op: 0.7 }, 'pixlight', 1),

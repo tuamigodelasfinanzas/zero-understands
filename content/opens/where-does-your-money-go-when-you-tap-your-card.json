@@ -1,0 +1,41 @@
+{
+  "archetype": "payments",
+  "variant": 0,
+  "kind": "money",
+  "object": "card",
+  "screen": {
+    "l1": "TOTAL",
+    "l2": "€100.00",
+    "l3": "APPROVED"
+  },
+  "question": [
+    "You paid a hundred euros.",
+    "So where exactly did it go?"
+  ],
+  "promise": [
+    "In the next two seconds, that payment is going to visit more companies than ZERO has ever heard of.",
+    "He's going with it."
+  ],
+  "VIDEO_TITLE": "Where Does Your Money Go When You Tap Your Card?",
+  "VIDEO_TOPIC": "payments",
+  "MAIN_SYSTEM": "the payment network",
+  "KEY_MYSTERY": "the €100 goes into the terminal and splits into several routes instead of going to the shop",
+  "CORE_QUESTION": "You paid a hundred euros. So where exactly did it go?",
+  "EVERYDAY_SITUATION": "ZERO paying €100 at a shop with his card",
+  "VISUAL_ANOMALY": "the €100 goes into the terminal and splits into several routes instead of going to the shop",
+  "ZERO_ACTION": "taps the card on the terminal",
+  "ZERO_REACTION": "follows the pieces with his eyes, counts them on his fingers",
+  "PIX_REVEAL": "PIX scans the terminal; it opens like a hatch onto a network of banks and card schemes",
+  "HIDDEN_SYSTEM": "the payment network",
+  "ENTRY_TRANSITION": "ZERO grabs the last coin as it slips in and goes with it",
+  "OPENING_NARRATION": [
+    "You paid a hundred euros.",
+    "So where exactly did it go?",
+    "(CLICK · ZERO UNDERSTANDS)",
+    "In the next two seconds, that payment is going to visit more companies than ZERO has ever heard of.",
+    "He's going with it."
+  ],
+  "SOUND_DESIGN": "terminal BEEP, a coin ring that splits into three; silence (0.5-0.8 s) right before the question; zu-signature on the crossing",
+  "MICRO_BRAND_MOMENT": "PIX chirp → CLICK → \"ZERO UNDERSTANDS\" wordmark over the moving system, 1.2 s, no narration stop",
+  "FIRST_MAIN_STORY_BEAT": "In the next two seconds, that payment is going to visit more companies than ZERO has ever heard of."
+}

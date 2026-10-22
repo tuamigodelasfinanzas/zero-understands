@@ -858,6 +858,71 @@
     },
     // a small birthday card tucked against the box
     bdaycard(p) { return `<g transform="${S(p)} rotate(${p.tilt ?? -8})"><rect x="-70" y="-50" width="140" height="100" rx="6" fill="#FBF8F1"/><rect x="-70" y="-50" width="140" height="100" rx="6" fill="none" stroke="#C9555A" stroke-width="4"/><text x="0" y="-4" text-anchor="middle" font-family="${FONT}" font-weight="700" font-size="22" fill="#C9555A">Happy</text><text x="0" y="24" text-anchor="middle" font-family="${FONT}" font-weight="700" font-size="22" fill="#C9555A">B-day</text></g>`; },
+    // ---------- ZeroOpen (docs/zeroopen.md) ----------
+    // a small screen standing on a counter (or hung on a wall, hang: true): up to three lines; c2 colours line 2,
+    // alert 0..1 pulses a ring around it so the eye goes there before the narrator says anything
+    screen(p) {
+      const w = p.w ?? 300, h = p.h ?? 180, gt = p.gt ?? 0, al = p.alert ?? 0;
+      return `<g transform="${S(p)} rotate(${p.tilt ?? 0})">${p.hang ? `<path d="M -60 ${-h / 2} V -2000 M 60 ${-h / 2} V -2000" stroke="#1B1E33" stroke-width="6"/>` : `<rect x="-14" y="${h / 2}" width="28" height="60" fill="#3A3F5C"/><rect x="-70" y="${h / 2 + 56}" width="140" height="12" rx="6" fill="#3A3F5C"/>`}
+        <rect x="${-w / 2 - 12}" y="${-h / 2 - 12}" width="${w + 24}" height="${h + 24}" rx="12" fill="#1B1E33"/><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="4" fill="${p.bg ?? '#EAF2FA'}"/>
+        ${p.l1 ? T(p.l1, p.s1 ?? 24, p.c1 ?? '#5C6684', 0, -h / 2 + 40, 'letter-spacing="2"') : ''}${p.l2 ? T(p.l2, p.s2 ?? 34, p.c2 ?? '#1B1E33', 0, 0) : ''}${p.l3 ? T(p.l3, p.s3 ?? 26, p.c3 ?? '#2E9E5B', 0, h / 2 - 40) : ''}
+        ${al > 0 ? `<rect x="${-w / 2 - 30}" y="${-h / 2 - 30}" width="${w + 60}" height="${h + 60}" rx="22" fill="none" stroke="${YEL}" stroke-width="${f(6 * al)}" opacity="${f(al * (0.55 + 0.45 * Math.sin(gt * 9)))}"/>` : ''}
+        <ellipse cx="0" cy="0" rx="${w}" ry="${h}" fill="url(#wCool)" opacity="0.35"/></g>`;
+    },
+    // the hidden layer PIX opens: a panel in a wall whose two doors slide apart (open 0..1) or that clears like an
+    // X-ray (style 'xray'), showing the system working behind it. kind: logistics | money | network | booking |
+    // store | subscriptions | generic. The doors take the colour of the wall (wall)
+    hiddenlayer(p) {
+      const gt = p.gt ?? 0, w = p.w ?? 780, h = p.h ?? 520, op = p.open ?? 0, k = p.kind ?? 'generic', st = p.style ?? 'doors', LB = '#7CC2FF';
+      let c = '';
+      if (k === 'logistics') {
+        c = [0, 1, 2].map(r => { const y = -h / 2 + 110 + r * 150, sp = [90, 140, 60][r], dir = r === 1 ? -1 : 1;
+          return `<rect x="${-w / 2}" y="${y}" width="${w}" height="14" fill="#2A3352"/>${Array.from({ length: 9 }, (_, i) => { const x = -w / 2 + ((i * 130 + dir * gt * sp) % (w + 130) + w + 130) % (w + 130) - 60, v = Math.floor(rnd(i + r * 9) * 3); return `<rect x="${f(x)}" y="${y - [40, 54, 34][v]}" width="${[56, 70, 46][v]}" height="${[40, 54, 34][v]}" fill="${i === 4 && r === 1 ? YEL : ['#A47A55', '#B88B60', '#93704F'][v]}"/>`; }).join('')}
+            <g transform="translate(${-w / 4 + r * w / 4} ${y - 90})"><path d="M -50 90 V 0 H 50 V 90" fill="none" stroke="#4A5270" stroke-width="10"/><circle cy="10" r="8" fill="${fr(gt * 0.9 + r * 0.3) < 0.15 ? '#E6F4FF' : LB}"/>${fr(gt * 0.9 + r * 0.3) < 0.15 ? `<path d="M 0 10 L -40 90 L 40 90 Z" fill="${LB}" opacity="0.35"/>` : ''}</g>`; }).join('')
+          + `<g transform="translate(${f(-w / 2 + fr(gt * 0.12) * (w + 300) - 150)} ${h / 2 - 40}) scale(0.9)">${icons.truck('#4A5270')}</g>`
+          + Array.from({ length: 4 }, (_, i) => `<path d="M ${-w / 2 + 120 + i * 170} ${-h / 2 + 60} l 22 -14 l 0 28 Z" fill="${YEL}" opacity="${f(0.4 + 0.6 * (Math.sin(gt * 4 + i) > 0))}"/>`).join('');
+      } else if (k === 'money' || k === 'subscriptions') {
+        const N_ = [[-w * 0.38, 0], [-w * 0.1, -h * 0.3], [-w * 0.1, h * 0.28], [w * 0.18, -h * 0.05], [w * 0.38, -h * 0.32], [w * 0.38, h * 0.3]];
+        const E_ = [[0, 1], [0, 2], [1, 3], [2, 3], [3, 4], [3, 5], [1, 4], [2, 5]];
+        c = E_.map(([a, b]) => `<path d="M ${f(N_[a][0])} ${f(N_[a][1])} L ${f(N_[b][0])} ${f(N_[b][1])}" stroke="#2F5E9E" stroke-width="5"/>`).join('')
+          + E_.map(([a, b], i) => { const q = fr(gt * 0.5 + i / E_.length); return `<circle cx="${f(N_[a][0] + (N_[b][0] - N_[a][0]) * q)}" cy="${f(N_[a][1] + (N_[b][1] - N_[a][1]) * q)}" r="12" fill="${YEL}" stroke="${AMBER}" stroke-width="3"/>`; }).join('')
+          + N_.map(([x, y], i) => `<g transform="translate(${f(x)} ${f(y)})"><circle r="38" fill="#13203A" stroke="${LB}" stroke-width="5"/><g transform="scale(0.45)">${icons[k === 'subscriptions' ? (i % 2 ? 'coin' : 'clock') : (i === 0 ? 'coin' : 'hub')](i === 0 ? YEL : LB)}</g></g>`).join('');
+      } else if (k === 'network') {
+        c = Array.from({ length: 12 }, (_, i) => { const x = -w / 2 + 90 + (i % 4) * (w - 180) / 3, y = -h / 2 + 100 + Math.floor(i / 4) * (h - 200) / 2; return `<rect x="${f(x - 30)}" y="${f(y - 18)}" width="60" height="36" rx="6" fill="#13203A" stroke="${LB}" stroke-width="4"/><circle cx="${f(x + 18)}" cy="${f(y)}" r="5" fill="${Math.sin(gt * 7 + i) > 0 ? '#58E08A' : '#2E5E3E'}"/>`; }).join('')
+          + Array.from({ length: 16 }, (_, i) => { const r = i % 3, q = fr(gt * 0.6 + rnd(i) ), y = -h / 2 + 100 + r * (h - 200) / 2; return `<rect x="${f(-w / 2 + 60 + q * (w - 120))}" y="${f(y - 6)}" width="16" height="12" fill="${i === 3 ? YEL : LB}"/>`; }).join('');
+      } else if (k === 'booking') {
+        c = Array.from({ length: 6 }, (_, i) => `<rect x="${-w / 2 + 40}" y="${-h / 2 + 40 + i * 70}" width="${w * 0.45}" height="54" fill="#13203A"/>${T(['LIS 18:40', 'MAD 19:05', 'LHR 19:30', 'CDG 20:10', 'JFK 21:00', 'FRA 21:45'][i], 28, i === 2 ? YEL : '#E6ECF5', -w / 2 + 40 + w * 0.225, -h / 2 + 67 + i * 70)}`).join('')
+          + Array.from({ length: 30 }, (_, i) => `<rect x="${f(w * 0.08 + (i % 6) * 54)}" y="${f(-h / 2 + 60 + Math.floor(i / 6) * 80)}" width="40" height="56" rx="8" fill="${rnd(i + Math.floor(gt * 2)) > 0.25 ? '#2F5E9E' : (i === 13 ? CORAL : '#13203A')}"/>`).join('');
+      } else if (k === 'store') {
+        c = Array.from({ length: 5 }, (_, i) => `<rect x="${-w / 2 + 70 + i * (w - 140) / 4 - 26}" y="${-h / 2 + 60}" width="52" height="${h - 160}" fill="#2A3352"/>`).join('')
+          + `<path d="M ${-w / 2 + 30} ${h / 2 - 50} C ${-w / 4} ${-h / 2 + 20} 0 ${h / 2} ${w / 4} ${-h / 2 + 40} S ${w / 2 - 30} ${h / 2 - 60} ${w / 2 - 30} ${h / 2 - 60}" fill="none" stroke="${YEL}" stroke-width="6" stroke-dasharray="18 12" stroke-dashoffset="${f(-gt * 60)}"/>`
+          + Array.from({ length: 6 }, (_, i) => `<circle cx="${f(-w / 2 + 90 + rnd(i) * (w - 180))}" cy="${f(-h / 2 + 80 + rnd(i * 3) * (h - 200))}" r="${f(26 + 10 * Math.sin(gt * 3 + i))}" fill="${CORAL}" opacity="0.35"/>`).join('');
+      } else {
+        c = Array.from({ length: 3 }, (_, i) => `<g transform="translate(${-w / 4 + i * w / 4} 0) rotate(${f(gt * (i % 2 ? -40 : 40))})">${Array.from({ length: 8 }, (_, j) => `<rect x="-14" y="-86" width="28" height="30" fill="#2F5E9E" transform="rotate(${j * 45})"/>`).join('')}<circle r="62" fill="#2F5E9E"/><circle r="20" fill="#13203A"/></g>`).join('')
+          + Array.from({ length: 10 }, (_, i) => `<circle cx="${f(-w / 2 + fr(gt * 0.3 + i / 10) * w)}" cy="${f(h / 2 - 60)}" r="9" fill="${YEL}"/>`).join('');
+      }
+      const id = 'wHL' + (p.uid ?? 0), doors = st === 'doors';
+      const dw = w / 2 * (1 - op), wall = p.wall ?? '#2F5260';
+      return `<g transform="${S(p)}"><defs><clipPath id="${id}"><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}"/></clipPath></defs>
+        <rect x="${-w / 2 - 18}" y="${-h / 2 - 18}" width="${w + 36}" height="${h + 36}" fill="#1B1E33" opacity="${f(Math.min(1, op * 4))}"/>
+        <g clip-path="url(#${id})"><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="#0A1020"/><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="url(#wGrid)" opacity="0.35"/>
+          <g opacity="${f(doors ? 1 : op)}">${c}</g><ellipse cx="0" cy="0" rx="${w * 0.6}" ry="${h * 0.6}" fill="url(#wSys)" opacity="${f(0.5 * op)}"/>
+          ${doors ? `<rect x="${-w / 2}" y="${-h / 2}" width="${f(dw)}" height="${h}" fill="${wall}"/><rect x="${f(w / 2 - dw)}" y="${-h / 2}" width="${f(dw)}" height="${h}" fill="${wall}"/>
+            ${op > 0 && op < 1 ? `<rect x="${f(-w / 2 + dw - 3)}" y="${-h / 2}" width="6" height="${h}" fill="${LB}"/><rect x="${f(w / 2 - dw - 3)}" y="${-h / 2}" width="6" height="${h}" fill="${LB}"/>` : ''}` : `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="${wall}" opacity="${f(1 - op)}"/><rect x="${-w / 2}" y="${f(-h / 2 + h * fr(gt * 0.8))}" width="${w}" height="10" fill="${LB}" opacity="${f(op > 0 && op < 1 ? 0.8 : 0)}"/>`}</g>
+        <rect x="${-w / 2 - 18}" y="${-h / 2 - 18}" width="${w + 36}" height="${h + 36}" fill="none" stroke="${LB}" stroke-width="4" opacity="${f(op)}"/></g>`;
+    },
+    // a bank card (chip, stripe, last digits) and a boarding pass, objects ZERO can hold or tap
+    paycard(p) { const c = p.color ?? '#2F5E9E'; return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><rect x="-86" y="-54" width="172" height="108" rx="12" fill="${c}"/><rect x="-86" y="-24" width="172" height="10" fill="${shade(c, 0.25)}" opacity="0.6"/><rect x="-66" y="-6" width="34" height="26" rx="5" fill="#E6C14A"/>${T('•••• 4021', 16, '#E6ECF5', 20, 30, 'letter-spacing="1"')}<path d="M 50 -40 a 14 14 0 1 0 0.1 0 M 66 -40 a 14 14 0 1 0 0.1 0" fill="#FFFFFF" opacity="0.35"/></g>`; },
+    pass(p) { return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><rect x="-110" y="-50" width="220" height="100" rx="8" fill="#F4F1EA"/><rect x="-110" y="-50" width="220" height="26" rx="8" fill="#2F5E9E"/><path d="M 50 -50 V 50" stroke="#9AA3B5" stroke-width="3" stroke-dasharray="6 5"/>${T('BOARDING PASS', 12, '#FFFFFF', -30, -37)}${T(p.seat ?? 'SEAT 18A', 22, '#1B1E33', -30, 4)}${Array.from({ length: 10 }, (_, i) => `<rect x="${62 + i * 4}" y="-20" width="${i % 3 ? 2 : 3}" height="50" fill="#1B1E33"/>`).join('')}</g>`; },
+    // the micro brand signature (1-2 s): ZERO's head, the wordmark, a yellow underline that wipes in (k 0..1);
+    // flash 0..1 is the CLICK
+    zumark(p) {
+      const k = p.k ?? 1, fl = p.flash ?? 0;
+      return `<g transform="${S(p)}">${fl > 0 ? `<circle r="${f(120 + 500 * (1 - fl))}" fill="none" stroke="${YEL}" stroke-width="${f(10 * fl)}" opacity="${f(fl)}"/>` : ''}
+        <g transform="translate(-350 -2) scale(0.8)">${PROPS.logo({ s: 1 })}</g>
+        <text x="-250" y="22" font-family="${FONT}" font-weight="700" font-size="72" fill="#FFFFFF" letter-spacing="3">ZERO UNDERSTANDS</text>
+        <rect x="-250" y="44" width="${f(760 * k)}" height="10" rx="5" fill="${YEL}"/></g>`;
+    },
     // a hard hat, held by the brim (ZERO holds it, never wears it)
     hardhat(p) { return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><path d="M -70 0 Q -70 -80 0 -84 Q 70 -80 70 0 Z" fill="${p.color ?? '#E8B83C'}"/><path d="M -8 -82 H 8 V 0 H -8 Z" fill="${shade(p.color ?? '#E8B83C', 0.15)}"/><rect x="-96" y="-8" width="192" height="18" rx="9" fill="${shade(p.color ?? '#E8B83C', 0.1)}"/></g>`; },
     // a recap photo: white frame, a night scene inside with one icon and a caption, a strip of tape

@@ -102,3 +102,22 @@ for k in np.sort(rng.uniform(0.2, 9.5, 26)):
     i = int(k * SR); m = int(0.12 * SR); tt = np.arange(m) / SR; f0 = rng.uniform(2800, 4200)
     ch[i:i + m] += np.sin(2 * np.pi * (f0 + 1800 * tt / 0.12) * tt) * np.sin(np.pi * tt / 0.12) * rng.uniform(0.2, 0.6)
 save('birds', fade(bed + ch, 0.8, 1.2))
+# zu-signature: the ZeroOpen micro brand signature (~1.1 s). PIX wakes (two quick rising chirps), a dry mechanical/
+# digital CLICK with a soft low thump, then a short clean sting: a rising fifth that lands on the octave, plucked,
+# with a little air. No epic hits, no reverb tail longer than the shot.
+def pluck(f0, d, bright=1.0):
+    x = t(d); env = np.exp(-x * 5.5) * (1 - np.exp(-x * 900))
+    return env * (np.sin(2 * np.pi * f0 * x) + 0.35 * bright * np.sin(2 * np.pi * 2 * f0 * x) * np.exp(-x * 9) + 0.12 * np.sin(2 * np.pi * 3 * f0 * x) * np.exp(-x * 14))
+rs = np.random.default_rng(11)   # its own seed: the signature never changes when other sounds are added
+sig = np.zeros(int(1.15 * SR))
+def put(x, at, g=1.0):
+    i = int(at * SR); n = min(len(x), len(sig) - i); sig[i:i + n] += g * x[:n]
+for at, (fa, fb) in [(0.0, (1400, 2300)), (0.075, (1900, 3100))]:   # PIX chirps
+    x = t(0.06); fq = np.linspace(fa, fb, len(x)); put(np.sin(2 * np.pi * np.cumsum(fq) / SR) * np.sin(np.linspace(0, np.pi, len(x))) ** 2, at, 0.35)
+x = t(0.14); put(lpf(rs.standard_normal(len(x)), 1 / 3) * np.exp(-x * 60) * np.linspace(0, 1, len(x)) ** 2, 0.08, 0.25)   # air rush into the click
+x = t(0.03); put(rs.standard_normal(len(x)) * np.exp(-x * 400) + np.sin(2 * np.pi * 4200 * x) * np.exp(-x * 300), 0.22, 0.9)   # CLICK
+x = t(0.12); put(np.sin(2 * np.pi * 85 * x) * np.exp(-x * 40), 0.22, 0.6)   # thump under the click
+put(pluck(659.25, 0.9), 0.27, 0.55); put(pluck(987.77, 0.85), 0.36, 0.5); put(pluck(1318.5, 0.8, 0.6), 0.45, 0.45)   # E5 B5 E6
+x = t(0.7); put(lpf(rs.standard_normal(len(x)), 1 / 2) * np.exp(-x * 7) * 0.05, 0.45)   # shimmer
+sig[-int(0.15 * SR):] *= np.linspace(1, 0, int(0.15 * SR))
+save('zu-signature', sig)
