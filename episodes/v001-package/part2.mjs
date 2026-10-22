@@ -217,7 +217,7 @@ export default {
     },
     // ===== s19c: the lane disagrees. A paddle sends ZERO back to the floor =====
     {
-      lines: [], min: 2.6, hold: 0.6, bg: '#1B1F33',
+      lines: [N('So how does one box find the right plane?', { at: 1.9 })], min: 2.6, hold: 0.6, bg: '#1B1F33',
       cam: cam({ z: 1.0, x: 960, y: 640 }, { t: 0.7, shake: 8, e: 'step' }, { t: 1.0, shake: 0 }),
       actors: [...hubSet({ fg: false }),
         P('conveyor', { x: 960, y: 470, w: 2600, speed: 160, legs: 0 }, 'bS', -8), P('conveyor', { x: 960, y: 700, w: 2600, speed: 120, legs: 0 }, 'bL', -7), P('conveyor', { x: 960, y: 900, w: 2600, speed: 90, legs: 30 }, 'bI', -6),
@@ -240,17 +240,18 @@ export default {
         zero([{ x: 120, y: G + 40, s: 2.6, face: 0, look: [8, -4] }, ...walk(120, 560, 0.6, 2.6), { u: 0.6, face: 3, look: [8, -6] }]), vig(0.7)],
       sfx: [sfx('hub', 0, { g: 0.4, bed: true }), sfx('belt', 0, { g: 0.3, bed: true }), sfx('shutter', 0, { u: 0.58, g: 0.7 })],
     },
-    // ===== s20b: nobody looks at it. Except ZERO, who peeks in exactly when the cameras fire =====
+    // ===== s20b: what the cameras see: the label, framed and read from every side. ZERO's face pops into the
+    // frame exactly when they fire =====
     {
-      lines: [N('Nobody opens your box.'), N('Nobody even looks at it.', { gap: 0.3 })], min: 4, hold: 0.8, bg: '#1B1F33',
-      cam: cam({ z: 1.6, x: 860, y: 520 }),
-      actors: [...hubSet({ fg: false, dim: 0.4 }),
-        P('conveyor', { x: 960, y: 760, w: 4000, speed: 120, legs: 175 }, 'belt', -8),
-        P('camtunnel', [{ x: 960, y: 728, flash: 0, lx: 80, ty: -70 }, { l: 1, t: 0.7, flash: 1, e: 'step' }, { l: 1, t: 0.9, flash: 0 }], 'tun', -4),
-        P('giftbox', [{ x: 1060, y: 730, s: BOX, ...ZB }, { u: 1, x: 1060 + 120 * 4, e: 'lin' }], 'box', -3.5),
-        zero([{ x: 640, y: G + 40, s: 2.6, face: 0, look: [8, -4] }, ...leanIn({ l: 1, t: 0.1 }, 640, { dx: 60, face: 0, look: [8, -6] }), { l: 1, t: 0.7, face: 3, squash: 0.9, e: 'step' }, { l: 1, t: 0.85, x: 600, pose: 'back', squash: 1, face: 11 }, { l: 1, t: 1.6, face: 1, pose: 'neutral', look: [0, 1] }]),
-        P('rect', [{ x: 960, y: 540, w: 1920, h: 1080, fill: '#E6F4FF', op: 0, ui: true }, { l: 1, t: 0.7, op: 0.7, e: 'step' }, { l: 1, t: 1.0, op: 0 }], 'flashw', 49), vig(0.7)],
-      sfx: [sfx('hub', 0, { g: 0.4, bed: true }), sfx('belt', 0, { g: 0.3, bed: true }), sfx('shutter', 0.7, { l: 1, g: 0.9 })],
+      lines: [N('Nobody opens your box.'), N('Nobody even looks at it.', { gap: 0.3 })], min: 4, hold: 0.8, bg: '#0A1020',
+      cam: cam({ z: 1.0, x: 960, y: 540 }, { end: 0, z: 1.06, x: 960, y: 540, e: 'lin' }),
+      actors: [P('rect', { x: 960, y: 540, w: 3000, h: 2000, fill: '#0A1020' }, 'bg', -20), sysOn({ t: -1 }),
+        P('biglabel', [{ x: 860, y: 560, s: 0.95, wet: 0.35, tilt: 4, hl: 0 }, { t: 0.6, hl: 1, e: 'step' }, { l: 1, hl: 5, e: 'step' }], 'label', 0),
+        ...[[300, 160], [1500, 160], [300, 940], [1500, 940]].map(([x, y], i) => P('rect', [{ x, y, w: 90, h: 8, fill: '#7CC2FF', op: 0.9, ui: true }], 'rt' + i, 41)),
+        ...[[256, 200], [1544, 200], [256, 900], [1544, 900]].map(([x, y], i) => P('rect', [{ x, y, w: 8, h: 90, fill: '#7CC2FF', op: 0.9, ui: true }], 'rv' + i, 41)),
+        zero([{ x: 2050, y: 1300, s: 3.6, face: 0, look: [-8, -2], flip: true }, { l: 1, t: 0.4, x: 2050 }, { l: 1, t: 0.7, x: 1700, face: 2, e: 'out' }, { l: 1, t: 0.85, face: 11, squash: 0.92, e: 'step' }, { l: 1, t: 1.3, x: 2100, face: 3, squash: 1, e: 'in' }], { z: 5 }),
+        P('rect', [{ x: 960, y: 540, w: 1920, h: 1080, fill: '#E6F4FF', op: 0, ui: true }, { l: 1, t: 0.85, op: 0.75, e: 'step' }, { l: 1, t: 1.15, op: 0 }], 'flashw', 49)],
+      sfx: [sfx('hub', 0, { g: 0.3, bed: true }), sfx('scan', 0.6, { g: 0.4 }), sfx('shutter', 0.85, { l: 1, g: 0.9 })],
     },
     // ===== s20c: the system reads the ZIP, picks the plane, and the box is off. ZERO runs after it =====
     {

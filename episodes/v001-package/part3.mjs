@@ -5,6 +5,7 @@
 // container, rides the van's roof and is found asleep inside the box.
 import { G, N, zero, pix, sfx, cam, walk, lookCam, stepBack, leanIn, tilt, shrug } from '../../src/kit.mjs';
 import { BOX, P, vig, sysOn, ui, ZB, VEST, rampSet, hubSet, usView, HX, HY } from './common.mjs';
+import { ironyBeat, endMark } from '../../src/story.mjs';
 
 const NET = '#081326';                      // the deep blue of SYSTEM VIEW
 const FIX = { ...ZB, wet: 0.7 };            // the label as it is now: the rain got into the ZIP
@@ -323,14 +324,20 @@ export default {
         zero([{ x: 480, y: G + 60, s: 2.6, face: 0, look: [8, -2] }, ...[1, 2, 3, 4, 5].flatMap(l => [{ l, t: 0.6, headR: 8, face: 1 }, { l, t: 0.9, headR: 0 }])], { z: 5 }), vig(0.7)],
       sfx: [...[1, 2, 3, 4, 5].map(l => sfx('swipe', 0, { l, g: 0.3 }))],
     },
-    // ===== s48: back on the step, on the box. The question; ZERO's look; black =====
+    // ===== ZeroEnding, irony: ZERO climbs out on the step. His phone buzzes: the reminder he never set comes now =====
+    ironyBeat({ at: { x: 700, y: 1005 }, s: 2.0, phone: ['', "Reminder: Mom's birthday is TODAY"],
+      set: [P('doorstep', { x: 960, y: 1000, open: 0.25 }, 'door', -20), P('giftbox', { x: 960, y: 1010, s: BOX * 1.1, ...FIX, open: 1 }, 'box', -3), P('bdaycard', { x: 1110, y: 960, s: 0.9, tilt: 10 }, 'card', -2)],
+      camK: cam({ z: 1.35, x: 860, y: 660 }, { end: 0, z: 1.45, x: 840, y: 650, e: 'lin' }) }),
+    // ===== s48: back on the box. The question for next time; ZERO's look =====
     {
-      lines: [N("And if she doesn't like the gift?", { at: 0.4 }), N('Sending it back is an even stranger system.', { gap: 0.3 })], min: 5.6, hold: 1.4, bg: '#7A8CA8',
-      cam: cam({ z: 1.4, x: 960, y: 700 }, { end: 0.9, z: 1.45, x: 960, y: 700, e: 'lin' }, { end: 0.85, black: 1, e: 'step' }),
+      act: 'understands', lines: [N("And if she doesn't like the gift?", { at: 0.4 }), N('Sending it back is an even stranger system.', { gap: 0.3 })], min: 5.2, hold: 1.0, bg: '#7A8CA8',
+      cam: cam({ z: 1.4, x: 960, y: 700 }, { end: 0, z: 1.48, x: 960, y: 700, e: 'lin' }),
       actors: [P('doorstep', { x: 960, y: 1000, open: 0.25 }, 'door', -20),
         P('giftbox', { x: 960, y: 1010, s: BOX * 1.1, ...FIX }, 'box', -3),
         zero([{ x: 960, y: 876, s: 1.6, fl: [120, 196], fr: [134, 200], face: 0, look: [-6, -4] }, { l: 1, t: 0.3, look: [6, -2] }, ...lookCam({ l: 1, t: 1.4 }, { face: 4, tilt: 10 })], { z: 2 })],
-      sfx: [sfx('birds', 0, { g: 0.25, bed: true }), sfx('zero-boop', 0.6, { end: 0.9, g: 0.5 }), sfx('pix-ting', 0.3, { end: 0.85, g: 0.5 })],
+      sfx: [sfx('birds', 0, { g: 0.25, bed: true })],
     },
+    // ===== CLICK · ZERO UNDERSTANDS, on black. The end =====
+    endMark(),
   ],
 };

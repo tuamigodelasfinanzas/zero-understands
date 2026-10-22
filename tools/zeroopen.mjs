@@ -4,9 +4,12 @@
 //        episode with the whole opening at episodes/opens/<slug>.mjs (preview it like any episode)
 //   node tools/zeroopen.mjs check <episode.mjs>
 //        runs the 12-question quality test on the opening of an episode
+//   node tools/zeroopen.mjs story "<VIDEO_TITLE>" | <episode.mjs>
+//        ZeroStoryEngine: the story plan for a title, or the story test on a whole episode
 import fs from 'node:fs';
 import path from 'node:path';
 import { deriveOpen, checkOpen } from '../src/zeroopen.mjs';
+import { deriveStory, checkStory } from '../src/story.mjs';
 import { estimate } from '../src/voice.mjs';
 
 const [cmd, arg, ...rest] = process.argv.slice(2);
@@ -26,4 +29,12 @@ if (cmd === 'plan' && arg) {
   console.log(`ZeroOpen check: ${ep.title}\nentry into the system at ${r.entryAt?.toFixed(1)} s\n`);
   for (const c of r.checks) console.log(`${c.ok === null ? 'LOOK' : c.ok ? ' OK ' : 'FAIL'}  ${String(c.n).padStart(2)}. ${c.q}  (${c.why})`);
   process.exitCode = r.checks.some(c => c.ok === false) ? 1 : 0;
-} else console.log('usage: node tools/zeroopen.mjs plan "<VIDEO_TITLE>" | check <episode.mjs>');
+} else if (cmd === 'story' && arg) {
+  if (arg.endsWith('.mjs')) {
+    const ep = (await import(path.resolve(arg))).default;
+    const r = checkStory(ep, t => estimate(t, 'narr'));
+    console.log(`ZeroStory check: ${ep.title} (${(r.total / 60).toFixed(1)} min)\n`);
+    for (const c of r.checks) console.log(`${c.ok ? ' OK ' : 'FAIL'}  ${c.n}. ${c.q}  (${c.why})`);
+    process.exitCode = r.checks.some(c => !c.ok) ? 1 : 0;
+  } else console.log(JSON.stringify(deriveStory({ title: arg, ...opt }), null, 2));
+} else console.log('usage: node tools/zeroopen.mjs plan "<VIDEO_TITLE>" | check <episode.mjs> | story "<VIDEO_TITLE>" | story <episode.mjs>');
