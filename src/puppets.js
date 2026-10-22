@@ -3,6 +3,8 @@
 // change a parameter here and every video stays consistent.
 (() => {
   const INK = '#111111', WHITE = '#FFFFFF', YEL = '#FFC93C', AMBER = '#E0A100', RED = '#E63946', BLUE = '#2F80ED', G1 = '#CFCFCF', G2 = '#9A9A9A';
+  // the rest of the ZERO palette (docs/direccion-visual.md §11): purple = mystery, green = success, backgrounds
+  const PURPLE = '#7B5CD6', GREEN = '#2E9E5B', CORAL = '#FF6B5B', CREAM = '#FFF4E3', BLUEGRAY = '#E4EBF3', DEEP = '#241C3A', SKY = '#CFE6FF';
   const FONT = "Fredoka, 'Arial Rounded MT Bold', Arial, sans-serif";
   const rad = d => d * Math.PI / 180;
   const f = n => Math.round(n * 100) / 100;
@@ -38,6 +40,11 @@
     walk: { hl: [86, 164], hr: [114, 164], fl: [88, 206], fr: [114, 206] },
     type: { hl: [100, 140], hr: [126, 138] },
     proud: { hl: [110, 146], hr: [90, 146] },
+    crossed: { hl: [116, 138], hr: [84, 138] },
+    open: { hl: [52, 146], hr: [148, 146] },
+    leanin: { hl: [92, 160], hr: [108, 160], lean: 9 },
+    back: { hl: [80, 138], hr: [120, 138], lean: -7 },
+    hips: { hl: [84, 150], hr: [116, 150] },
     scared: { hl: [72, 98], hr: [128, 98], tilt: -6 },
     reach: { hl: [81, 168], hr: [150, 150] },
     present: { hl: [81, 168], hr: [150, 140] },
@@ -225,6 +232,51 @@
     siren(p) { const on = (p.on ?? 0) > 0.5; return `<g transform="scale(${p.s ?? 1})"><path d="M -50 0 L -40 -70 A 40 40 0 0 1 40 -70 L 50 0 Z" fill="${on ? RED : '#8a2a31'}" stroke="${INK}" stroke-width="6"/><rect x="-66" y="0" width="132" height="22" rx="6" fill="${INK}"/>${on ? `<g stroke="${RED}" stroke-width="8" stroke-linecap="round"><path d="M -80 -60 l -40 -20"/><path d="M 80 -60 l 40 -20"/><path d="M 0 -120 v -40"/></g>` : ''}</g>`; },
     mask(p) { return `<rect x="-3000" y="-3000" width="6000" height="6000" fill="${p.fill ?? INK}" opacity="${p.op ?? 0.6}"/>`; },
     zzz(p) { return T('z z z', p.size ?? 60, G2); },
+    // ---------- scenery (docs/direccion-visual.md §4-5, §10) ----------
+    window(p) { // wall window with sky and drifting clouds (drift 0..1 moves them across)
+      const w = p.w ?? 300, h = p.h ?? 260, d = (p.drift ?? 0) % 1, id = 'wc' + Math.round((p.seed ?? 1) * 997);
+      const cl = (cx, cy, k) => `<g transform="translate(${f(cx)} ${cy}) scale(${k})"><ellipse rx="40" ry="18" fill="#fff"/><ellipse cx="-22" cy="4" rx="26" ry="14" fill="#fff"/><ellipse cx="24" cy="5" rx="24" ry="12" fill="#fff"/></g>`;
+      const xs = [0.15, 0.6, 1.05].map(x => ((x + d) % 1.2) * (w + 80) - w / 2 - 40);
+      return `<g transform="scale(${p.s ?? 1})"><defs><clipPath id="${id}"><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}"/></clipPath></defs>
+        <rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="${p.sky ?? SKY}"/>
+        <g clip-path="url(#${id})">${cl(xs[0], -h * 0.22, 1)}${cl(xs[1], h * 0.05, 0.7)}${cl(xs[2], -h * 0.3, 0.8)}${p.sun ? `<circle cx="${w * 0.28}" cy="${-h * 0.25}" r="${h * 0.12}" fill="${YEL}"/>` : ''}</g>
+        <rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="none" stroke="${INK}" stroke-width="9"/><path d="M 0 ${-h / 2} V ${h / 2} M ${-w / 2} 0 H ${w / 2}" stroke="${INK}" stroke-width="6"/>
+        <rect x="${-w / 2 - 18}" y="${h / 2}" width="${w + 36}" height="16" rx="4" fill="${INK}"/></g>`;
+    },
+    beam(p) { // light falling from a window onto the floor, with dust motes floating in it (ph 0..1)
+      const w = p.w ?? 300, l = p.len ?? 520, sk = p.skew ?? 220, ph = p.ph ?? 0;
+      const motes = Array.from({ length: p.motes ?? 7 }, (_, i) => { const a = (i * 0.37 + ph) % 1, x = -w / 2 + ((i * 53) % w) + sk * a, y = a * l; return `<circle cx="${f(x + Math.sin(i + ph * 6) * 10)}" cy="${f(y)}" r="${2.5 + (i % 3)}" fill="#FFF8D6" opacity="${f(0.8 * Math.sin(a * Math.PI))}"/>`; }).join('');
+      return `<g opacity="${p.op ?? 1}"><path d="M ${-w / 2} 0 L ${w / 2} 0 L ${w / 2 + sk} ${l} L ${-w / 2 + sk} ${l} Z" fill="${p.color ?? '#FFE9A8'}" opacity="0.32"/>${motes}</g>`;
+    },
+    lamp(p) { // floor lamp; on 0..1 lights a warm cone
+      const on = p.on ?? 1;
+      return `<g transform="scale(${p.s ?? 1})"><path d="M -120 ${-250} L 120 ${-250} L 260 330 L -260 330 Z" fill="#FFE9A8" opacity="${f(0.28 * on)}"/><rect x="-6" y="-250" width="12" height="580" fill="${INK}"/><ellipse cx="0" cy="330" rx="70" ry="12" fill="${INK}"/><path d="M -70 -250 L 70 -250 L 46 -340 L -46 -340 Z" fill="${on > 0.5 ? YEL : G1}" stroke="${INK}" stroke-width="7" stroke-linejoin="round"/></g>`;
+    },
+    shelf(p) { // wall shelf with a few books and an object
+      const cols = [BLUE, YEL, CORAL, PURPLE, GREEN];
+      return `<g transform="scale(${p.s ?? 1})"><rect x="-170" y="0" width="340" height="14" rx="4" fill="${INK}"/>${[0, 1, 2, 3].map(i => `<rect x="${-150 + i * 34}" y="${-(70 + (i % 2) * 14)}" width="28" height="${70 + (i % 2) * 14}" rx="4" fill="${cols[(i + (p.seed ?? 0)) % 5]}" stroke="${INK}" stroke-width="4"/>`).join('')}<rect x="-6" y="-60" width="26" height="60" rx="4" fill="${cols[((p.seed ?? 0) + 4) % 5]}" stroke="${INK}" stroke-width="4" transform="rotate(14 7 0)"/>${p.obj === 'globe' ? `<circle cx="100" cy="-44" r="36" fill="${BLUE}" stroke="${INK}" stroke-width="5"/><path d="M 80 -60 q 20 10 10 30 q 20 0 26 14" fill="none" stroke="${GREEN}" stroke-width="8" stroke-linecap="round"/>` : `<path d="M 80 0 L 96 -64 L 128 -64 L 144 0 Z" fill="${WHITE}" stroke="${INK}" stroke-width="5"/>`}</g>`;
+    },
+    picture(p) { return `<g transform="scale(${p.s ?? 1}) rotate(${p.tilt ?? 0})"><rect x="-80" y="-60" width="160" height="120" fill="${p.fill ?? WHITE}" stroke="${INK}" stroke-width="7"/>${p.mark === false ? '' : `<g transform="translate(0 4)">${T(p.mark ?? '?', 80, YEL, `stroke="${INK}" stroke-width="4" paint-order="stroke"`)}</g>`}</g>`; },
+    rug(p) { return `<ellipse rx="${p.w ?? 300}" ry="${(p.w ?? 300) * 0.12}" fill="${p.fill ?? '#F2D7B0'}" stroke="${INK}" stroke-width="5" opacity="${p.op ?? 1}"/>`; },
+    shadow(p) { return `<ellipse rx="${p.w ?? 120}" ry="${(p.w ?? 120) * 0.14}" fill="rgba(17,17,17,${p.op ?? 0.1})"/>`; },
+    room(p) { // back wall + floor band: the stylized set every room scene stands in (floor line at y=0)
+      return `<g><rect x="-3000" y="-3000" width="6000" height="3000" fill="${p.wall ?? CREAM}"/><rect x="-3000" y="0" width="6000" height="3000" fill="${p.floor ?? '#EADCC6'}"/><rect x="-3000" y="-26" width="6000" height="26" fill="${p.trim ?? '#F7EBD8'}"/><rect x="-3000" y="-3" width="6000" height="6" fill="${INK}"/></g>`;
+    },
+    skyline(p) { // city in the distance (bluegray), windows lit with lit 0..1
+      const bs = [[-900, 260], [-760, 380], [-620, 300], [-470, 460], [-320, 340], [-180, 420], [-40, 300], [100, 500], [250, 360], [400, 440], [560, 320], [700, 400], [850, 280]];
+      return `<g fill="${p.color ?? '#C9D6E6'}">${bs.map(([x, h], i) => `<rect x="${x}" y="${-h}" width="130" height="${h}"/>${Array.from({ length: Math.floor(h / 70) }, (_, j) => `<rect x="${x + 22 + (j % 2) * 50}" y="${-h + 30 + j * 60}" width="30" height="26" fill="${(i + j) % 3 === 0 && (p.lit ?? 0) > 0.5 ? YEL : '#E8EFF7'}"/>`).join('')}`).join('')}</g>`;
+    },
+    stars(p) { // tw 0..1 makes them twinkle
+      const tw = p.tw ?? 0, w = p.w ?? 2000, h = p.h ?? 1100;
+      return Array.from({ length: p.n ?? 70 }, (_, i) => { const x = ((i * 397) % w) - w / 2, y = ((i * 211) % h) - h / 2, r = 1.5 + (i % 4) * 0.9; return `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity="${f(0.45 + 0.55 * Math.abs(Math.sin(i * 1.7 + tw * 6.28)))}"/>`; }).join('');
+    },
+    planet(p) { return `<g transform="scale(${p.s ?? 1})"><circle r="90" fill="${p.fill ?? PURPLE}" stroke="${INK}" stroke-width="6"/><ellipse rx="150" ry="30" fill="none" stroke="${p.ring ?? YEL}" stroke-width="10" transform="rotate(-14)"/><path d="M -40 -50 q 30 10 40 -6" stroke="#fff" stroke-width="8" fill="none" opacity="0.4" stroke-linecap="round"/></g>`; },
+    coin(p) { return `<g transform="scale(${p.s ?? 1}) rotate(${p.roll ?? 0})"><circle r="34" fill="${YEL}" stroke="${INK}" stroke-width="6"/><circle r="22" fill="none" stroke="${AMBER}" stroke-width="5"/>${T('$', 30, AMBER)}</g>`; },
+    bulb(p) { const on = p.on ?? 1; return `<g transform="scale(${p.s ?? 1})"><circle r="${f(70 + 40 * on)}" fill="${YEL}" opacity="${f(0.22 * on)}"/><path d="M -34 10 C -60 -20 -40 -70 0 -70 C 40 -70 60 -20 34 10 L 26 34 L -26 34 Z" fill="${on > 0.3 ? YEL : WHITE}" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/><rect x="-24" y="34" width="48" height="26" rx="6" fill="${G2}" stroke="${INK}" stroke-width="5"/></g>`; },
+    tv(p) { // a screen that can turn on (on 0..1) and show a big glyph
+      const on = p.on ?? 0;
+      return `<g transform="scale(${p.s ?? 1})"><rect x="-150" y="-100" width="300" height="200" rx="16" fill="${INK}"/><rect x="-134" y="-86" width="268" height="172" rx="8" fill="${on > 0.5 ? (p.screen ?? BLUE) : '#2B2F3A'}"/>${on > 0.5 && p.txt ? T(p.txt, p.size ?? 60, WHITE) : ''}<path d="M -30 100 L 30 100 L 44 128 L -44 128 Z" fill="${INK}"/></g>`;
+    },
     sticky(p) { // sticky note with up to 3 lines (txt "A|B")
       const ls = String(p.txt ?? '').split('|'), fs = p.size ?? 34;
       return `<g transform="scale(${p.s ?? 1}) rotate(${p.tilt ?? -4})"><rect x="-110" y="-100" width="220" height="200" fill="${p.fill ?? YEL}" stroke="${INK}" stroke-width="5"/><path d="M 60 100 L 110 50 L 110 100 Z" fill="${AMBER}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>${ls.map((l, i) => `<text x="0" y="${f((i - (ls.length - 1) / 2) * fs * 1.15 + fs * 0.35)}" text-anchor="middle" font-family="${FONT}" font-weight="700" font-size="${fs}" fill="${p.color ?? INK}">${esc(l)}</text>`).join('')}</g>`;
@@ -243,9 +295,9 @@
       const m = p.mood ?? 0;
       return `<g transform="scale(${p.s ?? 1})"><path d="M -150 60 Q -210 60 -200 0 Q -200 -60 -130 -60 Q -110 -130 -30 -120 Q 30 -170 90 -110 Q 170 -120 180 -40 Q 230 0 190 50 Q 180 70 140 60 Z" fill="${p.fill ?? '#8C8C99'}" stroke="${INK}" stroke-width="7" stroke-linejoin="round"/><path d="M -70 -42 L -24 -26 M 70 -42 L 24 -26" stroke="${INK}" stroke-width="8" stroke-linecap="round" opacity="${1 - m}"/><circle cx="-44" cy="-6" r="10" fill="${INK}"/><circle cx="44" cy="-6" r="10" fill="${INK}"/><path d="M -30 ${f(34 - m * 6)} Q 0 ${f(18 + m * 20)} 30 ${f(34 - m * 6)}" stroke="${INK}" stroke-width="7" fill="none" stroke-linecap="round"/>${p.rain ? [-110, -40, 30, 100].map((x, i) => `<path d="M ${x} ${80 + ((p.rain * 120 + i * 37) % 80)} l -8 26" stroke="${BLUE}" stroke-width="7" stroke-linecap="round"/>`).join('') : ''}</g>`;
     },
-    plant(p) { return `<g transform="scale(${p.s ?? 1})"><path d="M -50 0 L 50 0 L 40 90 L -40 90 Z" fill="#C98B4A" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/><path d="M 0 0 C -10 -60 -70 -90 -80 -60 C -80 -30 -30 -20 0 0 M 0 0 C 10 -80 70 -110 80 -80 C 85 -40 30 -20 0 0" fill="#2E9E5B" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/></g>`; },
+    plant(p) { return `<g transform="scale(${p.s ?? 1})"><path d="M -50 0 L 50 0 L 40 90 L -40 90 Z" fill="#C98B4A" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/><g transform="rotate(${p.sway ?? 0})" opacity="1"><g transform="scale(1 ${p.perk ?? 1})"><path d="M 0 0 C -10 -60 -70 -90 -80 -60 C -80 -30 -30 -20 0 0 M 0 0 C 10 -80 70 -110 80 -80 C 85 -40 30 -20 0 0" fill="#2E9E5B" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/></g></g></g>`; },
     pencup(p) { return `<g transform="scale(${p.s ?? 1})">${[[-24, YEL, -10], [0, BLUE, 0], [24, RED, 10]].map(([x, c, r]) => `<rect x="${x - 7}" y="-90" width="14" height="80" fill="${c}" stroke="${INK}" stroke-width="4" transform="rotate(${p.messy ? r * 3 : 0} ${x} -10)"/>`).join('')}<rect x="-45" y="-20" width="90" height="80" rx="8" fill="${WHITE}" stroke="${INK}" stroke-width="6"/></g>`; },
   };
 
-  window.PUPPETS = { zero, limbs, pix, PROPS, POSES, COLORS: { INK, WHITE, YEL, AMBER, RED, BLUE, G1, G2 }, FONT, esc };
+  window.PUPPETS = { zero, limbs, pix, PROPS, POSES, COLORS: { INK, WHITE, YEL, AMBER, RED, BLUE, G1, G2, PURPLE, GREEN, CORAL, CREAM, BLUEGRAY, DEEP, SKY }, FONT, esc };
 })();

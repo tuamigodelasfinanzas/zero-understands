@@ -12,9 +12,9 @@ export const PX = (text, o = {}) => ({ who: 'pix', text, ...o });
 export const Z0 = (text, o = {}) => ({ who: 'zero', text, ...o });
 
 // actors
-export const zero = (k, o = {}) => ({ id: o.id || 'z', type: 'zero', z: o.z ?? 5, k: withBase(k, { x: 960, y: G, s: ZS, pose: 'neutral', face: 0 }) });
+export const zero = (k, o = {}) => ({ id: o.id || 'z', type: 'zero', z: o.z ?? 5, depth: o.depth, k: withBase(k, { x: 960, y: G, s: ZS, pose: 'neutral', face: 0 }) });
 export const pix = (k, o = {}) => ({ id: o.id || 'p', type: 'pix', z: o.z ?? 8, k: withBase(k, { x: 1520, y: 300, s: 2.2, face: 0 }) });
-export const prop = (type, k, o = {}) => ({ id: o.id, type, z: o.z ?? 3, k: Array.isArray(k) ? k : [k] });
+export const prop = (type, k, o = {}) => ({ id: o.id, type, z: o.z ?? 3, depth: o.depth, k: Array.isArray(k) ? k : [k] });
 export const floor = (y = G) => prop('floor', { x: 0, y }, { id: 'floor', z: 0 });
 
 function withBase(k, base) {
@@ -79,3 +79,24 @@ export function walk(x0, x1, t0, dur, o = {}) {
   }
   return ks;
 }
+
+// ---------- palette (docs/direccion-visual.md §11) ----------
+export const PALETTE = {
+  ink: '#111111', yellow: '#FFC93C', amber: '#E0A100', blue: '#2F80ED', purple: '#7B5CD6', coral: '#FF6B5B', red: '#E63946',
+  green: '#2E9E5B', cream: '#FFF4E3', bluegray: '#E4EBF3', deep: '#241C3A', night: '#2B2F4A', sky: '#CFE6FF',
+};
+
+// ---------- ZERO's gestures (§3) ----------
+// Each returns keys for zero([...]). `at` is a time: seconds, or a key time like { l: 1, t: 0.4 }.
+const at_ = (at, d = 0) => (typeof at === 'number' ? { t: at + d } : { ...at, t: (at.t ?? 0) + d });
+// slowly looks at the viewer (after something absurd), holds, then returns to `back` (optional state)
+export const lookCam = (at, o = {}) => [{ ...at_(at), headR: 0 }, { ...at_(at, 0.35), look: [0, 1], headR: o.tilt ?? 0, face: o.face ?? 1, e: 'io' }, ...(o.back ? [{ ...at_(at, 0.35 + (o.hold ?? 1.0)), ...o.back }] : [])];
+// head tilt when something doesn't make sense
+export const tilt = (at, o = {}) => [{ ...at_(at), headR: 0 }, { ...at_(at, 0.4), headR: o.deg ?? 12, face: o.face ?? 4, e: 'out' }, ...(o.hold ? [{ ...at_(at, 0.4 + o.hold), headR: 0, e: 'io' }] : [])];
+export const shrug = (at, o = {}) => [{ ...at_(at), pose: o.from ?? 'neutral' }, { ...at_(at, 0.25), pose: 'shrug', headR: -6, face: o.face ?? 1, e: 'out' }, { ...at_(at, 0.25 + (o.hold ?? 0.7)), pose: 'shrug' }, { ...at_(at, 0.55 + (o.hold ?? 0.7)), pose: o.to ?? 'neutral', headR: 0 }];
+export const crossArms = (at, o = {}) => [{ ...at_(at), pose: 'crossed', face: o.face ?? 1, headR: o.deg ?? -5 }];
+export const openArms = (at, o = {}) => [{ ...at_(at), pose: 'open', face: o.face ?? 2, headR: 0 }];
+// steps back from something surprising (x = where he stands now)
+export const stepBack = (at, x, o = {}) => [{ ...at_(at), x }, { ...at_(at, 0.3), x: x + (o.dx ?? -70), pose: 'back', face: o.face ?? 3, e: 'out' }, { ...at_(at, 0.9), pose: o.to ?? 'neutral' }];
+// leans in to look at something curious
+export const leanIn = (at, x, o = {}) => [{ ...at_(at), x }, { ...at_(at, 0.6), x: x + (o.dx ?? 40), pose: 'leanin', face: o.face ?? 0, look: o.look ?? [8, 4], e: 'io' }];

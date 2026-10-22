@@ -5,8 +5,8 @@
   const { zero, limbs, pix, PROPS, COLORS, FONT, esc } = window.PUPPETS;
   const D = window.DATA, ep = D.ep, W = D.w, H = D.h;
   const root = document.getElementById('stage');
-  // ep.life (or render env ZERO_LIFE=1): the animation layer that makes ZERO feel alive, see alive() below
-  const LIFE = D.ep.life ?? D.life ?? false;
+  // the life layer (see alive() below) is on unless the episode sets life: false or the render runs with ZERO_LIFE=0
+  const LIFE = D.ep.life ?? D.life ?? true;
 
   const EASE = {
     lin: x => x, step: () => 0,
@@ -65,7 +65,7 @@
       const keys = base ? [Object.assign({ t: 0 }, base), ...a.k.map(k => Object.assign({}, k))] : a.k;
       // a key with no time sits at t=0
       keys.forEach(k => { if (k.t == null && k.u == null && k.l == null && k.end == null) k.t = 0; });
-      return { id, type: a.type, keys, z: a.z ?? 0 };
+      return { id, type: a.type, keys, z: a.z ?? 0, depth: a.depth };
     });
     finals[i] = {};
     for (const a of b.actors) finals[i][a.id] = stateAt(a.keys, b.dur + 1, b);
@@ -132,6 +132,24 @@
     return st;
   }
 
+  // tout / tin: { type: 'zoom' | 'iris' | 'wipe' | 'fall', x, y (world point for zoom/iris), dur, color }
+  //   zoom: the camera dives into a point (a screen, a head, a door) and the next beat opens from it
+  //   iris: a circle closes on a point; wipe: a band of colour crosses the frame; fall: the world drops away upwards
+  function transition(spec, beat, lt) {
+    const out = {};
+    const one = (t, k, dir) => { // k: 0 → 1 progress into the cut (dir 'out') or out of it ('in')
+      const x = t.x ?? W / 2, y = t.y ?? H / 2, col = t.color ?? '#111111';
+      const e = dir === 'out' ? EASE.in(k) : EASE.out(1 - k);    // e = 1 at the cut
+      if (t.type === 'zoom') { out.zoom = 1 + e * (t.z ?? 9); out.zx = x; out.zy = y; out.pull = Math.min(1, e * 1.6); if (e > 0.75) out.over = `<rect width="${W}" height="${H}" fill="${col}" opacity="${((e - 0.75) / 0.25).toFixed(3)}"/>`; }
+      if (t.type === 'iris') { const r = Math.hypot(W, H) * (1 - e); out.over = `<path fill-rule="evenodd" fill="${col}" d="M0 0H${W}V${H}H0Z M${x - r} ${y} a${r} ${r} 0 1 0 ${2 * r} 0 a${r} ${r} 0 1 0 ${-2 * r} 0Z"/>`; }
+      if (t.type === 'wipe') { const p = dir === 'out' ? EASE.io(k) : 1 + EASE.io(k); const X = -W * 1.3 + p * W * 1.3; out.over = `<path fill="${t.color ?? '#FFC93C'}" d="M${X} 0 H${X + W * 1.15} L${X + W * 1.3} ${H} H${X + W * 0.15} Z"/>`; }
+      if (t.type === 'fall') out.dy = (dir === 'out' ? 1 : -1) * e * H * 1.2;
+    };
+    if (spec.tout) { const d = spec.tout.dur ?? 0.5, k = (lt - (beat.dur - d)) / d; if (k > 0) one(spec.tout, Math.min(1, k), 'out'); }
+    if (spec.tin) { const d = spec.tin.dur ?? 0.5, k = lt / d; if (k < 1) one(spec.tin, Math.max(0, k), 'in'); }
+    return out;
+  }
+
   function speaking(beat, who, gt) {
     for (const ln of beat.lines) if (ln.who === who && gt >= ln.start && gt <= ln.start + ln.dur) return gt - ln.start;
     return -1;
@@ -141,7 +159,11 @@
     const lt = gt - beat.start;
     const spec = ep.beats[beat.i];
     const cam = spec.cam ? stateAt(spec.cam.map(k => Object.assign({}, k, (k.t == null && k.u == null && k.l == null && k.end == null) ? { t: 0 } : {})), lt, beat) : {};
-    const cz = cam.z ?? 1, cx = cam.x ?? W / 2, cy = cam.y ?? H / 2;
+    let cz = cam.z ?? 1, cx = cam.x ?? W / 2, cy = cam.y ?? H / 2;
+    // integrated transitions (docs/direccion-visual.md §14): tout ends a beat, tin opens the next one
+    const tr = transition(spec, beat, lt);
+    if (tr.zoom) { cz *= tr.zoom; cx += (tr.zx - cx) * tr.pull; cy += (tr.zy - cy) * tr.pull; }
+    if (tr.dy) cy += tr.dy;
     const shake = cam.shake ? `translate(${(Math.sin(gt * 61) * cam.shake).toFixed(1)} ${(Math.cos(gt * 47) * cam.shake).toFixed(1)})` : '';
     let world = '', overlay = '';
     const actors = beat.actors.slice().sort((a, b) => a.z - b.z);
@@ -166,6 +188,11 @@
         const inner = PROPS[a.type](st);
         svg = `<g transform="translate(${st.x ?? 0} ${st.y ?? 0}) rotate(${st.r ?? 0}) scale(${(st.sc ?? 1) * (st.fx ? -1 : 1)} ${st.sc ?? 1})" opacity="${st.o ?? 1}">${inner}</g>`;
       }
+      // parallax: depth < 1 sits behind (moves and zooms less with the camera), > 1 is foreground
+      if (a.depth != null && a.depth !== 1 && svg) {
+        const k = (1 + (cz - 1) * a.depth) / cz, dx = (cx - W / 2) * (1 - a.depth), dy = (cy - H / 2) * (1 - a.depth);
+        svg = `<g transform="translate(${cx} ${cy}) scale(${k.toFixed(4)}) translate(${-cx} ${-cy}) translate(${dx.toFixed(1)} ${dy.toFixed(1)})">${svg}</g>`;
+      }
       if (st.ui) overlay += svg; else world += svg;
     }
     const bg = spec.bg ?? '#FFFFFF';
@@ -176,6 +203,7 @@
       <g ${gray}><g transform="${shake} translate(${W / 2} ${H / 2}) scale(${cz}) translate(${-cx} ${-cy})">${world}</g>${overlay}</g>`;
     if (cam.flash) html += `<rect width="${W}" height="${H}" fill="#fff" opacity="${cam.flash}"/>`;
     if (cam.black) html += `<rect width="${W}" height="${H}" fill="#111" opacity="${cam.black}"/>`;
+    html += tr.over || '';
     html += captions(beat, gt) + '</svg>';
     root.innerHTML = html;
   }
