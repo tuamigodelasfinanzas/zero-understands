@@ -60,3 +60,22 @@ export const brainSet = (o = {}) => [
 ];
 export const sfx = (s, t = 0, o = {}) => ({ s, t, ...o });
 export const cam = (...keys) => keys;
+
+// walk cycle: keys that move ZERO from x0 to x1 between t0 and t0+dur with real steps (feet, arm swing, bob).
+// Use inside zero([...]) after his starting key, e.g. zero([{ x: 300 }, ...walk(300, 900, 1.0, 2.2)]).
+// Moving left? pass flip: true in the starting key; the cycle is drawn in ZERO's own (mirrored) space.
+export function walk(x0, x1, t0, dur, o = {}) {
+  const step = o.step ?? 0.3, n = Math.max(2, Math.round(dur / step)), dt = dur / n, s = o.s ?? ZS;
+  const bob = (o.bob ?? 3.5) * s;
+  const ks = [];
+  for (let i = 0; i <= n; i++) {
+    const t = t0 + i * dt, x = x0 + (x1 - x0) * (i / n), a = i % 2 ? 1 : -1, last = i === n;
+    // contact pose (feet apart, arms swinging opposite to the legs)
+    ks.push(last
+      ? { t, x, y: o.y ?? G, fl: [90, 204], fr: [110, 204], hl: [81, 168], hr: [119, 168], e: 'out' }
+      : { t, x, y: o.y ?? G, fl: [100 - 13 * a, 204], fr: [100 + 13 * a, 204], hl: [84 + 10 * a, 167], hr: [116 - 10 * a, 167], e: 'io' });
+    // passing pose half a step later: body up, back foot lifted
+    if (!last) ks.push({ t: t + dt / 2, x: x + (x1 - x0) / n / 2, y: (o.y ?? G) - bob, fl: a > 0 ? [100, 204] : [102, 194], fr: a > 0 ? [98, 194] : [100, 204], hl: [84, 168], hr: [116, 168], e: 'io' });
+  }
+  return ks;
+}

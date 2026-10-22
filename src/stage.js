@@ -2,9 +2,11 @@
 // window.frame(t) draws the whole video at second t. Every visual comes from the episode JSON, so the same
 // episode can be re-rendered in another language by translating its strings.
 (() => {
-  const { zero, pix, PROPS, COLORS, FONT, esc } = window.PUPPETS;
+  const { zero, limbs, pix, PROPS, COLORS, FONT, esc } = window.PUPPETS;
   const D = window.DATA, ep = D.ep, W = D.w, H = D.h;
   const root = document.getElementById('stage');
+  // ep.life (or render env ZERO_LIFE=1): the animation layer that makes ZERO feel alive, see alive() below
+  const LIFE = D.ep.life ?? D.life ?? false;
 
   const EASE = {
     lin: x => x, step: () => 0,
@@ -69,6 +71,67 @@
     for (const a of b.actors) finals[i][a.id] = stateAt(a.keys, b.dur + 1, b);
   });
 
+  // ---------- life: principles of animation applied on top of the keyframes ----------
+  // The keys say where ZERO must be; this layer decides how he gets there. It samples the keyed motion a little
+  // before and after "now" and derives: anticipation (a small move against the direction before a move starts),
+  // follow-through/overshoot when it stops, leaning into motion and back on acceleration, the head and the hands
+  // dragging behind the body (overlapping action), eyes leading the turn, subtle squash and stretch on vertical
+  // impulses, and an idle layer (breathing, weight shift, small head drift) so he is never frozen.
+  const clamp = (v, a) => Math.max(-a, Math.min(a, v));
+  const V2 = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
+  function alive(a, st, beat, lt, gt, sp) {
+    const at = t => stateAt(a.keys, Math.min(beat.dur, Math.max(0, t)), beat);
+    const h = 0.14;
+    const P = at(lt - h), N = at(lt + h);
+    const flip = st.flip ? -1 : 1;
+    const s = st.s ?? 1;
+    const seed = a.id.length * 1.7 + (a.id.charCodeAt(0) || 0) * 0.13;
+    const lying = Math.abs(st.r ?? 0) > 30;
+    // body: anticipation + overshoot from the second difference of x / y (ignored for teleports and cuts)
+    const d2 = (k) => { const p0 = P[k] ?? st[k] ?? 0, p1 = st[k] ?? 0, p2 = N[k] ?? st[k] ?? 0; const a2 = p2 - 2 * p1 + p0; return Math.abs(a2) > 260 || Math.abs(p2 - p0) > 900 ? [0, 0] : [a2, (p2 - p0) / (2 * h)]; };
+    const [ax, vx] = d2('x'), [ay, vy] = d2('y');
+    if (!lying) {
+      st.x = (st.x ?? 0) - clamp(ax * 0.3, 7 * s);
+      st.y = (st.y ?? 0) - clamp(ay * 0.18, 5 * s);
+      // lean into the motion, and back when it is about to start (the body is "pushed" by the hips)
+      st.lean = (st.lean ?? 0) + flip * (clamp(vx / s * 0.012, 7) - clamp(ax / s * 0.09, 6));
+      // head lags behind the body
+      st.headR = (st.headR ?? 0) + flip * clamp(-vx / s * 0.006, 5) + flip * clamp(ax / s * 0.05, 4);
+      // squash on vertical impulses, stretch while moving fast vertically
+      st.squash = (st.squash ?? 1) * (1 - Math.min(0.07, Math.abs(ay) / s * 0.0016) + Math.min(0.04, Math.abs(vy) / s * 0.00005));
+    }
+    // limbs: blur over ~0.15 s (smooth pose changes, hands arrive a beat after the body) + a little overshoot
+    const L = (t) => limbs(at(t));
+    const now = limbs(st);
+    const lag = (k) => {
+      let acc = [0, 0], wsum = 0;
+      for (let i = 0; i < 5; i++) { const w = [0.3, 0.25, 0.2, 0.15, 0.1][i], v = L(lt - i * 0.035)[k]; acc = [acc[0] + v[0] * w, acc[1] + v[1] * w]; wsum += w; }
+      const cur = [acc[0] / wsum, acc[1] / wsum];
+      let old = [0, 0]; for (let i = 0; i < 5; i++) { const v = L(lt - 0.12 - i * 0.035)[k]; old = [old[0] + v[0] / 5, old[1] + v[1] / 5]; }
+      const over = [clamp((cur[0] - old[0]) * 0.28, 7), clamp((cur[1] - old[1]) * 0.28, 7)];
+      // when the keys hold still, the overshoot settles: blend it out by how far the blur already is from "now"
+      const settle = Math.min(1, Math.hypot(now[k][0] - cur[0], now[k][1] - cur[1]) / 6 + 0.25);
+      return [cur[0] + over[0] * settle, cur[1] + over[1] * settle];
+    };
+    st.hl = lag('hl'); st.hr = lag('hr');
+    if (!lying) { st.fl = lag('fl'); st.fr = lag('fr'); }
+    // eyes lead: look where the keys will be looking a moment from now
+    const ahead = at(lt + 0.12);
+    if (isNumArr(ahead.look)) st.look = ahead.look;
+    // idle: breathing (3.4 s), weight shift (5.3 s), head drift; hands breathe with the chest
+    const br = Math.sin(gt * 2 * Math.PI / 3.4 + seed);
+    st.squash = (st.squash ?? 1) * (1 + 0.012 * br);
+    if (!lying) {
+      st.lean = (st.lean ?? 0) + 1.3 * Math.sin(gt * 2 * Math.PI / 5.3 + seed * 0.7);
+      st.headR = (st.headR ?? 0) + 1.6 * Math.sin(gt * 2 * Math.PI / 4.1 + seed) + 0.7 * Math.sin(gt * 1.3 + seed * 2);
+    }
+    st.hl = V2(st.hl, [st.hl[0], st.hl[1] - 1.2 * br], 1);
+    st.hr = V2(st.hr, [st.hr[0], st.hr[1] - 1.2 * br], 1);
+    // talking: small nods instead of a rigid head
+    if (sp >= 0) st.headR = (st.headR ?? 0) + 2.5 * Math.sin(sp * 5.5) * Math.min(1, sp * 4);
+    return st;
+  }
+
   function speaking(beat, who, gt) {
     for (const ln of beat.lines) if (ln.who === who && gt >= ln.start && gt <= ln.start + ln.dur) return gt - ln.start;
     return -1;
@@ -92,7 +155,7 @@
         if (st.blink === false) st.blink = 0;
         const sp = speaking(beat, 'zero', gt);
         if (sp >= 0 && st.bounce !== false) st.squash = (st.squash ?? 1) * (1 + 0.03 * Math.sin(sp * 20));
-        svg = zero(st);
+        svg = zero(LIFE && st.life !== false ? alive(a, st, beat, lt, gt, sp) : st);
       } else if (a.type === 'pix') {
         const sp = speaking(beat, 'pix', gt);
         st.talk = sp >= 0 ? 0.5 + 0.5 * Math.sin(sp * 19) : 0;

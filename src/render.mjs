@@ -75,7 +75,7 @@ const exe = process.env.ZERO_CHROME || (fs.existsSync('/opt/pw-browsers/chromium
 const browser = await chromium.launch({ executablePath: exe, args: ['--font-render-hinting=none'] });
 const page = await browser.newPage({ viewport: { width: W, height: H } });
 await page.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>${font()}*{margin:0;padding:0}html,body{width:${W}px;height:${H}px;overflow:hidden;background:#fff}</style></head><body><div id="stage"></div></body></html>`);
-await page.evaluate(d => { window.DATA = d; }, { ep, beats, w: W, h: H, fps: FPS });
+await page.evaluate(d => { window.DATA = d; }, { ep, beats, w: W, h: H, fps: FPS, life: process.env.ZERO_LIFE === '1' });
 for (const f of ['faces.js', 'puppets.js', 'stage.js']) await page.addScriptTag({ path: path.join(ROOT, 'src', f) });
 await page.waitForFunction('window.ready === true');
 await page.evaluate('document.fonts.ready');

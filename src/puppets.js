@@ -45,16 +45,23 @@
     push: { hl: [81, 168], hr: [146, 152] },
   };
   const lerp = (a, b, t) => a + (b - a) * t;
-  function zero(p) {
+  // where ZERO's hands and feet end up for a state (pose + explicit overrides); the stage uses it to smooth limbs over time
+  function limbs(p) {
     const pose = POSES[p.pose] || POSES.neutral;
     const mix = POSES[p.pose2];
     const k = mix ? (p.poseMix ?? 0) : 0;
     const pick = (key, dflt) => { const A = pose[key] ?? dflt, B = mix ? (mix[key] ?? dflt) : A; return Array.isArray(A) ? A.map((v, i) => lerp(v, B[i], k)) : lerp(A, B, k); };
-    let hl = pick('hl', [81, 168]), hr = pick('hr', [119, 168]);
-    if (p.hl) hl = p.hl; if (p.hr) hr = p.hr;
-    const fl = p.fl || pick('fl', [90, 204]), fr = p.fr || pick('fr', [110, 204]);
-    const tilt = (p.tilt ?? 0) + pick('tilt', 0);
-    const lean = (p.lean ?? 0) + pick('lean', 0);
+    return {
+      hl: p.hl || pick('hl', [81, 168]), hr: p.hr || pick('hr', [119, 168]),
+      fl: p.fl || pick('fl', [90, 204]), fr: p.fr || pick('fr', [110, 204]),
+      tilt: pick('tilt', 0), lean: pick('lean', 0),
+    };
+  }
+  function zero(p) {
+    const L = limbs(p);
+    const { hl, hr, fl, fr } = L;
+    const tilt = (p.tilt ?? 0) + L.tilt;
+    const lean = (p.lean ?? 0) + L.lean;
     const face = p.face ?? 0;
     const [lx, ly] = p.look || [0, 0];
     const blink = p.blink ? 1 - 0.85 * p.blink : 1;
@@ -240,5 +247,5 @@
     pencup(p) { return `<g transform="scale(${p.s ?? 1})">${[[-24, YEL, -10], [0, BLUE, 0], [24, RED, 10]].map(([x, c, r]) => `<rect x="${x - 7}" y="-90" width="14" height="80" fill="${c}" stroke="${INK}" stroke-width="4" transform="rotate(${p.messy ? r * 3 : 0} ${x} -10)"/>`).join('')}<rect x="-45" y="-20" width="90" height="80" rx="8" fill="${WHITE}" stroke="${INK}" stroke-width="6"/></g>`; },
   };
 
-  window.PUPPETS = { zero, pix, PROPS, POSES, COLORS: { INK, WHITE, YEL, AMBER, RED, BLUE, G1, G2 }, FONT, esc };
+  window.PUPPETS = { zero, limbs, pix, PROPS, POSES, COLORS: { INK, WHITE, YEL, AMBER, RED, BLUE, G1, G2 }, FONT, esc };
 })();
