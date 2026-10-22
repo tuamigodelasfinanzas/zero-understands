@@ -1,0 +1,135 @@
+1
+00:00:00,400 --> 00:00:02,704
+ZERO just got his first credit card.
+
+2
+00:00:03,004 --> 00:00:04,684
+This is its first coffee.
+
+3
+00:00:10,900 --> 00:00:13,324
+That café has never met ZERO.
+
+4
+00:00:13,624 --> 00:00:15,832
+His bank has never met the café.
+
+5
+00:00:16,032 --> 00:00:17,832
+So who decides to trust him?
+
+6
+00:00:28,232 --> 00:00:30,810
+Between this tap and that cup, a tiny
+
+7
+00:00:30,810 --> 00:00:33,248
+message will cross three companies,
+
+8
+00:00:33,548 --> 00:00:35,420
+survive a fraud test,
+
+9
+00:00:35,520 --> 00:00:37,848
+and come back with a yes or a no.
+
+10
+00:00:37,948 --> 00:00:39,532
+ZERO is riding it.
+
+11
+00:00:40,532 --> 00:00:42,404
+First surprise:
+
+12
+00:00:42,704 --> 00:00:44,552
+that card has no battery.
+
+13
+00:00:44,702 --> 00:00:47,022
+The terminal's radio field wakes up
+
+14
+00:00:47,022 --> 00:00:48,878
+its chip for a split second,
+
+15
+00:00:49,278 --> 00:00:51,270
+just long enough to say one thing.
+
+16
+00:00:51,970 --> 00:00:53,842
+To ZERO, it's his money.
+
+17
+00:00:54,692 --> 00:00:56,636
+To the system, it's this.
+
+18
+00:00:56,936 --> 00:00:58,808
+A card number.
+
+19
+00:00:58,958 --> 00:01:00,830
+An amount.
+
+20
+00:01:00,930 --> 00:01:02,802
+Which shop.
+
+21
+00:01:02,902 --> 00:01:05,086
+And a code that only works once.
+
+22
+00:01:06,786 --> 00:01:08,658
+Copy that code,
+
+23
+00:01:08,958 --> 00:01:10,878
+and it's useless a second later.
+
+24
+00:01:11,078 --> 00:01:12,707
+That's why a chip card is
+
+25
+00:01:12,707 --> 00:01:13,814
+so hard to clone.
+
+26
+00:01:14,664 --> 00:01:16,536
+Pay with a phone instead,
+
+27
+00:01:16,836 --> 00:01:18,996
+and even the card number is fake.
+
+28
+00:01:19,096 --> 00:01:21,040
+It's a stand-in called a token.
+
+29
+00:01:21,340 --> 00:01:23,669
+Visa says it has handed out more than
+
+30
+00:01:23,669 --> 00:01:25,180
+sixteen billion of them.
+
+31
+00:01:26,030 --> 00:01:27,393
+ZERO thinks it's going
+
+32
+00:01:27,393 --> 00:01:28,694
+straight to his bank.
+
+33
+00:01:28,994 --> 00:01:29,930
+It isn't.
+
+34
+00:01:30,330 --> 00:01:32,202
+Not even close.
