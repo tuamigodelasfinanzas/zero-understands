@@ -211,7 +211,7 @@
         <feMerge><feMergeNode in="glow"/><feMergeNode in="rim"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       <filter id="gray"><feColorMatrix type="saturate" values="${1 - (cam.gray ?? 0)}"/></filter>${window.WORLD?.defs ?? ''}</defs>
       <rect width="${W}" height="${H}" fill="${bg}"/>
-      <g ${gray}><g transform="${shake} translate(${W / 2} ${H / 2}) scale(${cz}) translate(${-cx} ${-cy})">${world}</g>${overlay}</g>`;
+      <g ${gray}><g transform="${shake} ${cam.rot ? `rotate(${cam.rot.toFixed(2)} ${W / 2} ${H / 2})` : ''} translate(${W / 2} ${H / 2}) scale(${cz}) translate(${-cx} ${-cy})">${world}</g>${overlay}</g>`;
     if (cam.flash) html += `<rect width="${W}" height="${H}" fill="#fff" opacity="${cam.flash}"/>`;
     if (cam.black) html += `<rect width="${W}" height="${H}" fill="#111" opacity="${cam.black}"/>`;
     html += tr.over || '';

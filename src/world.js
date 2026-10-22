@@ -53,7 +53,30 @@
     gps: c => `<path d="M 0 46 C -30 10 -36 -4 -36 -14 A 36 36 0 0 1 36 -14 C 36 -4 30 10 0 46 Z" fill="none" stroke="${c}" stroke-width="7"/><circle cy="-14" r="12" fill="${c}"/>`,
     heart: c => `<path d="M 0 30 C -50 -10 -30 -50 0 -22 C 30 -50 50 -10 0 30 Z" fill="none" stroke="${c}" stroke-width="7" stroke-linejoin="round"/>`,
     cup: c => `<g fill="none" stroke="${c}" stroke-width="7" stroke-linejoin="round"><path d="M -30 -20 H 26 V 20 Q 26 40 -2 40 Q -30 40 -30 20 Z"/><path d="M 26 -8 Q 44 -8 44 6 Q 44 18 26 18"/><path d="M -14 -34 q 6 -8 0 -16 M 4 -34 q 6 -8 0 -16" stroke-linecap="round"/></g>`,
+    cap: c => `<g fill="${c}"><path d="M -60 -10 L 0 -36 L 60 -10 L 0 16 Z"/><path d="M -34 2 V 26 Q 0 44 34 26 V 2 L 0 16 Z"/></g><path d="M 50 -6 V 30" stroke="${c}" stroke-width="5"/><circle cx="50" cy="34" r="7" fill="${c}"/>`,
+    clock: c => `<circle r="46" fill="none" stroke="${c}" stroke-width="8"/><path d="M 0 -28 V 0 L 20 12" stroke="${c}" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+    people: c => `<g fill="${c}"><circle cx="-26" cy="-22" r="14"/><path d="M -50 30 Q -50 -2 -26 -2 Q -2 -2 -2 30 Z"/><circle cx="26" cy="-22" r="14"/><path d="M 2 30 Q 2 -2 26 -2 Q 50 -2 50 30 Z"/></g>`,
   };
+
+  // the air network on the US map (video 001 part 2): ZERO's expected straight line to mom (direct 0..1, cross 0..1
+  // strikes it out), the real flight to the hub (zarc 0..1), every other city's flight converging (arcs 0..1, with
+  // planes flowing along them), and the four-hour circle around the hub (ring 0..1, filled only over land)
+  const HUB = [265, 111];
+  const CITIES = [[40, 32], [30, 100], [55, 150], [100, 168], [105, 88], [150, 105], [215, 52], [205, 180], [232, 204], [300, 150], [335, 212], [352, 74], [372, 52], [180, 140], [320, 100]];
+  const arcPath = (a, b, lift = 34) => `M ${a[0]} ${a[1]} Q ${(a[0] + b[0]) / 2} ${Math.min(a[1], b[1]) - lift} ${b[0]} ${b[1]}`;
+  const onArc = (a, b, k, lift = 34) => { const c = [(a[0] + b[0]) / 2, Math.min(a[1], b[1]) - lift]; return [(1 - k) ** 2 * a[0] + 2 * (1 - k) * k * c[0] + k * k * b[0], (1 - k) ** 2 * a[1] + 2 * (1 - k) * k * c[1] + k * k * b[1]]; };
+  function usx(p, pts) {
+    const gt = p.gt ?? 0, A = [48, 112], B = [366, 80];
+    let o = '';
+    if ((p.ring ?? 0) > 0) { const r = 240 * p.ring; o += `<defs><clipPath id="wUSclip"><polygon points="${pts}"/></clipPath></defs><circle cx="${HUB[0]}" cy="${HUB[1]}" r="${f(r)}" fill="#BFE3FF" opacity="0.2" clip-path="url(#wUSclip)"/><circle cx="${HUB[0]}" cy="${HUB[1]}" r="${f(r)}" fill="none" stroke="${YEL}" stroke-width="3" stroke-dasharray="10 8" opacity="0.9"/>`; }
+    if ((p.direct ?? 0) > 0) o += `<path d="M ${A[0]} ${A[1]} L ${B[0]} ${B[1]}" stroke="#E6ECF5" stroke-width="4" stroke-dasharray="12 10" pathLength="320" stroke-dashoffset="0" opacity="0.8" style="stroke-dasharray:${f(320 * p.direct)} 320"/>`;
+    if ((p.cross ?? 0) > 0) { const m = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], k = p.cross * 22; o += `<path d="M ${f(m[0] - k)} ${f(m[1] - k)} L ${f(m[0] + k)} ${f(m[1] + k)} M ${f(m[0] + k)} ${f(m[1] - k)} L ${f(m[0] - k)} ${f(m[1] + k)}" stroke="#FF5A4E" stroke-width="8" stroke-linecap="round"/>`; }
+    const n = Math.round(CITIES.length * (p.arcs ?? 0));
+    CITIES.slice(0, n).forEach((c, i) => { o += `<path d="${arcPath(c, HUB)}" fill="none" stroke="#7CC2FF" stroke-width="2.5" opacity="0.7"/><circle cx="${c[0]}" cy="${c[1]}" r="4" fill="#7CC2FF"/>`; const q = onArc(c, HUB, fr(gt * 0.3 + i * 0.37)); o += `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="4.5" fill="#FFFFFF"/>`; });
+    if ((p.zarc ?? 0) > 0) { o += `<path d="${arcPath(A, HUB, 50)}" fill="none" stroke="${YEL}" stroke-width="5" stroke-linecap="round" pathLength="300" stroke-dasharray="${f(300 * p.zarc)} 300"/>`; const q = onArc(A, HUB, p.zarc, 50); o += `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="7" fill="${YEL}"/>`; }
+    if (p.hub) o += `<circle cx="${HUB[0]}" cy="${HUB[1]}" r="9" fill="${YEL}"/><circle cx="${HUB[0]}" cy="${HUB[1]}" r="${f(9 + 22 * fr(gt * 0.8))}" fill="none" stroke="${YEL}" stroke-width="3" opacity="${f(1 - fr(gt * 0.8))}"/>${p.hubLabel ? `<g transform="translate(${HUB[0]} ${HUB[1] + 30})"><rect x="-62" y="-13" width="124" height="26" rx="5" fill="#0A1B33" opacity="0.85"/>${T(p.hubLabel, 15, YEL, 0, -4, 'letter-spacing="1"')}</g>` : ''}`;
+    return o;
+  }
 
   // ---------- the props ----------
   const W = {
@@ -128,7 +151,7 @@
       return `<g transform="${S(p)} scale(${st} 1) translate(-206 -122)">
         <polygon points="${pts}" fill="${fill}" stroke="${stroke}" stroke-width="${tone === 'holo' ? 4 : 0}" stroke-linejoin="round"/>
         ${tone === 'magnet' ? `<polygon points="${pts}" fill="none" stroke="#3E7D63" stroke-width="5" stroke-linejoin="round" transform="translate(3 5)" opacity="0.4"/>` : ''}
-        ${route}${dots}
+        ${usx(p, pts)}${route}${dots}
         ${(p.a ?? 1) > 0 ? `<g transform="translate(${A[0]} ${A[1]}) scale(${1 / st} 1)"><circle r="10" fill="${INK}"/><circle r="5" fill="${WHITE}"/></g>` : ''}
         <g transform="translate(${B[0]} ${B[1]}) scale(${f((1 + 0.12 * Math.sin((p.gt ?? 0) * 6)) / st)} ${f(1 + 0.12 * Math.sin((p.gt ?? 0) * 6))})"><path d="M 0 12 C -20 -4 -12 -20 0 -9 C 12 -20 20 -4 0 12 Z" fill="${RED}"/></g></g>`;
     },
@@ -238,7 +261,7 @@
       return `<g transform="translate(0 ${f(-bob)}) ${S(p)} scale(${p.flip ? -1 : 1} 1)"><ellipse cx="0" cy="${f(bob + 2)}" rx="44" ry="7" fill="#000" opacity="0.22"/>
         ${pose === 'sit' ? '' : ''}${legs}
         ${limb([-14, -150 - bob], hl, 15, shade(sh, 0.15))}
-        <path d="M ${-30} ${-86 - bob} Q -34 ${-150 - bob} 0 ${-166 - bob + breath} Q 34 ${-150 - bob} 30 ${-86 - bob} Z" fill="${sh}"/>${p.apron ? `<path d="M -22 ${-130 - bob} H 22 V ${-80 - bob} H -22 Z" fill="${p.apron}"/>` : ''}
+        <path d="M ${-30} ${-86 - bob} Q -34 ${-150 - bob} 0 ${-166 - bob + breath} Q 34 ${-150 - bob} 30 ${-86 - bob} Z" fill="${sh}"/>${p.vest ? `<path d="M -27 ${-92 - bob} Q -30 ${-146 - bob} -10 ${-158 - bob} L 10 ${-158 - bob} Q 30 ${-146 - bob} 27 ${-92 - bob} Z" fill="${p.vest}"/><rect x="-28" y="${-122 - bob}" width="56" height="7" fill="#E6ECF2" opacity="0.9"/>` : ''}${p.apron ? `<path d="M -22 ${-130 - bob} H 22 V ${-80 - bob} H -22 Z" fill="${p.apron}"/>` : ''}
         <rect x="-9" y="${-182 - bob}" width="18" height="20" fill="${shade(sk, 0.15)}"/>
         <g transform="translate(0 ${f(-212 - bob + breath)}) rotate(${f(headR)})"><ellipse cx="0" cy="0" rx="27" ry="30" fill="${sk}"/>${cap}${eyes}${mouth}</g>
         ${held}${limb([14, -150 - bob], hr, 15, sh)}<circle cx="${f(hl[0])}" cy="${f(hl[1] - bob)}" r="8" fill="${sk}"/><circle cx="${f(hr[0])}" cy="${f(hr[1] - bob)}" r="8" fill="${sk}"/></g>`;
@@ -362,8 +385,9 @@
         ${zip}${wet > 0 ? `<ellipse cx="40" cy="90" rx="${f(150 * wet)}" ry="${f(60 * wet)}" fill="#6F86A8" opacity="${f(0.35 * wet)}"/><path d="M ${f(20 + 60 * wet)} 60 q 10 ${f(60 * wet)} 0 ${f(120 * wet)}" stroke="#6F86A8" stroke-width="10" opacity="${f(0.3 * wet)}" fill="none" stroke-linecap="round"/>` : ''}${glow(hl === 5, -160, 50, 320, 76)}
         ${bars}${glow(hl === 1, -300, 150, 600, 120)}</g>`;
     },
-    // system-view overlay: a blue grid, a scan line sweeping down, tinted wash (op 0..1). ui layer.
-    sysview(p) { const op = p.op ?? 1, gt = p.gt ?? 0, y = fr(gt * 0.45) * 1180 - 50; if (op <= 0) return ''; return `<g opacity="${f(op)}"><rect x="0" y="0" width="1920" height="1080" fill="#0A1B33" opacity="0.55"/><rect x="0" y="0" width="1920" height="1080" fill="url(#wGrid)" opacity="0.6"/><rect x="0" y="${f(y)}" width="1920" height="6" fill="#7CC2FF" opacity="0.6"/><rect x="0" y="${f(y - 60)}" width="1920" height="60" fill="#7CC2FF" opacity="0.08"/>${T('SYSTEM VIEW', 30, '#7CC2FF', 170, 60, 'letter-spacing="6"')}<circle cx="44" cy="70" r="9" fill="#E85B4E" opacity="${fr(gt) < 0.5 ? 1 : 0.2}"/></g>`; },
+    // system-view overlay: a blue grid, a scan line sweeping down, tinted wash (op 0..1). ui layer; light: no wash and a
+    // faint grid, for pages that are already system view (it draws over them)
+    sysview(p) { const op = p.op ?? 1, gt = p.gt ?? 0, y = fr(gt * 0.45) * 1180 - 50; if (op <= 0) return ''; return `<g opacity="${f(op)}"><rect x="0" y="0" width="1920" height="1080" fill="#0A1B33" opacity="${p.light ? 0 : 0.55}"/><rect x="0" y="0" width="1920" height="1080" fill="url(#wGrid)" opacity="${p.light ? 0.22 : 0.6}"/><rect x="0" y="${f(y)}" width="1920" height="6" fill="#7CC2FF" opacity="0.6"/><rect x="0" y="${f(y - 60)}" width="1920" height="60" fill="#7CC2FF" opacity="0.08"/>${T('SYSTEM VIEW', 30, '#7CC2FF', 170, 60, 'letter-spacing="6"')}<circle cx="44" cy="70" r="9" fill="#E85B4E" opacity="${fr(gt) < 0.5 ? 1 : 0.2}"/></g>`; },
     // a scanner arch over a belt: two posts, a top bar with a red line of light; flash 0..1 when it reads something
     scanarch(p) { const fl = p.flash ?? 0, gt = p.gt ?? 0; return `<g transform="${S(p)}"><rect x="-150" y="-330" width="26" height="330" fill="#4A5270"/><rect x="124" y="-330" width="26" height="330" fill="#4A5270"/><rect x="-170" y="-360" width="340" height="50" rx="8" fill="#5C6684"/>${[0, 1, 2, 3, 4].map(i => `<circle cx="${-100 + i * 50}" cy="-335" r="7" fill="${fl > 0.3 ? YEL : (Math.sin(gt * 6 + i) > 0 ? '#E85B4E' : '#6A2A2A')}"/>`).join('')}<path d="M -124 -300 L 124 -300 L 124 -40 L -124 -40 Z" fill="${fl > 0.3 ? '#FFE7A0' : '#E85B4E'}" opacity="${f(0.06 + 0.3 * fl)}"/>${[0, 1, 2].map(i => `<path d="M -124 ${-260 + i * 90 + Math.sin(gt * 4 + i) * 30} L 124 ${-230 + i * 90 - Math.sin(gt * 4 + i) * 30}" stroke="#FF5A4E" stroke-width="2" opacity="0.7"/>`).join('')}</g>`; },
     // top-down view of a belt with boxes (for the overhead shot); off scrolls the belt
@@ -452,6 +476,249 @@
     persontop(p) { const gt = p.gt ?? 0, sw = Math.sin(gt * 7 + (p.seed ?? 0)) * 8; return `<g transform="${S(p)} rotate(${p.r ?? 0})"><ellipse cx="6" cy="8" rx="44" ry="36" fill="#000" opacity="0.25"/><circle cx="${f(-14 + sw)}" cy="-28" r="10" fill="${p.skin ?? '#B9876A'}"/><circle cx="${f(-14 - sw)}" cy="28" r="10" fill="${p.skin ?? '#B9876A'}"/><ellipse cx="0" cy="0" rx="22" ry="38" fill="${p.shirt ?? '#2D6E7E'}"/><circle r="22" fill="${p.hat ?? YEL}"/><path d="M 14 -14 A 22 22 0 0 1 14 14" fill="none" stroke="${shade(p.hat ?? YEL, 0.2)}" stroke-width="6"/></g>`; },
     // a brown parcel from above (top-down shots)
     topparcel(p) { const v = Math.abs(p.v ?? 0), w = [150, 120, 180, 100][v % 4], h = [110, 100, 130, 90][v % 4], c = ['#A47A55', '#B88B60', '#93704F', '#AD835A'][v % 4]; return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><rect x="${-w / 2 + 8}" y="${-h / 2 + 10}" width="${w}" height="${h}" fill="#000" opacity="0.3"/><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="${c}"/><rect x="${-w / 2}" y="-10" width="${w}" height="20" fill="${tint(c, 0.25)}" opacity="0.6"/><rect x="${w * 0.08}" y="${-h * 0.4}" width="${w * 0.3}" height="${h * 0.26}" fill="#F2EEE6"/></g>`; },
+
+    // ===== the air network (video 001, part 2): ramp, cargo jet, containers, the hub =====
+    // the airport ramp at night: sky with stars, the lit hub and the tower on the horizon (y = 0), blue taxiway lights,
+    // parked jets with blinking beacons, floodlight masts with sodium cones, slab joints converging, a tug train crossing
+    ramp(p) {
+      const gt = p.gt ?? 0, vx = p.vx ?? 0;
+      const stars = Array.from({ length: 50 }, (_, i) => `<circle cx="${f(-3000 + rnd(i * 3) * 6000)}" cy="${f(-2800 + rnd(i * 7) * 2500)}" r="${rnd(i) > 0.85 ? 3 : 2}" fill="#DDE6FF" opacity="${f(0.3 + 0.4 * fr(rnd(i * 5) + gt * 0.15 * rnd(i + 9)))}"/>`).join('');
+      const jet = (x, s, i) => `<g transform="translate(${x} -6) scale(${s})"><path d="M -300 -40 L 260 -50 Q 330 -46 330 -20 Q 320 0 260 0 L -260 0 Q -300 -10 -300 -40 Z" fill="#1B2040"/><path d="M -290 -40 L -340 -170 L -250 -170 L -200 -46 Z" fill="#1B2040"/><path d="M -60 -10 L -180 30 L -100 30 L 60 -10 Z" fill="#161A36"/><circle cx="0" cy="-54" r="10" fill="#FF4A4A" opacity="${fr(gt * 1.1 + i * 0.3) < 0.15 ? 1 : 0.15}"/></g>`;
+      const taxi = Array.from({ length: 80 }, (_, i) => `<circle cx="${-3200 + i * 80}" cy="16" r="5" fill="#5AA8FF" opacity="${f(0.55 + 0.35 * Math.sin(gt * 2 + i))}"/>`).join('');
+      const joints = Array.from({ length: 15 }, (_, i) => `<path d="M ${vx + (i - 7) * 50} 0 L ${vx + (i - 7) * 900} 1500" stroke="#30344C" stroke-width="5" opacity="0.6"/>`).join('') + Array.from({ length: 7 }, (_, i) => `<rect x="-4000" y="${f(30 + i * i * 28)}" width="8000" height="${2 + i}" fill="#30344C" opacity="0.5"/>`).join('');
+      const mast = x => `<g transform="translate(${x} 0)"><rect x="-12" y="-780" width="24" height="1060" fill="#151935"/><rect x="-80" y="-820" width="160" height="50" rx="6" fill="#1D2240"/>${[-60, -20, 20, 60].map(dx => `<rect x="${dx - 14}" y="-788" width="28" height="16" rx="4" fill="#FFD9A0"/>`).join('')}
+        <path d="M -80 -780 L 80 -780 L 520 300 L -520 300 Z" fill="url(#wConeWarm)" opacity="0.4"/><ellipse cx="0" cy="300" rx="560" ry="90" fill="url(#wSodium)" opacity="0.65"/></g>`;
+      const k = fr(gt / 18 + (p.seed ?? 0)), tx = -2800 + k * 5600;
+      const tug = `<g transform="translate(${f(tx)} 120) scale(0.55)"><rect x="0" y="-70" width="120" height="60" rx="10" fill="#D9A43A"/><rect x="30" y="-110" width="60" height="44" rx="6" fill="#1D2240"/><circle cx="60" cy="-118" r="9" fill="#FFB25C" opacity="${fr(gt * 2) < 0.5 ? 1 : 0.2}"/>${[0, 1, 2].map(i => `<g transform="translate(${-200 - i * 240} 0)"><rect x="-100" y="-34" width="200" height="16" fill="#4A5270"/><path d="M -80 -34 L 100 -34 L 100 -200 L -100 -200 L -100 -90 Z" fill="#9AA3B5"/><rect x="-86" y="-186" width="172" height="140" fill="#2A2638"/></g>`).join('')}<circle cx="30" cy="-6" r="14" fill="#14161F"/><circle cx="96" cy="-6" r="14" fill="#14161F"/></g>`;
+      return `<g><defs><linearGradient id="wRampSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060918"/><stop offset="1" stop-color="#2A3060"/></linearGradient></defs>
+        <rect x="-4000" y="-3200" width="8000" height="3200" fill="url(#wRampSky)"/>${stars}<ellipse cx="0" cy="0" rx="2600" ry="160" fill="url(#wSodium)" opacity="0.35"/>
+        ${p.hub === false ? '' : `<rect x="-1500" y="-150" width="2500" height="150" fill="#141830"/>${Array.from({ length: 80 }, (_, i) => rnd(i * 7) > 0.45 ? `<rect x="${-1490 + i * 31}" y="-100" width="14" height="12" fill="#FFCF8A" opacity="0.55"/>` : '').join('')}${Array.from({ length: 42 }, (_, i) => `<rect x="${-1490 + i * 60}" y="-154" width="10" height="6" fill="#FFCF8A" opacity="0.8"/>`).join('')}
+        <g transform="translate(1250 0)"><rect x="-15" y="-470" width="30" height="470" fill="#141830"/><path d="M -60 -540 L 60 -540 L 50 -470 L -50 -470 Z" fill="#1E2A3F"/><rect x="-54" y="-528" width="108" height="26" fill="#7CE0B0" opacity="0.55"/><circle cy="-552" r="7" fill="#FF4A4A" opacity="${fr(gt * 0.8) < 0.3 ? 1 : 0.2}"/></g>`}
+        ${jet(-900, 0.38, 0)}${jet(-380, 0.3, 1)}${jet(520, 0.34, 2)}
+        <rect x="-4000" y="0" width="8000" height="3000" fill="#23273B"/><rect x="-4000" y="0" width="8000" height="1400" fill="url(#wFloorFade)" opacity="0.6"/>${taxi}${joints}
+        <path d="M ${vx + 40} 0 Q ${vx + 380} 420 ${vx - 320} 1500" fill="none" stroke="#D9B44A" stroke-width="14" opacity="0.7"/>
+        ${tug}${(p.masts ?? [-1150, 1050]).map(mast).join('')}</g>`;
+    },
+    // a cargo jet side-on, nose to the right (no real airline's livery): fuselage, cheatline, fin, wing, two engines,
+    // gear; door 0..1 opens the main-deck cargo door (warm light inside); land turns on the landing light;
+    // tilt rotates it about the main gear (take-off); beacon and strobes blink with gt
+    cargojet(p) {
+      const gt = p.gt ?? 0, door = p.door ?? 0, c = p.color ?? '#E6E4DE', liv = p.livery ?? '#2B3A67';
+      const beacon = fr(gt * 1.1) < 0.14, strobe = fr(gt * 0.9 + 0.5) < 0.05;
+      const wheel = (x, n = 2) => Array.from({ length: n }, (_, i) => `<g transform="translate(${x + i * 70} -46) rotate(${f(gt * (p.roll ?? 0))})"><circle r="44" fill="#14161F"/><circle r="18" fill="#5C6684"/><rect x="-16" y="-3" width="32" height="6" fill="#3A3F5C"/></g>`).join('');
+      return `<g transform="${S(p)} rotate(${f(-(p.tilt ?? 0))} -100 -50)"><ellipse cx="0" cy="4" rx="${p.tilt ? 0 : 1000}" ry="26" fill="#000" opacity="0.35"/>
+        <rect x="-140" y="-280" width="22" height="230" fill="#4A5270"/><rect x="740" y="-280" width="18" height="230" fill="#4A5270"/>${wheel(-200)}${wheel(712, 1)}
+        <path d="M -880 -470 L -960 -930 L -820 -930 L -560 -490 Z" fill="${liv}"/><path d="M -900 -880 L -830 -880 L -640 -500" stroke="${tint(liv, 0.25)}" stroke-width="14" fill="none"/>
+        <path d="M -920 -470 L 760 -570 Q 950 -566 966 -430 Q 958 -286 770 -268 L -700 -268 Q -880 -300 -920 -470 Z" fill="${c}"/>
+        <path d="M -900 -380 L -700 -268 L 770 -268 Q 930 -282 958 -380 Z" fill="${shade(c, 0.18)}"/>
+        <path d="M -900 -456 L 940 -470" stroke="${liv}" stroke-width="20"/><path d="M -900 -432 L 940 -446" stroke="${tint(liv, 0.3)}" stroke-width="6"/>
+        <path d="M 836 -508 L 904 -502 L 930 -476 L 846 -478 Z" fill="#1A2140"/><path d="M 850 -502 L 868 -500 L 862 -482 L 848 -484 Z" fill="#7CA4D8" opacity="0.5"/>
+        <path d="M -930 -470 L -1010 -500 L -950 -500 L -780 -470 Z" fill="${shade(c, 0.1)}"/>
+        ${door > 0 ? `<rect x="520" y="-560" width="190" height="200" fill="#2A2638"/><ellipse cx="615" cy="-450" rx="120" ry="110" fill="url(#wWarm)" opacity="0.9"/><g transform="translate(520 -560) rotate(${f(-100 * door)})"><rect x="0" y="0" width="190" height="200" fill="${tint(c, 0.05)}"/><rect x="0" y="184" width="190" height="16" fill="${shade(c, 0.2)}"/></g>`
+          : `<path d="M 520 -560 V -362 H 712 V -566" fill="none" stroke="${shade(c, 0.22)}" stroke-width="4"/>`}
+        <path d="M -320 -300 L 120 -300 L 380 -220 L -60 -220 Z" fill="${shade(c, 0.32)}"/>
+        <g transform="translate(160 -196)"><path d="M -230 -50 L 150 -60 Q 190 -56 190 0 Q 190 56 150 60 L -230 50 L -290 0 Z" fill="#8C93AA"/><ellipse cx="174" cy="0" rx="22" ry="58" fill="#1B1E33"/><ellipse cx="176" cy="0" rx="10" ry="40" fill="#3A3F5C" opacity="${f(0.6 + 0.4 * Math.sin(gt * 30))}"/><rect x="-200" y="-12" width="300" height="10" fill="${liv}" opacity="0.6"/></g>
+        <circle cx="0" cy="-578" r="10" fill="#FF4A4A" opacity="${beacon ? 1 : 0.2}"/>${beacon ? `<circle cx="0" cy="-578" r="80" fill="#FF4A4A" opacity="0.25"/>` : ''}
+        <circle cx="-940" cy="-920" r="9" fill="#FFFFFF" opacity="${strobe ? 1 : 0.15}"/>${strobe ? `<circle cx="-940" cy="-920" r="120" fill="#FFFFFF" opacity="0.3"/>` : ''}
+        ${p.land ? `<circle cx="760" cy="-262" r="14" fill="#FFF6D8"/><path d="M 760 -262 L 1700 -420 L 1700 -60 Z" fill="#FFF1C9" opacity="0.1"/>` : ''}</g>`;
+    },
+    // an air cargo container (the ULD the script talks about), seen from its open face: aluminium frame with the
+    // contour cut that lets it fit the curve of the fuselage, ribs, a vinyl curtain (door 0..1 rolls it up), parcels
+    // stacked inside (fill 0..1), the yellow box in one slot (yellow: true), an ID plate
+    uld(p) {
+      const w = 320, h = 300, fill = p.fill ?? 0.7, door = p.door ?? 0, cc = p.color ?? '#AEB6C6';
+      const shape = `M -100 0 L 160 0 L 160 -${h} L -160 -${h} L -160 -120 Z`;
+      const rows = Math.round(4 * fill);
+      const stack = Array.from({ length: rows }, (_, r) => Array.from({ length: 3 }, (_, i) => { const v = (r * 3 + i + (p.seed ?? 0)) % 5, x = -96 + i * 96 + (r % 2) * 10 + (r === 0 && i === 0 ? 30 : 0); return `<g transform="translate(${x} ${-8 - r * 68}) scale(0.62)">${PROPS.parcel({ v })}</g>`; }).join('')).join('');
+      const yb = p.yellow ? `<g transform="translate(${p.yx ?? 40} ${p.yy ?? -8 - Math.max(0, rows - 1) * 68 - 68})">${PROPS.giftbox({ s: 0.62, label: true, stamp: 1, wet: p.wet ?? 0 })}</g>` : '';
+      return `<g transform="${S(p)}"><ellipse cx="0" cy="2" rx="180" ry="10" fill="#000" opacity="0.3"/><defs><clipPath id="${gid('uldc', p.seed ?? 0)}"><path d="${shape}"/></clipPath></defs>
+        <path d="${shape}" fill="${cc}"/><g clip-path="url(#${gid('uldc', p.seed ?? 0)})"><rect x="-150" y="-${h - 12}" width="300" height="${h - 20}" fill="#1E1C2C"/>${stack}${yb}
+        ${door < 1 ? `<rect x="-160" y="-${h}" width="320" height="${f(h * (1 - door))}" fill="#9FC4D8" opacity="0.38"/>${[-90, 0, 90].map(x => `<rect x="${x - 6}" y="-${h}" width="12" height="${f(h * (1 - door))}" fill="#E6C14A" opacity="0.7"/>`).join('')}<rect x="-160" y="${f(-h + h * (1 - door) - 14)}" width="320" height="18" rx="9" fill="#8FB1C4"/>` : `<rect x="-160" y="-${h}" width="320" height="20" rx="10" fill="#8FB1C4"/>`}</g>
+        <path d="${shape}" fill="none" stroke="${shade(cc, 0.25)}" stroke-width="10" stroke-linejoin="round"/>${[-80, 0, 80].map(x => `<rect x="${x - 3}" y="-${h}" width="6" height="14" fill="${shade(cc, 0.3)}"/>`).join('')}
+        <rect x="70" y="-${h + 2}" width="84" height="26" rx="3" fill="#F2EEE6"/>${T(p.id ?? 'AKE', 16, '#1B1E33', 112, -h + 9)}
+        ${p.dest ? `<g transform="translate(-60 -${h + 40})"><rect x="-60" y="-24" width="120" height="48" rx="6" fill="#1B1E33"/>${T(p.dest, 28, p.dc ?? '#7CC2FF', 0, -4)}</g>` : ''}</g>`;
+    },
+    // low airport dolly a container sits on, with a tow bar; lock 0..1 raises its side stops
+    dolly(p) { const l = p.lock ?? 1; return `<g transform="${S(p)}"><rect x="-190" y="-40" width="380" height="22" rx="4" fill="#4A5270"/><rect x="-200" y="-46" width="400" height="8" fill="#6C7590"/>${[-170, 170].map(x => `<rect x="${x - 8}" y="${f(-46 - 26 * l)}" width="16" height="${f(26 * l + 6)}" fill="#E6C14A"/>`).join('')}<path d="M -190 -28 L -300 -10" stroke="#3A3F5C" stroke-width="10"/>${[-130, 130].map(x => `<circle cx="${x}" cy="-14" r="16" fill="#14161F"/>`).join('')}</g>`; },
+    // inside the main deck of the cargo jet, side cutaway: quilted insulation between ribs, ceiling lamps, a floor of
+    // roller tracks, a cargo net; window: x of a round window (moonlight comes in); red: the dim red night light
+    hold(p) {
+      const gt = p.gt ?? 0, red = p.red ?? 0;
+      const ribs = Array.from({ length: 26 }, (_, i) => { const x = -2600 + i * 200; return `<rect x="${x}" y="-760" width="150" height="740" rx="10" fill="#353A54"/>${[0, 1, 2, 3].map(j => `<rect x="${x + 12}" y="${-740 + j * 180}" width="126" height="160" rx="12" fill="#3B4060"/>`).join('')}<rect x="${x + 150}" y="-780" width="50" height="780" fill="#2A2E44"/>`; }).join('');
+      const lamps = Array.from({ length: 9 }, (_, i) => { const x = -2400 + i * 600; return `<rect x="${x - 60}" y="-790" width="120" height="16" rx="6" fill="${red ? '#FF7A6A' : '#FFE7B0'}"/><ellipse cx="${x}" cy="-600" rx="300" ry="260" fill="url(#w${red ? 'Sodium' : 'Warm'})" opacity="${f(0.45 + 0.05 * Math.sin(gt * 9 + i))}"/>`; }).join('');
+      const rollers = Array.from({ length: 70 }, (_, i) => `<circle cx="${-2600 + i * 76}" cy="-6" r="10" fill="#7A8299"/>`).join('');
+      const win = p.window != null ? `<g transform="translate(${p.window} -430)"><circle r="70" fill="#1E2236"/><circle r="52" fill="#0B1030"/><circle cx="-14" cy="-14" r="10" fill="#DDE6FF" opacity="0.8"/><ellipse cx="0" cy="0" rx="52" ry="52" fill="url(#wCool)" opacity="0.6"/><ellipse cx="60" cy="380" rx="160" ry="40" fill="url(#wCool)" opacity="0.35"/></g>` : '';
+      return `<g><rect x="-4000" y="-3000" width="8000" height="3000" fill="#22263C"/>${ribs}${lamps}${win}
+        <path d="M -4000 -800 L 4000 -800 L 4000 -1400 L -4000 -1400 Z" fill="#191C2E"/><rect x="-4000" y="-20" width="8000" height="40" fill="#4A5270"/>${rollers}<rect x="-4000" y="20" width="8000" height="2000" fill="#1A1D2E"/>
+        ${red ? `<rect x="-4000" y="-3000" width="8000" height="5000" fill="#FF3B2E" opacity="${f(0.08 * red)}"/>` : ''}</g>`;
+    },
+    // a cargo net strapped across the front of the containers (foreground of the hold)
+    net(p) { const w = p.w ?? 1400, h = p.h ?? 700; let d = ''; for (let i = 0; i <= w / 70; i++) d += `M ${-w / 2 + i * 70} ${-h} L ${-w / 2 + i * 70 - 120} 0 `; for (let i = 0; i <= w / 70; i++) d += `M ${-w / 2 + i * 70 - 120} ${-h} L ${-w / 2 + i * 70} 0 `; return `<g opacity="${p.op ?? 0.5}"><path d="${d}" stroke="#2A2E40" stroke-width="7"/></g>`; },
+    // night take-off seen from the side of the runway: sky, distant lights, runway edge lights and centre line rushing
+    // past at speed px/s (the camera pans with the jet)
+    runway(p) {
+      const gt = p.gt ?? 0, sp = p.speed ?? 2400;
+      const edge = (y, r, c) => Array.from({ length: 40 }, (_, i) => `<circle cx="${f(-3000 + ((i * 160 - gt * sp) % 6400 + 6400) % 6400)}" cy="${y}" r="${r}" fill="${c}"/>`).join('');
+      return `<g><rect x="-4000" y="-3000" width="8000" height="3000" fill="url(#wRampSky)"/><defs><linearGradient id="wRampSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060918"/><stop offset="1" stop-color="#2A3060"/></linearGradient></defs>
+        <ellipse cx="0" cy="0" rx="3000" ry="140" fill="url(#wSodium)" opacity="0.3"/>${Array.from({ length: 60 }, (_, i) => `<circle cx="${f(-3000 + rnd(i * 13) * 6000 - (gt * sp * 0.05) % 300)}" cy="${f(-4 - rnd(i) * 30)}" r="3" fill="#FFCF8A" opacity="0.6"/>`).join('')}
+        <rect x="-4000" y="0" width="8000" height="3000" fill="#1B1E2E"/><rect x="-4000" y="90" width="8000" height="200" fill="#2A2E44"/>${edge(96, 8, '#FFFFFF')}${edge(284, 10, '#FFFFFF')}
+        ${Array.from({ length: 30 }, (_, i) => `<rect x="${f(-3000 + ((i * 240 - gt * sp) % 7200 + 7200) % 7200)}" y="186" width="120" height="8" fill="#E6E4DE" opacity="0.7"/>`).join('')}</g>`;
+    },
+    // the night approach seen through a round window: a queue of landing lights coming down a slope of air toward the
+    // lit hub on the horizon; ground lights in perspective. n planes, one every (period) seconds
+    approach(p) {
+      const gt = p.gt ?? 0, n = p.n ?? 8, hx = p.hx ?? 560;
+      const ground = Array.from({ length: 14 }, (_, r) => Array.from({ length: 40 }, (_, i) => { const y = 10 + r * r * 6, sx = (i - 20) * (60 + r * 24); return rnd(r * 40 + i) > 0.55 ? `<circle cx="${f(hx * 0.3 + sx)}" cy="${y}" r="${f(1.5 + r * 0.25)}" fill="${rnd(i * 3 + r) > 0.7 ? '#FFFFFF' : '#FFC27A'}" opacity="0.75"/>` : ''; }).join('')).join('');
+      const planes = Array.from({ length: n }, (_, j) => { const k = fr(gt / (p.period ?? 3.4) / n + j / n), x = -1500 + (hx + 1500) * k, y = -1000 + 990 * k, s = 0.4 + 0.6 * (1 - k), on = fr(gt * 1.2 + j * 0.37) < 0.15;
+        return `<g transform="translate(${f(x)} ${f(y)})" opacity="${f(Math.min(1, (1 - k) * 8))}"><path d="M 0 0 L ${f(260 * s)} ${f(120 * s)} L ${f(200 * s)} ${f(200 * s)} Z" fill="#FFF1C9" opacity="0.12"/><circle r="${f(70 * s)}" fill="url(#wCool)"/><circle r="${f(10 * s + 3)}" fill="#FFFFFF"/><circle cx="${f(-16 * s)}" cy="${f(-6 * s)}" r="${f(3 * s + 1)}" fill="#FF4A4A" opacity="${on ? 1 : 0.2}"/></g>`; }).join('');
+      return `<g><rect x="-4000" y="-3000" width="8000" height="3000" fill="url(#wRampSky)"/><defs><linearGradient id="wRampSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060918"/><stop offset="1" stop-color="#2A3060"/></linearGradient></defs>
+        ${Array.from({ length: 40 }, (_, i) => `<circle cx="${f(-2000 + rnd(i * 3) * 4000)}" cy="${f(-1500 + rnd(i * 7) * 1300)}" r="2" fill="#DDE6FF" opacity="0.5"/>`).join('')}
+        <rect x="-4000" y="0" width="8000" height="2000" fill="#0B0E1E"/>${ground}
+        <ellipse cx="${hx}" cy="6" rx="420" ry="70" fill="url(#wSodium)"/><ellipse cx="${hx}" cy="6" rx="200" ry="26" fill="#FFCF8A" opacity="0.6"/>${planes}</g>`;
+    },
+    // screen-space round window frame (POV shots): dark wall with a round hole r at the centre, a rim, a glint
+    porthole(p) { const r = p.rr ?? 400, cx = p.cx ?? 960, cy = p.cy ?? 540; return `<g><path d="M -100 -100 H 2020 V 1180 H -100 Z M ${cx - r} ${cy} A ${r} ${r} 0 1 0 ${cx + r} ${cy} A ${r} ${r} 0 1 0 ${cx - r} ${cy} Z" fill="#1E2236" fill-rule="evenodd"/><circle cx="${cx}" cy="${cy}" r="${r + 18}" fill="none" stroke="#3A3F58" stroke-width="40"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#0B0D18" stroke-width="10"/><path d="M ${cx - r * 0.6} ${cy - r * 0.55} Q ${cx - r * 0.2} ${cy - r * 0.85} ${cx + r * 0.2} ${cy - r * 0.8}" stroke="#FFFFFF" stroke-width="10" fill="none" opacity="0.12" stroke-linecap="round"/></g>`; },
+    // the hub from the air at night (top-down with a slight tilt): the main building with its piers, jets parked
+    // at the piers, tugs crawling, sodium pools on the apron; fields 0..1 tiles the roof with up to 90 football fields
+    hubaerial(p) {
+      const gt = p.gt ?? 0, fl = p.fields ?? 0;
+      const jetTop = (x, y, r, s = 1) => `<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})"><path d="M 0 -120 Q 10 -110 10 -80 L 10 80 Q 0 120 -10 80 L -10 -80 Q -10 -110 0 -120 Z" fill="#DCDAD4"/><path d="M -10 -10 L -110 40 L -110 56 L -10 30 Z M 10 -10 L 110 40 L 110 56 L 10 30 Z" fill="#C9C7C0"/><path d="M -6 90 L -44 110 L 44 110 L 6 90 Z" fill="#C9C7C0"/><rect x="-6" y="80" width="12" height="30" fill="#2B3A67"/></g>`;
+      const piers = [[-640, -1], [0, -1], [640, -1], [-320, 1], [320, 1]];
+      const jets = piers.map(([x, d], i) => [-1, 1].map(sd => [0, 1].map(j => (i + j + (sd > 0 ? 1 : 0)) % 3 === 0 ? '' : jetTop(x + sd * 190, d * (420 + j * 260), sd > 0 ? -90 : 90, 0.85)).join('')).join('')).join('');
+      const tugs = Array.from({ length: 16 }, (_, i) => { const k = fr(gt * 0.03 * (0.6 + rnd(i)) + rnd(i * 3)), a = k * Math.PI * 2, rx = 1400 + rnd(i * 5) * 400, ry = 900 + rnd(i * 7) * 200; return `<circle cx="${f(Math.cos(a) * rx)}" cy="${f(Math.sin(a) * ry)}" r="7" fill="#FFB25C" opacity="${fr(gt * 2 + i * 0.3) < 0.5 ? 1 : 0.4}"/>`; }).join('');
+      const fields = fl > 0 ? Array.from({ length: Math.round(90 * fl) }, (_, i) => { const c = i % 15, r = Math.floor(i / 15), x = -900 + c * 120, y = -270 + r * 90; return `<g><rect x="${x + 3}" y="${y + 3}" width="114" height="84" fill="${i % 2 ? '#3C8C4E' : '#46A05A'}"/><rect x="${x + 9}" y="${y + 9}" width="102" height="72" fill="none" stroke="#EAF4EE" stroke-width="2.5" opacity="0.8"/><path d="M ${x + 60} ${y + 9} V ${y + 81}" stroke="#EAF4EE" stroke-width="2.5" opacity="0.8"/></g>`; }).join('') : '';
+      return `<g transform="scale(1 ${p.tiltY ?? 0.62})"><rect x="-6000" y="-5000" width="12000" height="10000" fill="#141729"/><rect x="-3000" y="-1500" width="6000" height="3000" rx="200" fill="#1E2236"/>
+        ${Array.from({ length: 24 }, (_, i) => `<ellipse cx="${f(-2600 + rnd(i * 11) * 5200)}" cy="${f(-1300 + rnd(i * 17) * 2600)}" rx="260" ry="260" fill="url(#wSodium)" opacity="0.4"/>`).join('')}
+        <path d="M -3000 1100 H 3000 M -3000 -1100 H 3000" stroke="#C9A84A" stroke-width="8" opacity="0.4"/>
+        ${piers.map(([x, d]) => `<rect x="-90" y="${d > 0 ? 260 : -900}" width="180" height="640" fill="#2E3354" transform="translate(${x} 0)"/>`).join('')}
+        <rect x="-930" y="-300" width="1860" height="600" fill="#3A3F5C"/>${Array.from({ length: 11 }, (_, i) => `<path d="M ${-930 + i * 186} -300 V 300" stroke="#2E3354" stroke-width="4"/>`).join('')}${Array.from({ length: 30 }, (_, i) => `<rect x="${f(-880 + rnd(i) * 1740)}" y="${f(-260 + rnd(i * 3) * 500)}" width="40" height="28" fill="#4A5270"/>`).join('')}
+        <rect x="-930" y="-300" width="1860" height="600" fill="none" stroke="#FFB25C" stroke-width="5" opacity="0.6"/>${fields}
+        <rect x="-930" y="300" width="1860" height="60" fill="#22263C"/>${Array.from({ length: 46 }, (_, i) => `<rect x="${-920 + i * 40}" y="316" width="20" height="14" fill="#FFCF8A" opacity="${rnd(i) > 0.3 ? 0.7 : 0.1}"/>`).join('')}
+        ${jets}${tugs}</g>`;
+    },
+    // the hub's outer wall at ground level, low angle: corrugated panels, a dock door (warm interior, rubber seals,
+    // hazard stripes), sodium wall lamps, the lead-in line and stop bar painted on the tarmac; horizon at y = 0
+    hubwall(p) {
+      const gt = p.gt ?? 0, dx = p.dx ?? 700, dw = p.dw ?? 1000, dh = p.dh ?? 760;
+      const panels = Array.from({ length: 90 }, (_, i) => `<rect x="${-4500 + i * 100}" y="-1700" width="10" height="1700" fill="#262B48"/>`).join('');
+      const lamps = [-1700, -900, -100, 1600, 2400].map(x => `<g transform="translate(${x} -880)"><rect x="-40" y="-14" width="80" height="22" rx="6" fill="#FFD9A0"/><path d="M -40 8 L 40 8 L 300 900 L -300 900 Z" fill="url(#wConeWarm)" opacity="0.35"/></g>`).join('');
+      const hz = Array.from({ length: Math.ceil(dh / 40) }, (_, i) => `<path d="M 0 ${-dh + i * 40} l 30 0 l -30 30 Z" fill="${i % 2 ? '#1B1E33' : '#E8B83C'}"/>`).join('');
+      return `<g><rect x="-4500" y="-3000" width="9000" height="3000" fill="url(#wRampSky)"/><defs><linearGradient id="wRampSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060918"/><stop offset="1" stop-color="#2A3060"/></linearGradient></defs>
+        <rect x="-4500" y="-1700" width="9000" height="1700" fill="#2E3458"/>${panels}<rect x="-4500" y="-1720" width="9000" height="30" fill="#1D2240"/>${Array.from({ length: 60 }, (_, i) => `<rect x="${-4480 + i * 150}" y="-1726" width="12" height="8" fill="#FF4A4A" opacity="${fr(gt * 0.7 + i * 0.13) < 0.2 ? 1 : 0.2}"/>`).join('')}
+        <g transform="translate(${dx} 0)"><rect x="${-dw / 2 - 40}" y="${-dh - 40}" width="${dw + 80}" height="${dh + 40}" fill="#14161F"/><rect x="${-dw / 2}" y="${-dh}" width="${dw}" height="${dh}" fill="#3B3149"/><ellipse cx="0" cy="${-dh * 0.45}" rx="${dw * 0.55}" ry="${dh * 0.5}" fill="url(#wWarm)"/>
+          ${Array.from({ length: 5 }, (_, i) => `<rect x="${-dw / 2 + 60 + i * (dw - 120) / 4 - 30}" y="${-dh * 0.38}" width="60" height="${dh * 0.38}" fill="#2A2638" opacity="0.8"/>`).join('')}<rect x="${-dw / 2}" y="${-dh * 0.38 - 20}" width="${dw}" height="22" fill="#5C6684"/>
+          <g transform="translate(${-dw / 2 - 40} 0)">${hz}</g><g transform="translate(${dw / 2 + 10} 0)">${hz}</g>
+          <g transform="translate(0 ${-dh - 110})"><rect x="-140" y="-40" width="280" height="80" rx="8" fill="#1B1E33"/><rect x="-132" y="-32" width="264" height="64" rx="5" fill="none" stroke="#FFC93C" stroke-width="3"/>${T(p.txt ?? 'DOCK 7', 34, '#FFC93C', 0, -4, 'letter-spacing="3"')}</g></g>
+        ${lamps}<rect x="-4500" y="0" width="9000" height="3000" fill="#23273B"/><rect x="-4500" y="0" width="9000" height="40" fill="#1B1E2E"/>
+        <path d="M ${dx - 2400} 520 Q ${dx - 600} 200 ${dx} 40" fill="none" stroke="#D9B44A" stroke-width="16" opacity="0.7"/><rect x="${dx - 260}" y="70" width="520" height="16" fill="#E6E4DE" opacity="0.8"/>
+        ${[-1300, -500, 1500].map(x => `<ellipse cx="${x}" cy="160" rx="420" ry="80" fill="url(#wSodium)" opacity="0.6"/>`).join('')}</g>`;
+    },
+    // inside the hub: high trusses, hanging sodium lamps, three tiers of belts in the background with parcels flowing
+    // (each tier its own speed and direction), railings, columns with hazard feet; floor at y = 0 with reflections
+    hubint(p) {
+      const gt = p.gt ?? 0, dim = p.dim ?? 0;
+      const tiers = [[-820, 160, 0.55], [-560, -220, 0.7], [-320, 260, 0.85]];
+      const tier = ([y, sp, s], ti) => { const off = ((gt * sp) % 300 + 300) % 300; return `<g><rect x="-4500" y="${y}" width="9000" height="${26 * s}" fill="#4A5270"/><rect x="-4500" y="${y + 26 * s}" width="9000" height="${10 * s}" fill="#2A2E44"/><rect x="-4500" y="${y - 50 * s}" width="9000" height="${6 * s}" fill="#E6C14A" opacity="0.55"/>
+        ${Array.from({ length: 32 }, (_, i) => { const x = -4500 + i * 300 + off, v = (i * 7 + ti) % 5; return rnd(i + ti * 40) > 0.25 ? `<g transform="translate(${f(x)} ${y}) scale(${f(s * 0.7)})">${PROPS.parcel({ v })}</g>` : ''; }).join('')}
+        ${Array.from({ length: 16 }, (_, i) => `<rect x="${-4500 + i * 600 + ti * 120}" y="${y + 30 * s}" width="${14 * s}" height="${-y}" fill="#252A42"/>`).join('')}</g>`; };
+      const truss = Array.from({ length: 46 }, (_, i) => `<path d="M ${-4500 + i * 200} -1300 L ${-4400 + i * 200} -1180 L ${-4300 + i * 200} -1300" stroke="#2A2E48" stroke-width="10" fill="none"/>`).join('');
+      const lamps = Array.from({ length: 12 }, (_, i) => { const x = -3300 + i * 600; return `<g transform="translate(${x} -1150)"><path d="M 0 -150 V 0" stroke="#1B1E33" stroke-width="4"/><path d="M -40 0 L 40 0 L 26 -24 L -26 -24 Z" fill="#1B1E33"/><ellipse cx="0" cy="4" rx="24" ry="8" fill="#FFD9A0"/><path d="M -40 4 L 40 4 L 380 1150 L -380 1150 Z" fill="url(#wConeWarm)" opacity="${f(0.22 * (1 - dim))}"/></g><ellipse cx="${x}" cy="40" rx="300" ry="50" fill="url(#wSodium)" opacity="${f(0.45 * (1 - dim))}"/>`; }).join('');
+      const cols = Array.from({ length: 9 }, (_, i) => `<g transform="translate(${-4000 + i * 1000} 0)"><rect x="-26" y="-1300" width="52" height="1300" fill="#20243C"/><path d="M -26 -120 h 52 v 120 h -52 Z" fill="#E8B83C"/>${[0, 1, 2].map(j => `<path d="M -26 ${-100 + j * 40} l 52 -30 v 18 l -52 30 Z" fill="#1B1E33"/>`).join('')}</g>`).join('');
+      return `<g><rect x="-4500" y="-3000" width="9000" height="3000" fill="#1B1F33"/>${truss}<rect x="-4500" y="-1310" width="9000" height="20" fill="#252A46"/>${tiers.map(tier).join('')}${cols}${lamps}
+        <rect x="-4500" y="0" width="9000" height="2500" fill="#262A3C"/><rect x="-4500" y="0" width="9000" height="900" fill="url(#wFloorFade)" opacity="0.5"/>${Array.from({ length: 30 }, (_, i) => `<rect x="${-4500 + i * 300}" y="0" width="3" height="900" fill="#30344C" opacity="0.6" transform="skewX(${(i - 15) * 2})"/>`).join('')}
+        ${dim ? `<rect x="-4500" y="-3000" width="9000" height="5500" fill="#05060F" opacity="${f(0.6 * dim)}"/>` : ''}</g>`;
+    },
+    // odd-shaped parcels for the irregular lane: k tube | tire | guitar | golf
+    oddparcel(p) {
+      const k = p.k ?? 'tube', sh = '<ellipse cx="0" cy="3" rx="90" ry="8" fill="#000" opacity="0.25"/>';
+      const body = {
+        tube: `<rect x="-120" y="-48" width="240" height="44" rx="22" fill="#B88B60"/><ellipse cx="120" cy="-26" rx="10" ry="22" fill="#8C6844"/><rect x="-30" y="-48" width="50" height="44" fill="#F2EEE6"/>`,
+        tire: `<circle cy="-70" r="70" fill="#1F2130"/><circle cy="-70" r="34" fill="#3A3F5C"/><circle cy="-70" r="20" fill="#14161F"/><rect x="-20" y="-150" width="40" height="30" fill="#F2EEE6"/>`,
+        guitar: `<g transform="rotate(-8)"><path d="M -140 -10 Q -150 -60 -100 -66 Q -70 -70 -60 -50 Q -40 -64 -10 -56 L 120 -46 L 130 -24 L -10 -16 Q -40 -8 -60 -22 Q -70 0 -100 0 Q -134 2 -140 -10 Z" fill="#2A2238"/><rect x="-80" y="-48" width="40" height="20" fill="#F2EEE6"/></g>`,
+        golf: `<rect x="-36" y="-170" width="72" height="170" rx="20" fill="#3D6B58"/><rect x="-36" y="-100" width="72" height="14" fill="#2A4A3C"/>${[-18, 0, 18].map((x, i) => `<rect x="${x - 3}" y="${-230 + i * 10}" width="6" height="70" fill="#9AA3B5"/><circle cx="${x}" cy="${-232 + i * 10}" r="9" fill="#C9CED8"/>`).join('')}<rect x="-20" y="-70" width="40" height="22" fill="#F2EEE6"/>`,
+      }[k];
+      return `<g transform="${S(p)} rotate(${p.tilt ?? 0})">${sh}${body}</g>`;
+    },
+    // a diverter paddle beside a belt: post and an arm that swings by ang degrees (0 = parked along the belt edge)
+    paddle(p) { const a = p.ang ?? 0; return `<g transform="${S(p)}"><rect x="-14" y="-160" width="28" height="160" fill="#4A5270"/><circle cy="-160" r="22" fill="#5C6684"/><g transform="translate(0 -160) rotate(${f(a)})"><rect x="0" y="-16" width="240" height="32" rx="10" fill="#E8B83C"/>${[0, 1, 2, 3, 4].map(i => `<path d="M ${20 + i * 44} -16 l 22 0 l -22 32 l -22 0 Z" fill="#1B1E33"/>`).join('')}</g></g>`; },
+    // the camera tunnel over the belt, side cutaway: a hood lined with camera heads (top, back, floor rail) that all
+    // flash (flash 0..1) and draw their sight lines to the label; a strip of status LEDs runs along the hood
+    camtunnel(p) {
+      const gt = p.gt ?? 0, fl = p.flash ?? 0, w = p.w ?? 560, h = p.h ?? 440, ty = p.ty ?? -120;
+      const heads = [...[-200, -100, 0, 100, 200].map(x => [x, -h + 50, 90]), ...[-160, 0, 160].map(x => [x, -h * 0.55, 0]), ...[-210, 210].map(x => [x, -40, x < 0 ? -40 : 220])];
+      const cam_ = ([x, y]) => `<g transform="translate(${x} ${y})"><rect x="-24" y="-18" width="48" height="36" rx="6" fill="#3A3F5C"/><circle r="12" fill="#0B0D18"/><circle r="7" fill="${fl > 0.2 ? '#E6F4FF' : '#3A7BD5'}"/><circle cx="-3" cy="-3" r="2.5" fill="#FFFFFF" opacity="0.8"/></g>`;
+      const lines = fl > 0.05 ? heads.map(([x, y]) => `<path d="M ${x} ${y} L ${p.lx ?? 0} ${ty}" stroke="#7CC2FF" stroke-width="3" opacity="${f(0.8 * fl)}"/>`).join('') : '';
+      return `<g transform="${S(p)}"><rect x="${-w / 2 - 30}" y="${-h - 40}" width="${w + 60}" height="${h + 40}" rx="20" fill="#4A5270"/><rect x="${-w / 2}" y="${-h}" width="${w}" height="${h}" fill="#0C0F1E"/>
+        <rect x="${-w / 2}" y="${-h}" width="${w}" height="${h}" fill="#CFE8FF" opacity="${f(0.45 * fl)}"/>${heads.map(cam_).join('')}${lines}
+        ${Array.from({ length: 14 }, (_, i) => `<rect x="${-w / 2 + 10 + i * (w - 20) / 14}" y="${-h - 28}" width="${(w - 20) / 14 - 8}" height="10" rx="3" fill="${fr(gt * 1.5 - i / 14) < 0.15 ? '#7CC2FF' : '#23304E'}"/>`).join('')}
+        ${T(p.txt ?? 'DIMENSION · WEIGHT · LABEL', 18, '#9AA3B5', 0, -h - 58, 'letter-spacing="2"')}</g>`;
+    },
+    // the curtain the camera tunnel's belt runs through (put it in front of the box at the tunnel mouth)
+    strips(p) { const gt = p.gt ?? 0, h = p.h ?? 440; return `<g>${Array.from({ length: 6 }, (_, i) => `<path d="M ${i * 14} ${-h} L ${i * 14 + 12} ${-h} L ${f(i * 14 + 12 + Math.sin(gt * 2 + i) * 4 + (p.push ?? 0) * 40)} 0 L ${f(i * 14 + Math.sin(gt * 2 + i) * 4 + (p.push ?? 0) * 40)} 0 Z" fill="#9FC4D8" opacity="0.3"/>`).join('')}</g>`; },
+    // a hanging monitor: dark screen, lines of system text (l1, l2), ok: 0..1 shows the green check
+    monitor(p) { const w = p.w ?? 460, h = p.h ?? 250; return `<g transform="${S(p)}"><path d="M -80 ${-h / 2} V -2000 M 80 ${-h / 2} V -2000" stroke="#1B1E33" stroke-width="8"/><rect x="${-w / 2 - 16}" y="${-h / 2 - 16}" width="${w + 32}" height="${h + 32}" rx="14" fill="#1B1E33"/><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="#0A1B33"/><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="url(#wGrid)" opacity="0.4"/>
+      ${p.l1 ? T(p.l1, p.size ?? 34, '#7CC2FF', 0, -h / 2 + 50) : ''}${p.l2 ? T(p.l2, p.size ?? 34, YEL, 0, -h / 2 + 110) : ''}${(p.ok ?? 0) > 0 ? `<g transform="translate(0 ${h / 2 - 50}) scale(${f(p.ok)})"><circle r="30" fill="#2E9E5B"/><path d="M -14 0 L -4 10 L 16 -12" stroke="#FFFFFF" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>` : ''}</g>`; },
+    // the maze: belts crossing at several heights and angles, each carrying parcels at its own pace (background)
+    beltmaze(p) {
+      const gt = p.gt ?? 0;
+      const segs = [[-2600, -1100, 2600, -1100, 120], [2600, -820, -2600, -760, 90], [-2600, -560, 600, -560, 150], [600, -560, 1400, -260, 150], [-2600, -300, 2600, -300, 110], [2600, -60, -400, -60, 130], [-1800, -1100, -800, -560, 100], [1200, -1100, 2000, -820, 80]];
+      const belt = ([x0, y0, x1, y1, sp], si) => { const L = Math.hypot(x1 - x0, y1 - y0), a = Math.atan2(y1 - y0, x1 - x0) * 180 / Math.PI, n = Math.floor(L / 260);
+        const parcels = Array.from({ length: n }, (_, i) => { const d = ((i * 260 + gt * sp) % L + L) % L; return rnd(i + si * 30) > 0.3 ? `<g transform="translate(${f(d)} 0) rotate(${f(-a)}) scale(0.62)">${PROPS.parcel({ v: (i + si) % 5 })}</g>` : ''; }).join('');
+        const legs = Array.from({ length: Math.floor(L / 500) + 1 }, (_, i) => { const x = x0 + (x1 - x0) * i / Math.max(1, Math.floor(L / 500)), y = y0 + (y1 - y0) * i / Math.max(1, Math.floor(L / 500)); return `<rect x="${f(x - 7)}" y="${f(y + 20)}" width="14" height="${f(-y - 20)}" fill="#20243C"/>`; }).join('');
+        return `${legs}<g transform="translate(${x0} ${y0}) rotate(${f(a)})"><rect x="0" y="0" width="${f(L)}" height="24" fill="#4A5270"/><rect x="0" y="24" width="${f(L)}" height="8" fill="#2A2E44"/><rect x="0" y="-46" width="${f(L)}" height="6" fill="#E6C14A" opacity="0.5"/>${parcels}</g>`; };
+      return `<g opacity="${p.op ?? 1}">${segs.map(belt).join('')}</g>`;
+    },
+    // a wall of identical brown boxes (rows x cols), each with its label; n hides none of them (it's the joke)
+    boxwall(p) {
+      const rows = p.rows ?? 8, cols = p.cols ?? 14, bw = p.bw ?? 150, bh = p.bh ?? 112;
+      return `<g transform="${S(p)}">${Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => { const x = (c - cols / 2) * bw + (r % 2) * bw * 0.5, y = -(r + 1) * bh, col = ['#A47A55', '#AD835A', '#9C7550'][Math.floor(rnd(r * 31 + c) * 3)];
+        return `<rect x="${x + 2}" y="${y + 2}" width="${bw - 4}" height="${bh - 4}" fill="${col}"/><rect x="${x + 2}" y="${y + 2}" width="${bw - 4}" height="8" fill="${tint(col, 0.15)}"/><rect x="${x + bw * 0.12}" y="${y + bh * 0.3}" width="${bw * 0.3}" height="${bh * 0.26}" fill="#F2EEE6"/><rect x="${x + bw * 0.12}" y="${y + bh * 0.62}" width="${bw * 0.22}" height="4" fill="#1B1E33" opacity="0.5"/>`; }).join('')).join('')}</g>`;
+    },
+    // ZERO's handwritten cardboard sign
+    cardsign(p) { return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><rect x="-140" y="-80" width="280" height="160" rx="6" fill="#C9A27A"/><rect x="-140" y="-80" width="280" height="12" fill="#B38B62"/><path d="M -130 74 L -100 60 L -60 78" stroke="#8C6844" stroke-width="3" fill="none"/><text x="0" y="22" text-anchor="middle" font-family="${FONT}" font-weight="700" font-size="${p.size ?? 58}" fill="${INK}" transform="rotate(-3)">${esc(p.txt ?? 'Great.')}</text></g>`; },
+    // SYSTEM VIEW of the hub from above: the belt network as blue lines, grey dots flowing on it, scanner nodes;
+    // the yellow dot is ZERO's box (prog 0..1 along its route), ZERO's own dot follows at zprog; nodes ping as it passes
+    hubmap(p) {
+      const gt = p.gt ?? 0;
+      const route = [[-760, 300], [-420, 300], [-420, 40], [-60, 40], [-60, -220], [360, -220], [360, 80], [760, 80]];
+      const net = [[[-900, -320], [900, -320]], [[-900, 200], [900, 200]], [[-600, -400], [-600, 400]], [[200, -400], [200, 400]], [[600, -400], [600, 400]], [[-900, -60], [500, -60]], [[-200, -400], [-200, 400]]];
+      const len = pts => pts.slice(1).reduce((s, q, i) => s + Math.hypot(q[0] - pts[i][0], q[1] - pts[i][1]), 0);
+      const at = (pts, k) => { let d = k * len(pts); for (let i = 1; i < pts.length; i++) { const l = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); if (d <= l) return [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * d / l, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * d / l]; d -= l; } return pts[pts.length - 1]; };
+      const poly = pts => pts.map(q => q.join(',')).join(' ');
+      const flow = net.map((pts, ni) => Array.from({ length: 10 }, (_, i) => { const q = at(pts, fr(gt * 0.08 * (ni % 2 ? -1 : 1) + i / 10 + ni * 0.13)); return `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="7" fill="#9AA3B5" opacity="0.7"/>`; }).join('')).join('');
+      const nodesK = [0.12, 0.3, 0.5, 0.68, 0.86], prog = p.prog ?? 0;
+      const nodes = nodesK.map(k => { const q = at(route, k), d = prog - k, ping = d > 0 && d < 0.08 ? d / 0.08 : 0; return `<rect x="${f(q[0] - 14)}" y="${f(q[1] - 14)}" width="28" height="28" fill="${prog >= k ? YEL : '#2A4A7A'}" stroke="#7CC2FF" stroke-width="3"/>${ping ? `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="${f(20 + 60 * ping)}" fill="none" stroke="${YEL}" stroke-width="4" opacity="${f(1 - ping)}"/>` : ''}`; }).join('');
+      const yb = at(route, prog), zp = at(route, Math.max(0, p.zprog ?? 0));
+      return `<g transform="${S(p)}">${net.map(pts => `<polyline points="${poly(pts)}" fill="none" stroke="#2F5E9E" stroke-width="16" stroke-linecap="round"/>`).join('')}<polyline points="${poly(route)}" fill="none" stroke="#4FA8FF" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="${poly(route)}" fill="none" stroke="${YEL}" stroke-width="6" stroke-dasharray="${f(len(route) * prog)} 99999" stroke-linecap="round" stroke-linejoin="round"/>${flow}${nodes}
+        <circle cx="${f(yb[0])}" cy="${f(yb[1])}" r="${f(22 + 3 * Math.sin(gt * 8))}" fill="${YEL}"/><circle cx="${f(yb[0])}" cy="${f(yb[1])}" r="60" fill="url(#wPix)"/>
+        ${p.zprog != null ? `<g transform="translate(${f(zp[0])} ${f(zp[1])})"><circle r="15" fill="${WHITE}" stroke="${INK}" stroke-width="5"/><path d="M -4 -15 l 4 -8 l 4 8" fill="${WHITE}" stroke="${INK}" stroke-width="3"/></g>` : ''}</g>`;
+    },
+    // the break room: lockers, a humming vending machine, an inside window onto the sort floor (belts moving), a
+    // clock, a notice board with flyers, warm light; floor at y = 0
+    breakroom(p) {
+      const gt = p.gt ?? 0, wall = p.wall ?? '#3A3348';
+      const lockers = Array.from({ length: 6 }, (_, i) => `<g transform="translate(${-1500 + i * 130} 0)"><rect x="0" y="-760" width="124" height="760" fill="#4E5A78"/><rect x="0" y="-760" width="124" height="10" fill="#5E6A88"/>${[0, 1, 2, 3, 4].map(j => `<rect x="20" y="${-720 + j * 12}" width="84" height="5" fill="#3A445E"/>`).join('')}<rect x="96" y="-420" width="10" height="40" rx="4" fill="#9AA3B5"/></g>`).join('');
+      const winOff = ((gt * 140) % 260 + 260) % 260;
+      const win = `<g transform="translate(160 -560)"><rect x="-360" y="-200" width="720" height="380" fill="#14172A"/><rect x="-360" y="-200" width="720" height="380" fill="url(#wSodium)" opacity="0.35"/><rect x="-360" y="40" width="720" height="18" fill="#4A5270"/>${Array.from({ length: 5 }, (_, i) => `<g transform="translate(${f(-460 + i * 260 + winOff)} 40) scale(0.45)">${PROPS.parcel({ v: i })}</g>`).join('')}${[-200, 60, 260].map((x, i) => `<g transform="translate(${x} 170) scale(0.45)">${PROPS.person({ gt, pose: 'walk', shirt: '#4C5E7C', vest: '#E8823C', seed: i + 4, speed: 0.6 })}</g>`).join('')}<rect x="-376" y="-216" width="752" height="412" fill="none" stroke="#2A2638" stroke-width="32"/><path d="M -300 -180 L -200 -180 L -340 120 Z" fill="#FFFFFF" opacity="0.05"/></g>`;
+      const vend = `<g transform="translate(1250 0)"><rect x="-150" y="-820" width="300" height="820" rx="10" fill="#7A2E3A"/><rect x="-120" y="-780" width="170" height="560" fill="#1E2236"/><rect x="-120" y="-780" width="170" height="560" fill="#BFE3FF" opacity="${f(0.16 + 0.03 * Math.sin(gt * 40))}"/>${Array.from({ length: 5 }, (_, r) => Array.from({ length: 4 }, (_, c) => `<rect x="${-110 + c * 40}" y="${-760 + r * 108}" width="30" height="60" rx="5" fill="${['#E85B4E', '#4FA8FF', '#7BC6A4', '#E6C14A'][(r + c) % 4]}" opacity="0.85"/>`).join('')).join('')}<rect x="70" y="-700" width="60" height="120" rx="6" fill="#2A1E26"/><rect x="-120" y="-180" width="170" height="70" fill="#14161F"/><ellipse cx="-30" cy="-500" rx="300" ry="420" fill="url(#wCool)" opacity="0.35"/></g>`;
+      const board = `<g transform="translate(-480 -640)"><rect x="-170" y="-130" width="340" height="250" fill="#8C6844"/><rect x="-160" y="-120" width="320" height="230" fill="#B38B62"/><g transform="translate(-80 -30) rotate(-4)"><rect x="-56" y="-70" width="112" height="140" fill="#F2EEE6"/><g transform="translate(0 -20) scale(0.5)">${icons.cap('#2B3A67')}</g><rect x="-40" y="30" width="80" height="6" fill="#2B3A67"/><rect x="-40" y="44" width="60" height="5" fill="#9AA3B5"/></g><g transform="translate(70 -10) rotate(5)"><rect x="-60" y="-60" width="120" height="110" fill="#FFF4D6"/><rect x="-44" y="-40" width="88" height="6" fill="#C9555A"/><rect x="-44" y="-24" width="70" height="5" fill="#9AA3B5"/><rect x="-44" y="-12" width="80" height="5" fill="#9AA3B5"/></g><circle cx="-80" cy="-96" r="6" fill="#E85B4E"/><circle cx="70" cy="-66" r="6" fill="#4FA8FF"/></g>`;
+      return `<g><rect x="-4000" y="-3000" width="8000" height="3000" fill="${wall}"/><rect x="-4000" y="-300" width="8000" height="300" fill="${shade(wall, 0.15)}"/>${lockers}${board}${win}${vend}
+        <g transform="translate(-160 -880) scale(0.7)">${PROPS.wallclock({ gt, h: p.h ?? 2, m: p.m ?? 13, s0: 0 })}</g>
+        <rect x="-4000" y="0" width="8000" height="2000" fill="#2E2A3A"/>${Array.from({ length: 30 }, (_, i) => `<rect x="${-4000 + i * 280}" y="0" width="4" height="900" fill="#3A3548" transform="skewX(${(i - 15) * 2})"/>`).join('')}<rect x="-4000" y="0" width="8000" height="900" fill="url(#wFloorFade)" opacity="0.5"/>
+        <ellipse cx="0" cy="-500" rx="1300" ry="700" fill="url(#wWarm)" opacity="0.35"/></g>`;
+    },
+    // an open book (held with both hands, or on a lap)
+    book(p) { return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><path d="M -70 -6 Q -36 -20 0 -8 Q 36 -20 70 -6 L 70 40 Q 36 28 0 40 Q -36 28 -70 40 Z" fill="${p.cover ?? '#2B3A67'}"/><path d="M -64 -10 Q -32 -22 0 -12 L 0 34 Q -32 24 -64 34 Z" fill="#F2EEE6"/><path d="M 64 -10 Q 32 -22 0 -12 L 0 34 Q 32 24 64 34 Z" fill="#E9E4DA"/>${[0, 1, 2, 3].map(i => `<path d="M -54 ${-6 + i * 9} Q -30 ${-14 + i * 9} -8 ${-6 + i * 9}" stroke="#9AA3B5" stroke-width="2" fill="none"/>`).join('')}</g>`; },
+    // a platform scale under a container; the dial's needle (a, degrees) swings with a damped wobble from since
+    floorscale(p) { const gt = p.gt ?? 0, a = (p.a ?? 0) + (p.since != null && gt > p.since ? 30 * Math.exp(-(gt - p.since) * 3) * Math.sin((gt - p.since) * 14) : 0); return `<g transform="${S(p)}"><rect x="-260" y="-24" width="520" height="24" fill="#5C6684"/><rect x="-270" y="-30" width="540" height="10" fill="#7A8299"/><g transform="translate(330 -220)"><rect x="-8" y="0" width="16" height="200" fill="#4A5270"/><circle r="80" fill="#1B1E33"/><circle r="66" fill="#F2EEE6"/>${Array.from({ length: 9 }, (_, i) => `<path d="M 0 -60 V -48" stroke="#1B1E33" stroke-width="4" transform="rotate(${-120 + i * 30})"/>`).join('')}<g transform="rotate(${f(-120 + a)})"><path d="M -4 0 L 0 -56 L 4 0 Z" fill="#C63D46"/></g><circle r="8" fill="#1B1E33"/></g></g>`; },
+    // a chute sloping down from (0,0) to (dx,dy), side walls, parcels sliding down it (speed), a city plate at the top
+    chute(p) {
+      const gt = p.gt ?? 0, dx = p.dx ?? 600, dy = p.dy ?? 500, L = Math.hypot(dx, dy), a = Math.atan2(dy, dx) * 180 / Math.PI, sp = p.speed ?? 220;
+      const parcels = p.empty ? '' : Array.from({ length: Math.floor(L / 220) }, (_, i) => { const d = ((i * 220 + gt * sp) % L + L) % L; return `<g transform="translate(${f(d)} -4) scale(0.6)" opacity="${f(Math.min(1, (L - d) / 60))}">${PROPS.parcel({ v: (i + (p.seed ?? 0)) % 5 })}</g>`; }).join('');
+      return `<g><g transform="rotate(${f(a)})"><rect x="0" y="0" width="${f(L)}" height="30" fill="#8C93AA"/><rect x="0" y="-70" width="${f(L)}" height="16" fill="#6C7590"/>${parcels}<rect x="0" y="-74" width="${f(L)}" height="104" fill="#9FC4D8" opacity="0.08"/></g>
+        ${p.txt ? `<g transform="translate(40 -150)"><rect x="-80" y="-34" width="160" height="68" rx="8" fill="#1B1E33"/><rect x="-72" y="-26" width="144" height="52" rx="5" fill="none" stroke="${p.tc ?? '#7CC2FF'}" stroke-width="3"/>${T(p.txt, 34, p.tc ?? '#7CC2FF', 0, -4, 'letter-spacing="3"')}</g>` : ''}</g>`;
+    },
   };
   Object.assign(PROPS, W);
   window.WORLD = { defs, NIGHT, icons };

@@ -56,3 +56,35 @@ save('tape', n * am * np.exp(-((x - 0.25) / 0.2) ** 2) - lpf(n, 1 / 4) * 0.3)
 x = t(0.8); th = np.sin(2 * np.pi * 70 * x) * np.exp(-x * 12) * 2 + lpf(rng.standard_normal(len(x)), 1 / 10) * np.exp(-x * 25) * 3
 ra = rng.standard_normal(len(x)) * (np.sin(2 * np.pi * 30 * x) > 0.7) * np.exp(-x * 6) * 0.3
 save('door', th + ra)
+# ---- video 001 part 2: the air network ----
+# ramp: open night air, distant jet idle whine and a far-off reversing beeper
+x = t(16); air = lpf(rng.standard_normal(len(x)), 1 / 50) * 2
+whine = np.sin(2 * np.pi * (1850 + 20 * np.sin(2 * np.pi * 0.1 * x)) * x) * 0.03 + np.sin(2 * np.pi * 92 * x) * 0.15
+bp = np.sin(2 * np.pi * 1300 * x) * ((x % 1.2) < 0.35) * (x > 3) * (x < 11) * 0.04
+save('ramp', fade(air + whine + bp, 0.8, 1.2))
+# jet: take-off roar swelling from a whine to a deep rumble
+x = t(4.5); k = np.clip(x / 3.0, 0, 1); n = rng.standard_normal(len(x))
+roar = lpf(n, 1 / 6) * (0.3 + k) + lpf(n, 1 / 40) * 2.5 * k
+wh = np.sin(2 * np.pi * np.cumsum(1500 + 1500 * k) / SR) * 0.08 * (1 - 0.5 * k)
+save('jet', fade(roar + wh, 0.2, 1.0))
+# beep: ground vehicle reversing alarm (two beeps)
+x = t(1.3); save('beep', np.sin(2 * np.pi * 1250 * x) * (((x % 0.6) < 0.32)) * np.exp(-x * 0.6) * (x < 1.0))
+# clunk: heavy metal lock
+x = t(0.7); cl = sum(np.sin(2 * np.pi * f * x) * np.exp(-x * d) for f, d in [(180, 14), (420, 22), (1130, 35), (2450, 50)]) + lpf(rng.standard_normal(len(x)), 1 / 6) * np.exp(-x * 60) * 2
+save('clunk', cl)
+# shutter: a burst of camera clicks (the camera tunnel)
+x = t(0.8); sh = np.zeros_like(x)
+for k in [0.0, 0.06, 0.1, 0.17, 0.21, 0.3, 0.36]:
+    i = int(k * SR); m = 700; sh[i:i + m] += rng.standard_normal(m) * np.exp(-np.arange(m) / 90) * (0.6 + 0.4 * rng.random())
+save('shutter', sh + np.sin(2 * np.pi * 3200 * x) * np.exp(-x * 10) * 0.05)
+# chime: shift-change bell, two soft tones
+x = t(2.4); ch = (np.sin(2 * np.pi * 784 * x) * np.exp(-x * 2.2) + np.sin(2 * np.pi * 588 * np.clip(x - 0.45, 0, None)) * np.exp(-np.clip(x - 0.45, 0, None) * 2.2) * (x > 0.45))
+save('chime', ch * 0.7 + 0.15 * np.sin(2 * np.pi * 1568 * x) * np.exp(-x * 4))
+# slide: cardboard sliding down a metal chute
+x = t(1.1); n = rng.standard_normal(len(x)); save('slide', (lpf(n, 1 / 5) - lpf(n, 1 / 30)) * np.sin(np.pi * x / 1.1) ** 0.7)
+# hub: a huge hall at night: deep rumble, rollers everywhere, far beeps, a PA hum
+x = t(20); rum = lpf(rng.standard_normal(len(x)), 1 / 90) * 3
+rl = np.zeros_like(x)
+for k in np.sort(rng.uniform(0, 19.8, 160)): i = int(k * SR); m = 1200; rl[i:i + m] += np.exp(-np.arange(m) / 200) * np.sin(2 * np.pi * rng.uniform(500, 1100) * np.arange(m) / SR) * rng.uniform(0.1, 0.5)
+far = np.sin(2 * np.pi * 2100 * x) * ((x % 5.3) < 0.08) * 0.05
+save('hub', fade(rum + 0.35 * rl + far + 0.08 * np.sin(2 * np.pi * 120 * x), 0.8, 1.2))
