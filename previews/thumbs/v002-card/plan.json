@@ -1,0 +1,753 @@
+{
+ "title": "What Happens in the 2 Seconds After You Tap Your Card",
+ "titleProposed": false,
+ "coreQuestion": "Where does the payment go behind the terminal?",
+ "playbook": "card",
+ "category": "MONEY",
+ "world": "network",
+ "recommended": "A",
+ "why": "curiosity gap: the viewer has to click to find out what happens inside",
+ "variants": [
+  {
+   "id": "A",
+   "angle": "curiosity",
+   "playbook": "card",
+   "concept": "ZERO taps; his card shoots along a light rail into a wall cut open on the payment network: cables branching to everywhere, servers, an eye at the back",
+   "category": "MONEY",
+   "mystery": "Where does the payment go behind the terminal?",
+   "metaphor": "ZERO taps; his card shoots along a light rail into a wall cut open on the payment network: cables branching to everywhere, servers, an eye at the back",
+   "layout": "discovery",
+   "zero": {
+    "side": "left",
+    "emotion": "waitwhat",
+    "pose": "chasing"
+   },
+   "mainObject": "card",
+   "world": "network",
+   "accent": "#2E9E5B",
+   "family": {
+    "name": "MONEY",
+    "bg1": "#08161F",
+    "bg2": "#123B3F",
+    "wall": "#16363B",
+    "floor": "#0F2629",
+    "accent": "#2E9E5B",
+    "accent2": "#FFC93C",
+    "key": "#FFE2A6",
+    "grade": "#FFC93C"
+   },
+   "text": {
+    "lines": [
+     "WHO SAID",
+     "YES?"
+    ],
+    "color": "#FFC93C"
+   },
+   "textOptions": [
+    {
+     "lines": [
+      "WHO SAID",
+      "YES?"
+     ]
+    }
+   ],
+   "pix": {
+    "on": true,
+    "role": "reveal"
+   },
+   "hero": "cutaway",
+   "heroOpts": {
+    "interior": "tech",
+    "obj": "card"
+   },
+   "worldOpts": {},
+   "meta": {
+    "layout": "discovery",
+    "hidden": true,
+    "pose": "chasing",
+    "pixRole": "reveal",
+    "attention": 2
+   },
+   "echo": false,
+   "hook": {
+    "title": "What Happens in the 2 Seconds After You Tap Your Card",
+    "image": "Where does the payment go behind the terminal?",
+    "text": "WHO SAID YES?"
+   },
+   "seen": 1
+  },
+  {
+   "id": "B",
+   "angle": "consequence",
+   "playbook": "card",
+   "concept": "His money goes into the payment machine whole and comes out smaller; pipes carry the difference away",
+   "category": "MONEY",
+   "mystery": "A full coin goes in; less comes out the other side. Where is the rest?",
+   "metaphor": "His money goes into the payment machine whole and comes out smaller; pipes carry the difference away",
+   "layout": "beforeafter",
+   "zero": {
+    "side": "right",
+    "emotion": "waitwhat",
+    "pose": "waitwhat"
+   },
+   "mainObject": "card",
+   "world": "network",
+   "accent": "#2E9E5B",
+   "family": {
+    "name": "MONEY",
+    "bg1": "#08161F",
+    "bg2": "#123B3F",
+    "wall": "#16363B",
+    "floor": "#0F2629",
+    "accent": "#2E9E5B",
+    "accent2": "#FFC93C",
+    "key": "#FFE2A6",
+    "grade": "#FFC93C"
+   },
+   "text": {
+    "lines": [
+     "WHO TAKES",
+     "A CUT?"
+    ],
+    "color": "#FF6B5B"
+   },
+   "textOptions": [
+    {
+     "lines": [
+      "WHO TAKES",
+      "A CUT?"
+     ]
+    }
+   ],
+   "pix": {
+    "on": false,
+    "role": "scan"
+   },
+   "hero": "beforeafter",
+   "heroOpts": {
+    "in": "card"
+   },
+   "worldOpts": {},
+   "meta": {
+    "layout": "beforeafter",
+    "hidden": true,
+    "pixRole": "scan",
+    "attention": 2
+   },
+   "echo": false,
+   "hook": {
+    "title": "What Happens in the 2 Seconds After You Tap Your Card",
+    "image": "A full coin goes in; less comes out the other side. Where is the rest?",
+    "text": "WHO TAKES A CUT?"
+   },
+   "seen": 0
+  },
+  {
+   "id": "C",
+   "angle": "scale",
+   "playbook": "card",
+   "concept": "One terminal, one coffee, a whole planet of banks lighting up",
+   "category": "MONEY",
+   "mystery": "Why does one coffee light up a whole planet of banks?",
+   "metaphor": "One terminal, one coffee, a whole planet of banks lighting up",
+   "layout": "scale",
+   "zero": {
+    "side": "left",
+    "emotion": "lookingup",
+    "pose": "lookingup"
+   },
+   "mainObject": null,
+   "world": "network",
+   "accent": "#2E9E5B",
+   "family": {
+    "name": "MONEY",
+    "bg1": "#08161F",
+    "bg2": "#123B3F",
+    "wall": "#16363B",
+    "floor": "#0F2629",
+    "accent": "#2E9E5B",
+    "accent2": "#FFC93C",
+    "key": "#FFE2A6",
+    "grade": "#FFC93C"
+   },
+   "text": {
+    "lines": [
+     "ALL THIS FOR",
+     "A COFFEE?"
+    ],
+    "color": "#FFC93C"
+   },
+   "textOptions": [
+    {
+     "lines": [
+      "ALL THIS FOR",
+      "A COFFEE?"
+     ]
+    }
+   ],
+   "pix": {
+    "on": false,
+    "role": null
+   },
+   "hero": "web",
+   "heroOpts": {},
+   "worldOpts": {},
+   "meta": {
+    "layout": "scale",
+    "attention": 2
+   },
+   "echo": false,
+   "hook": {
+    "title": "What Happens in the 2 Seconds After You Tap Your Card",
+    "image": "Why does one coffee light up a whole planet of banks?",
+    "text": "ALL THIS FOR A COFFEE?"
+   },
+   "seen": 0
+  }
+ ],
+ "primary": "A1",
+ "alternative": "B1",
+ "qa": {
+  "A1": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "43%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 205
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "chasing"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "Where does the payment go behind the terminal?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "reveal"
+    },
+    {
+     "q": "Text is 2-5 words",
+     "pass": true,
+     "value": 3
+    },
+    {
+     "q": "Text readable on a phone (font >= 84 px at 1280)",
+     "pass": true,
+     "value": 128
+    },
+    {
+     "q": "Text never covers ZERO",
+     "pass": true,
+     "value": 0
+    },
+    {
+     "q": "Text does not cover the main object",
+     "pass": true,
+     "value": "0%"
+    },
+    {
+     "q": "Text inside the safe margins",
+     "pass": true,
+     "value": "630,30,610,265"
+    },
+    {
+     "q": "PIX does not cover the text",
+     "pass": true,
+     "value": ""
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 10,
+    "zeroVisibility": 9.7,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 9,
+    "originality": 7.5
+   },
+   "redesign": [],
+   "pose": "chasing",
+   "boxes": {
+    "zero": [
+     111.25600000000001,
+     344.04,
+     187.48799999999997,
+     309.96
+    ],
+    "text": [
+     630.3259576291454,
+     30,
+     609.6740423708546,
+     265.3061224489796
+    ],
+    "hero": [
+     370,
+     380,
+     260,
+     170
+    ],
+    "pix": [
+     709,
+     317,
+     70,
+     70
+    ]
+   },
+   "notes": [],
+   "text": [
+    "WHO SAID",
+    "YES?"
+   ],
+   "pix": true
+  },
+  "A2": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "43%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 205
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "chasing"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "Where does the payment go behind the terminal?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "reveal"
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 9,
+    "zeroVisibility": 9.7,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 9,
+    "originality": 7.5
+   },
+   "redesign": [],
+   "pose": "chasing",
+   "boxes": {
+    "zero": [
+     111.25600000000001,
+     344.04,
+     187.48799999999997,
+     309.96
+    ],
+    "text": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hero": [
+     370,
+     380,
+     260,
+     170
+    ],
+    "pix": [
+     709,
+     317,
+     70,
+     70
+    ]
+   },
+   "notes": [],
+   "text": null,
+   "pix": true
+  },
+  "B1": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "41%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 1050
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "waitwhat"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "A full coin goes in; less comes out the other side. Where is the rest?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
+    },
+    {
+     "q": "Text is 2-5 words",
+     "pass": true,
+     "value": 4
+    },
+    {
+     "q": "Text readable on a phone (font >= 84 px at 1280)",
+     "pass": true,
+     "value": 117
+    },
+    {
+     "q": "Text never covers ZERO",
+     "pass": true,
+     "value": 0
+    },
+    {
+     "q": "Text does not cover the main object",
+     "pass": true,
+     "value": "0%"
+    },
+    {
+     "q": "Text inside the safe margins",
+     "pass": true,
+     "value": "586,36,654,244"
+    },
+    {
+     "q": "PIX does not cover the text",
+     "pass": true,
+     "value": ""
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 10,
+    "zeroVisibility": 9.8,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 9,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "waitwhat",
+   "boxes": {
+    "zero": [
+     960.72,
+     358.8,
+     178.56,
+     295.2
+    ],
+    "text": [
+     586.001127031604,
+     36,
+     653.998872968396,
+     243.54215098344753
+    ],
+    "hero": [
+     110,
+     300,
+     800,
+     320
+    ],
+    "pix": null
+   },
+   "notes": [],
+   "text": [
+    "WHO TAKES",
+    "A CUT?"
+   ],
+   "pix": false
+  },
+  "B2": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "41%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 1050
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "waitwhat"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "A full coin goes in; less comes out the other side. Where is the rest?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 9,
+    "zeroVisibility": 9.8,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 9,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "waitwhat",
+   "boxes": {
+    "zero": [
+     960.72,
+     358.8,
+     178.56,
+     295.2
+    ],
+    "text": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hero": [
+     110,
+     300,
+     800,
+     320
+    ],
+    "pix": null
+   },
+   "notes": [],
+   "text": null,
+   "pix": false
+  },
+  "C1": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "35%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 250
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "lookingup"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "Why does one coffee light up a whole planet of banks?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
+    },
+    {
+     "q": "Text is 2-5 words",
+     "pass": true,
+     "value": 5
+    },
+    {
+     "q": "Text readable on a phone (font >= 84 px at 1280)",
+     "pass": true,
+     "value": 101
+    },
+    {
+     "q": "Text never covers ZERO",
+     "pass": true,
+     "value": 0
+    },
+    {
+     "q": "Text does not cover the main object",
+     "pass": true,
+     "value": "0%"
+    },
+    {
+     "q": "Text inside the safe margins",
+     "pass": true,
+     "value": "588,36,652,210"
+    },
+    {
+     "q": "PIX does not cover the text",
+     "pass": true,
+     "value": ""
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 9,
+    "curiosity": 9,
+    "zeroVisibility": 9.8,
+    "mobile": 8.3,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 8,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "lookingup",
+   "boxes": {
+    "zero": [
+     174.112,
+     403.08000000000004,
+     151.776,
+     250.92
+    ],
+    "text": [
+     587.9444468524773,
+     36,
+     652.0555531475227,
+     210.36681119768483
+    ],
+    "hero": [
+     580,
+     360,
+     300,
+     300
+    ],
+    "pix": null
+   },
+   "notes": [],
+   "text": [
+    "ALL THIS FOR",
+    "A COFFEE?"
+   ],
+   "pix": false
+  },
+  "C2": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "35%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 250
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "lookingup"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "Why does one coffee light up a whole planet of banks?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 8,
+    "zeroVisibility": 9.8,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 8,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "lookingup",
+   "boxes": {
+    "zero": [
+     174.112,
+     403.08000000000004,
+     151.776,
+     250.92
+    ],
+    "text": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hero": [
+     580,
+     360,
+     300,
+     300
+    ],
+    "pix": null
+   },
+   "notes": [],
+   "text": null,
+   "pix": false
+  }
+ }
+}
