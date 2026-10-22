@@ -419,6 +419,129 @@
         <circle cx="${-w / 2 + 50}" cy="0" r="14" fill="${c}" opacity="${f(0.55 + 0.45 * Math.sin(gt * 4))}"/>${TL(p.txt ?? '$4.75 · PENDING', p.size ?? 32, '#E6ECF5', -w / 2 + 80, -4, 'letter-spacing="2"')}</g>`;
     },
   });
+  // ===== part 3: the night, the money, the slices =====
+  const GOLDC = '#E0A100', MONEY = '#6FBF73';
+  const coinSide = (x, y, r, c = GOLDC) => `<g transform="translate(${f(x)} ${f(y)})"><ellipse rx="${r}" ry="${f(r * 0.32)}" cy="${f(r * 0.12)}" fill="${shade(c, 0.35)}"/><ellipse rx="${r}" ry="${f(r * 0.32)}" fill="${c}"/><ellipse rx="${f(r * 0.7)}" ry="${f(r * 0.2)}" fill="none" stroke="${tint(c, 0.35)}" stroke-width="3"/></g>`;
+  const USPTS = '20,20 110,22 180,28 250,30 262,40 285,45 300,60 320,50 335,58 350,55 365,40 385,22 398,35 380,55 370,70 365,90 372,105 360,125 345,145 330,165 338,195 345,222 330,215 318,180 300,172 270,178 245,185 225,195 210,225 190,205 175,185 155,175 120,172 90,165 55,150 40,125 22,90 15,55';
+  Object.assign(W, {
+    // the terminal's tray of the day's approvals: little green capsules piling up (n of the day; drawn up to 60)
+    capstack(p) {
+      const n = Math.round(p.n ?? 0), m = Math.min(60, Math.ceil(n / 5.2));
+      return `<g transform="${S(p)}"><path d="M -120 0 L -106 -50 H 106 L 120 0 Z" fill="#3A3F5C"/>${Array.from({ length: m }, (_, i) => { const r = Math.floor(i / 10), c = i % 10; return pale(-90 + c * 20 + (r % 2) * 10, -40 - r * 16, 0.55, 1, i % 4 ? '#7BE0A0' : '#58C98A'); }).join('')}
+        ${p.label === false ? '' : `<rect x="-110" y="20" width="220" height="44" rx="10" fill="#13203A"/>${T(n + ' YES TODAY', 22, '#8FF0B0', 0, 38, 'letter-spacing="1"')}`}</g>`;
+    },
+    // the batch: the day's approvals tied into one bale with a strap (txt on its tag); glow while it travels
+    bundle(p) {
+      const cap = Array.from({ length: 24 }, (_, i) => pale(-110 + (i % 6) * 44 + (Math.floor(i / 6) % 2) * 20, -70 + Math.floor(i / 6) * 34, 0.7, 1, i % 3 ? '#7BE0A0' : '#58C98A')).join('');
+      return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><ellipse rx="230" ry="150" fill="url(#wSys)" opacity="${f(p.glow ?? 0)}"/><rect x="-150" y="-100" width="300" height="190" rx="40" fill="#1E6B45"/>${cap}
+        <rect x="-160" y="-14" width="320" height="22" rx="6" fill="#C9A24A"/><rect x="-14" y="-108" width="22" height="206" rx="6" fill="#C9A24A"/>
+        <g transform="translate(110 -110) rotate(12)"><rect x="-70" y="-24" width="140" height="48" rx="6" fill="#F4EEE2"/>${T(p.txt ?? 'BATCH · 312', 18, '#1B1E33', 0, -4, 'letter-spacing="1"')}</g></g>`;
+    },
+    // the night settle board: each bank's long list of payments (k 0) folds into one net number (k 1); the numbers
+    // are an illustration that adds up to zero (the board says so)
+    settleboard(p) {
+      const k = p.k ?? 0, gt = p.gt ?? 0, hl = p.hl ?? -1;
+      const rows = p.rows ?? [['BANK A', '+$2.1M'], ['BANK B', '−$0.8M'], ["ZERO'S BANK", '−$1.4M'], ["CAFÉ'S BANK", '+$0.6M'], ['BANK E', '−$0.5M']];
+      return `<g transform="${S(p)}"><rect x="-640" y="-380" width="1280" height="760" rx="24" fill="#0A0E26"/><rect x="-620" y="-360" width="1240" height="720" rx="18" fill="none" stroke="${NET.gold}" stroke-width="5"/>
+        ${T('WHO OWES WHOM · TONIGHT', 32, NET.gold, 0, -310, 'letter-spacing="5"')}${T('ILLUSTRATION', 16, '#8FA6C8', 520, 330, 'letter-spacing="3"')}
+        ${rows.map(([b, v], i) => { const y = -210 + i * 110, on = hl === i, neg = v[0] === '−';
+          const ticks = Array.from({ length: 14 }, (_, j) => { const o = 1 - Math.min(1, k * 1.6 - j * 0.03); return o > 0 ? `<rect x="${-90 + j * 46}" y="${y - 16 + (j % 3) * 4}" width="${30 + (j * 13) % 14}" height="8" rx="4" fill="${j % 2 ? '#7BE0A0' : '#FF9A8A'}" opacity="${f(0.7 * o)}" transform="translate(${f(Math.sin(gt * 3 + j + i) * 2)} 0)"/>` : ''; }).join('');
+          return `<g opacity="${f(hl >= 0 && !on ? 0.5 : 1)}"><rect x="-580" y="${y - 44}" width="1160" height="88" rx="12" fill="${on ? '#1C2658' : '#111842'}"/>${TL(b, 34, on ? YEL : '#E6ECF5', -550, y - 4, 'letter-spacing="2"')}${ticks}
+            <g opacity="${f(Math.max(0, k * 2 - 1))}">${T(v, 46, neg ? '#FF9A8A' : '#8FF0B0', 420, y - 4, 'font-family="monospace"')}</g></g>`; }).join('')}
+        ${T('= 0', 30, '#8FA6C8', 420, 340, `opacity="${f(Math.max(0, k * 2 - 1))}" font-family="monospace"`)}</g>`;
+    },
+    // dawn over the banks: bank buildings joined by big pipes to a central SETTLEMENT tank; blocks of money slide
+    // through them (flow 0..1); dawn 0..1 lifts the night sky to sunrise; lit: index of a building whose windows glow
+    bankpipes(p) {
+      const gt = p.gt ?? 0, dn = p.dawn ?? 0, fl = p.flow ?? 1;
+      const sky = mix('#0A0E26', '#F2B37A', dn * 0.85), sky2 = mix('#1C2658', '#FFD9A0', dn);
+      const blds = p.blds ?? [[-1300, 'BANK A'], [-650, "ZERO'S BANK"], [650, "CAFÉ'S BANK"], [1300, 'BANK B']];
+      const bld = ([x, lab], i) => `<g transform="translate(${x} 0)"><rect x="-230" y="-760" width="460" height="760" fill="${mix('#3A3F5C', '#C9B49A', dn * 0.5)}"/><path d="M -260 -760 L 0 -900 L 260 -760 Z" fill="${mix('#2A2E40', '#B39D82', dn * 0.5)}"/>
+        ${Array.from({ length: 5 }, (_, c) => `<rect x="${-200 + c * 90}" y="-700" width="40" height="600" fill="${mix('#2A2E40', '#E9E2D3', dn * 0.5)}"/>`).join('')}<rect x="-240" y="-110" width="480" height="30" fill="${mix('#2A2E40', '#B39D82', dn * 0.5)}"/>
+        ${Array.from({ length: 8 }, (_, w) => `<rect x="${-180 + (w % 4) * 100}" y="${-620 + Math.floor(w / 4) * 200}" width="44" height="90" fill="${p.lit === i || rnd(w + i * 8) > 0.6 ? '#FFD98A' : '#1B1E33'}" opacity="${f(0.9 - dn * 0.4)}"/>`).join('')}
+        <rect x="-200" y="-860" width="400" height="60" rx="8" fill="#13203A"/>${T(lab, 26, p.lit === i ? YEL : '#E6ECF5', 0, -834, 'letter-spacing="2"')}</g>`;
+      const pipe = ([x], i) => { const y = -360, d = `M ${x + (x < 0 ? 230 : -230)} ${y} H ${x < 0 ? -170 : 170}`; const dir = (i % 2 ? 1 : -1) * Math.sign(x);
+        const blocks = Array.from({ length: 3 }, (_, j) => { const kk = fr(gt * 0.35 * fl + j / 3 + i * 0.17), x0 = x + (x < 0 ? 230 : -230), x1 = x < 0 ? -170 : 170, bx = dir > 0 ? x0 + (x1 - x0) * kk : x1 + (x0 - x1) * kk; return fl > 0 ? `<g transform="translate(${f(bx)} ${y})"><rect x="-44" y="-26" width="88" height="52" rx="6" fill="${MONEY}"/><rect x="-44" y="-6" width="88" height="12" fill="#3E8E47"/>${T('$', 22, '#1E5A2A', 0, -14)}</g>` : ''; }).join('');
+        return `<path d="${d}" stroke="#5C6684" stroke-width="84" fill="none"/><path d="${d}" stroke="#7A86A8" stroke-width="64" fill="none" opacity="0.6"/>${blocks}<path d="${d}" stroke="#DDEBF2" stroke-width="64" fill="none" opacity="0.18"/>`; };
+      return `<g transform="${S(p)}"><defs><linearGradient id="wDawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky}"/><stop offset="1" stop-color="${sky2}"/></linearGradient></defs><rect x="-3000" y="-2600" width="6000" height="2600" fill="url(#wDawn)"/>
+        ${dn > 0 ? `<circle cx="0" cy="${f(-200 - 500 * dn)}" r="160" fill="#FFE7A0" opacity="${f(dn)}"/><circle cx="0" cy="${f(-200 - 500 * dn)}" r="400" fill="url(#wWarm)" opacity="${f(dn)}"/>` : Array.from({ length: 40 }, (_, i) => `<circle cx="${f(-2800 + rnd(i) * 5600)}" cy="${f(-2500 + rnd(i + 5) * 1500)}" r="${f(2 + rnd(i + 9) * 3)}" fill="#FFFFFF" opacity="${f(0.4 + 0.6 * Math.abs(Math.sin(gt + i)))}"/>`).join('')}
+        ${blds.map(pipe).join('')}<g transform="translate(0 -360)"><circle r="180" fill="#2A3154"/><circle r="150" fill="#3A4466"/>${T('SETTLEMENT', 26, NET.gold, 0, -14, 'letter-spacing="3"')}${T('ONCE A BUSINESS DAY', 16, '#C9D3E6', 0, 22, 'letter-spacing="2"')}</g>
+        ${blds.map(bld).join('')}<rect x="-3000" y="0" width="6000" height="2000" fill="${mix('#141933', '#8A7A6A', dn * 0.6)}"/></g>`;
+    },
+    // the country at night: the US outline; day 0..1 lights a dust of tiny blinking promises everywhere; night 0..1
+    // draws a few thick settlement lines between a handful of hubs
+    usnight(p) {
+      const gt = p.gt ?? 0, dy = p.day ?? 0, nt = p.night ?? 0;
+      const inside = (x, y) => { const P = USPTS.split(' ').map(s => s.split(',').map(Number)); let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const [xi, yi] = P[i], [xj, yj] = P[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
+      let dots = '';
+      if (dy > 0) for (let i = 0, n = 0; i < 1400 && n < 520; i++) { const x = 15 + rnd(i) * 385, y = 20 + rnd(i + 7) * 205; if (!inside(x, y)) continue; n++; const on = fr(gt * (0.8 + rnd(i + 3)) + rnd(i + 11)) < 0.5; dots += on ? `<circle cx="${f(x)}" cy="${f(y)}" r="1.6" fill="#FFE7A0" opacity="${f(dy)}"/>` : ''; }
+      const hubs = [[70, 95], [150, 120], [220, 70], [300, 140], [350, 75], [260, 190]];
+      const lines = nt > 0 ? hubs.flatMap((a, i) => hubs.slice(i + 1).filter((_, j) => (i + j) % 2 === 0).map(b => `<path d="M ${a[0]} ${a[1]} Q ${(a[0] + b[0]) / 2} ${Math.min(a[1], b[1]) - 40} ${b[0]} ${b[1]}" fill="none" stroke="${NET.gold}" stroke-width="5" pathLength="100" stroke-dasharray="${f(100 * nt)} 100" opacity="0.9"/>`)).join('') + hubs.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="${f(6 * nt)}" fill="${NET.gold}"/>`).join('') : '';
+      return `<g transform="${S(p)} translate(-206 -122)"><polygon points="${USPTS}" fill="rgba(79,168,255,0.10)" stroke="#7CC2FF" stroke-width="2.5" stroke-linejoin="round"/>${dots}${lines}</g>`;
+    },
+    // ZERO's $4.75 as one big coin; three wedges come out of it (out: [a, b, c] 0..1), each tagged; the wedges are
+    // drawn bigger than life so we can see them (the caption says so)
+    coinpie(p) {
+      const R = 260, out = p.out ?? [0, 0, 0], W3 = p.w ?? [26, 12, 14], a0 = (p.dir ?? 0) - (W3[0] + W3[1] + W3[2]) / 2;
+      const labs = p.labs ?? ["ZERO'S BANK", 'NETWORK', "SHOP'S CARD CO."];
+      let a = a0, wedges = '', tags = '';
+      W3.forEach((w, i) => { const mid = (a + w / 2) * Math.PI / 180, dx = Math.cos(mid) * 170 * out[i], dy = Math.sin(mid) * 170 * out[i];
+        const p1 = [Math.cos(a * Math.PI / 180) * R, Math.sin(a * Math.PI / 180) * R], p2 = [Math.cos((a + w) * Math.PI / 180) * R, Math.sin((a + w) * Math.PI / 180) * R];
+        wedges += `<g transform="translate(${f(dx)} ${f(dy)})"><path d="M 0 0 L ${f(p1[0])} ${f(p1[1])} A ${R} ${R} 0 0 1 ${f(p2[0])} ${f(p2[1])} Z" fill="${['#F2C14E', '#E8B83C', '#DDAE36'][i]}" stroke="#B9962F" stroke-width="3"/></g>`;
+        if (out[i] > 0.5) { const tx = R + 330, ty = -150 + i * 150, ex = Math.cos(mid) * (R + 170 * out[i]), ey = Math.sin(mid) * (R + 170 * out[i]); tags += `<g opacity="${f(Math.min(1, (out[i] - 0.5) * 3))}"><path d="M ${f(ex)} ${f(ey)} L ${tx - 140} ${ty}" stroke="#8FA6C8" stroke-width="3" stroke-dasharray="6 6"/><g transform="translate(${tx} ${ty})"><rect x="-140" y="-30" width="280" height="60" rx="30" fill="#13203A"/>${T(labs[i], 22, i ? '#E6ECF5' : YEL, 0, -4, 'letter-spacing="1"')}</g></g>`; }
+        a += w; });
+      const hole = `M 0 0 L ${f(Math.cos(a0 * Math.PI / 180) * R)} ${f(Math.sin(a0 * Math.PI / 180) * R)} A ${R} ${R} 0 0 1 ${f(Math.cos(a * Math.PI / 180) * R)} ${f(Math.sin(a * Math.PI / 180) * R)} Z`;
+      return `<g transform="${S(p)}"><circle r="${R + 10}" fill="#B9962F" transform="translate(8 12)" opacity="0.6"/><circle r="${R}" fill="${YEL}"/><circle r="${R - 30}" fill="none" stroke="${AMBER}" stroke-width="8"/>
+        ${out.some(o => o > 0) ? `<path d="${hole}" fill="#05070F" opacity="0.85"/>` : ''}${T(p.txt ?? '$4.75', 110, '#3A2A00', 0, 30)}${wedges}${tags}
+        ${p.cap ? T(p.cap, 22, '#C9D3E6', 0, R + 60, 'letter-spacing="2"') : ''}${p.note ? T(p.note, 16, '#8FA6C8', 0, R + 100, 'letter-spacing="2"') : ''}</g>`;
+    },
+    // a mountain of coins growing (k 0..1): every shop's slices, the whole country
+    coinmountain(p) {
+      const k = p.k ?? 1, n = Math.round(260 * k);
+      let c = '';
+      for (let i = 0; i < n; i++) { const t = rnd(i), h = Math.pow(rnd(i + 3), 0.6), x = (t - 0.5) * 1800 * (1 - h * 0.85), y = -h * 620 * k; c += coinSide(x, y, 34 + rnd(i + 5) * 10, [GOLDC, '#C9A24A', '#E8B83C'][i % 3]); }
+      return `<g transform="${S(p)}"><ellipse cx="0" cy="10" rx="${f(900 * Math.max(0.1, k))}" ry="60" fill="#000" opacity="0.3"/><path d="M ${f(-900 * k)} 0 Q 0 ${f(-1000 * k)} ${f(900 * k)} 0 Z" fill="#B9862F"/>${c}</g>`;
+    },
+    // debit vs credit: two cards on plinths with the bank's slice as a stack above each; debit's stack has a lock
+    // (capped by federal law); credit's grows with the card's tier (tier 0 plain, 1 gold, 2 metal)
+    cardcompare(p) {
+      const tr = p.tier ?? 0, lk = p.lock ?? 1;
+      const card = (c, lab, x) => `<g transform="translate(${x} 0)"><rect x="-150" y="0" width="300" height="60" rx="8" fill="#3A3F5C"/><g transform="translate(0 -70) scale(1.4)"><rect x="-86" y="-54" width="172" height="108" rx="12" fill="${c}"/><rect x="-66" y="-16" width="34" height="26" rx="5" fill="#E6C14A"/>${T(lab, 18, '#FFFFFF', 22, 26, 'letter-spacing="2"')}</g></g>`;
+      const stack = (x, n, top) => `<g transform="translate(${x} -170)">${Array.from({ length: Math.round(n) }, (_, i) => coinSide(0, -i * 22, 64, GOLDC)).join('')}${top ?? ''}</g>`;
+      const cc = mix(mix('#2F5E9E', '#C9A24A', Math.min(1, tr)), '#2A2A30', Math.max(0, tr - 1));
+      const shine = tr > 0.2 ? `<path d="M 260 -170 L 330 -50 M 380 -150 L 320 -60" stroke="#FFFFFF" stroke-width="5" opacity="${f(Math.min(1, tr) * (0.5 + 0.5 * Math.sin((p.gt ?? 0) * 6)))}"/>` : '';
+      return `<g transform="${S(p)}">${card('#4A8C6A', 'DEBIT', -380)}${card(cc, tr > 1.5 ? 'METAL' : tr > 0.5 ? 'GOLD' : 'CREDIT', 380)}${shine}
+        ${stack(-380, 2, lk > 0 ? `<g transform="translate(0 -90) scale(${f(0.9 * lk)})">${window.WORLD.icons.lock('#8FF0B0')}</g>` : '')}${stack(380, 4 + tr * 3)}
+        ${lk > 0 ? T('CAPPED BY LAW', 24, '#8FF0B0', -380, 120, `letter-spacing="2" opacity="${f(lk)}"`) : ''}${T('NO CAP', 24, '#FF9A8A', 380, 120, `letter-spacing="2" opacity="${f(p.nocap ?? 1)}"`)}</g>`;
+    },
+    // a thread of coins from a cash wallet (left) to a shiny rewards card (right), flowing with gt (on 0..1)
+    cointhread(p) {
+      const on = p.on ?? 1, gt = p.gt ?? 0, L = p.len ?? 900;
+      const coins = Array.from({ length: 10 }, (_, i) => { const k = fr(gt * 0.4 + i / 10), x = -L / 2 + k * L, y = -Math.sin(k * Math.PI) * 160; return `<g transform="translate(${f(x)} ${f(y)})" opacity="${f(on * Math.min(1, Math.sin(k * Math.PI) * 3))}"><circle r="16" fill="${GOLDC}"/><circle r="10" fill="none" stroke="#FFE7A0" stroke-width="3"/></g>`; }).join('');
+      return `<g transform="${S(p)}" opacity="${f(on)}"><g transform="translate(${-L / 2 - 60} 0)"><rect x="-70" y="-46" width="140" height="92" rx="14" fill="#7A5A3E"/><rect x="0" y="-20" width="70" height="40" rx="8" fill="#5C4330"/>${T('CASH', 20, '#F4EEE2', 0, 74, 'letter-spacing="2"')}</g>
+        ${coins}<g transform="translate(${L / 2 + 60} 0)"><rect x="-86" y="-54" width="172" height="108" rx="12" fill="#2A2A30"/><rect x="-66" y="-16" width="34" height="26" rx="5" fill="#E6C14A"/><path d="M -80 -50 L 80 50" stroke="#FFFFFF" stroke-width="4" opacity="${f(0.3 + 0.3 * Math.sin(gt * 5))}"/>${T('REWARDS', 20, '#F4EEE2', 0, 82, 'letter-spacing="2"')}</g></g>`;
+    },
+    // the bill's two roads: PAID IN FULL (green, free) or carried over (coral, 22% a year, a snowball that grows: snow 0..1)
+    twopaths(p) {
+      const g = p.g ?? 1, c = p.c ?? 1, sn = p.snow ?? 0, gt = p.gt ?? 0;
+      return `<g transform="${S(p)}"><g transform="translate(-520 0)"><rect x="-120" y="-70" width="240" height="140" rx="16" fill="#F4F1EA"/>${T('BILL', 26, '#5C6684', 0, -36, 'letter-spacing="3"')}${T('$4.75', 44, '#1B1E33', 0, 10)}</g>
+        <path d="M -390 0 C -200 0 -160 -180 60 -180 H 360" fill="none" stroke="#58E08A" stroke-width="16" stroke-linecap="round" pathLength="100" stroke-dasharray="${f(100 * g)} 100"/>
+        <path d="M -390 0 C -200 0 -160 180 60 180 H 360" fill="none" stroke="${CORAL}" stroke-width="16" stroke-linecap="round" pathLength="100" stroke-dasharray="${f(100 * c)} 100"/>
+        <g opacity="${f(g)}">${TL('PAID IN FULL', 36, '#8FF0B0', 400, -196, 'letter-spacing="2"')}${TL('the loan was free', 24, '#C9D3E6', 400, -150)}</g>
+        <g opacity="${f(c)}">${TL('CARRIED OVER', 36, '#FF9A8A', 400, 164, 'letter-spacing="2"')}${TL('~22% a year', 24, '#C9D3E6', 400, 210)}</g>
+        ${sn > 0 ? `<g transform="translate(${f(-300 + 600 * sn)} ${f(180 - 40 - 60 * sn)}) rotate(${f(gt * 120)})"><circle r="${f(30 + 60 * sn)}" fill="#F4F1EA"/><circle r="${f(30 + 60 * sn)}" fill="none" stroke="#C9D3E6" stroke-width="5"/><path d="M -20 -10 L 10 6" stroke="#C9D3E6" stroke-width="5"/></g>` : ''}</g>`;
+    },
+    // a recap snapshot: a white-framed print that holds any prop (inner, its keys in ip) with a caption
+    snap(p) {
+      const w = p.w ?? 420, h = p.h ?? 300, id = 'wSnap' + (p.uid ?? Math.round(rnd(w + h) * 1e6));
+      const inner = PROPS[p.inner] ? PROPS[p.inner](Object.assign({ gt: p.gt ?? 0 }, p.ip || {})) : '';
+      return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><rect x="${-w / 2 - 18}" y="${-h / 2 - 18}" width="${w + 36}" height="${h + 90}" rx="6" fill="#000" opacity="0.3" transform="translate(8 10)"/><rect x="${-w / 2 - 18}" y="${-h / 2 - 18}" width="${w + 36}" height="${h + 90}" rx="6" fill="#FBF8F1"/>
+        <defs><clipPath id="${id}"><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}"/></clipPath></defs><g clip-path="url(#${id})"><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="${p.bgc ?? '#0A1020'}"/><g transform="translate(${p.ix ?? 0} ${p.iy ?? 0}) scale(${p.is ?? 1})">${inner}</g></g>
+        ${T(p.txt ?? '', 24, '#1B1E33', 0, h / 2 + 34, 'letter-spacing="2"')}</g>`;
+    },
+    // a single coin seen face on (the nickel: silver, 5¢)
+    coin(p) { const c = p.color ?? '#C9CED8'; return `<g transform="${S(p)}"><circle r="40" fill="${shade(c, 0.25)}" transform="translate(3 4)"/><circle r="40" fill="${c}"/><circle r="31" fill="none" stroke="${tint(c, 0.4)}" stroke-width="4"/>${T(p.txt ?? '5¢', 26, '#3A3F5C', 0, -2)}</g>`; },
+  });
   Object.assign(PROPS, W);
   window.WORLD_PAY = { CAFE, ACQ, NET, BNK };
 })();

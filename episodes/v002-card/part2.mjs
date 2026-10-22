@@ -180,7 +180,7 @@ export default {
         zero([{ x: 1760, y: G, s: 1.8, face: 0, flip: true, look: [-6, -6] }, { t: 0.6, pose: 'point', hr: [150, 40], face: 2, look: [-6, -8] }, { t: 0.8, hr: [150, 30] }, { t: 1.0, hr: [150, 40] }, { l: 1, pose: 'neutral', hr: null, face: 7 }, { l: 2, face: 0, look: [-8, -6] }], { z: 5 }),
         pix([{ x: 1560, y: 260, s: 0.9, face: 2 }, { l: 1, face: 1 }]),
         P('holo', [{ x: 600, y: 140, w: 520, h: 160, txt: '500+ DETAILS · ~1 MS', size: 34, color: '#FFD98A', on: 0 }, { l: 2, t: 2.4, on: 1, e: 'out' }], 'h500', 6),
-        P('text', [{ x: 600, y: 250, txt: 'VISA, 2025', size: 22, color: '#E6CFC0', o: 0 }, { l: 2, t: 2.6, o: 1, e: 'step' }], 'h500s', 6),
+        P('text', [{ x: 600, y: 250, txt: 'VISA, 2019', size: 22, color: '#E6CFC0', o: 0 }, { l: 2, t: 2.6, o: 1, e: 'step' }], 'h500s', 6),
         vig(0.6)],
       sfx: [sfx('hum', 0, { g: 0.25, bed: true }), sfx('tape', 0.2, { l: 1, g: 0.2 }), sfx('roll', 0.3, { l: 1, g: 0.4 }), sfx('ping', 2.4, { l: 2, g: 0.35 })],
     },

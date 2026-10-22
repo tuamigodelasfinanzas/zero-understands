@@ -1,0 +1,8 @@
+{
+  "VIDEO_TITLE": "What Happens in the 2 Seconds After You Tap Your Card",
+  "VIDEO_TOPIC": "Paying by credit card: the two seconds between the tap and the approval (shop side, network, bank fraud test), and the money that only moves that night, minus the fees",
+  "MAIN_OBJECT": "card",
+  "RECOMMENDED": "A",
+  "THUMBNAIL_TEXT": ["WHO SAID", "YES?"],
+  "VARIANTS": { "B": { "text": ["WHO TAKES", "A CUT?"] }, "C": { "text": ["ALL THIS FOR", "A COFFEE?"] } }
+}

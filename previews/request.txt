@@ -1,2 +1,3 @@
 episodes/v002-card/part2.mjs
+episodes/v002-card/part3.mjs
 # preview request: the workflow renders every episode listed above (one per line, in parallel)
