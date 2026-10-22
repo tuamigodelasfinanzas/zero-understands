@@ -1,0 +1,9 @@
+{
+  "_doc": "One row per upload. GitHub Actions renders each row the day before (or the same day if it was missed); Make publishes it on its date at 17:00 Madrid. Calendar: Mon Short, Wed long video, Thu related Short, Sat Short.",
+  "items": [
+    { "date": "2026-10-24", "file": "episodes/001-phone/short-2.mjs" },
+    { "date": "2026-10-26", "file": "episodes/001-phone/short-1.mjs" },
+    { "date": "2026-10-28", "file": "episodes/001-phone/long.mjs" },
+    { "date": "2026-10-29", "file": "episodes/001-phone/short-3.mjs" }
+  ]
+}

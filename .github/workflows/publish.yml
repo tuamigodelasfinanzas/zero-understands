@@ -1,0 +1,93 @@
+name: Render
+
+# Every day at 09:00 UTC: renders what content/schedule.json has for today or tomorrow (Madrid time),
+# puts the video on GitHub Pages and writes queue/<date>.json. Make reads that file at 17:00 Madrid on the
+# publishing day and uploads the video to YouTube (@zerounderstands).
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Optional: render the row of this date (YYYY-MM-DD) even if it was already rendered"
+        required: false
+        default: ""
+      preview:
+        description: "Optional: render this episode file only as a downloadable preview (nothing is queued)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: render
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+          sudo apt-get install -y -qq ffmpeg >/dev/null
+          pip install -q edge-tts numpy
+
+      - name: Preview only
+        if: inputs.preview != ''
+        run: node src/render.mjs "${{ inputs.preview }}" out/preview
+
+      - uses: actions/upload-artifact@v4
+        if: inputs.preview != ''
+        with:
+          name: preview
+          path: |
+            out/preview/*.mp4
+            out/preview/thumb.jpg
+            out/preview/timing.json
+
+      - name: Get site branch (media + queue + state)
+        if: inputs.preview == ''
+        run: |
+          git config --global user.name "zero-bot"; git config --global user.email "zero-bot@users.noreply.github.com"
+          REMOTE="https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          if git ls-remote --exit-code --heads "$REMOTE" gh-pages >/dev/null 2>&1; then git clone -q --depth 1 --branch gh-pages "$REMOTE" site
+          else mkdir site && cd site && git init -q -b gh-pages && git remote add origin "$REMOTE" && touch .nojekyll && cd ..; fi
+          mkdir -p site/state site/media site/queue
+          [ -f site/state/rendered.json ] || echo '{}' > site/state/rendered.json
+          curl -sS -o /dev/null -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages" -d '{"source":{"branch":"gh-pages","path":"/"}}' || true
+
+      - name: Render what is due
+        if: inputs.preview == ''
+        run: |
+          set -euo pipefail
+          ROWS=$(node src/queue.mjs site/state/rendered.json "${{ inputs.date }}")
+          echo "Due: $ROWS"
+          BASEURL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          for row in $(echo "$ROWS" | jq -c '.[]'); do
+            DATE=$(echo "$row" | jq -r .date); FILE=$(echo "$row" | jq -r .file)
+            ID=$(basename "$(dirname "$FILE")")-$(basename "$FILE" .mjs)
+            DIR="$DATE-$ID"
+            node src/render.mjs "$FILE" "out/$DIR"
+            mkdir -p "site/media/$DIR"
+            cp out/$DIR/*.mp4 "site/media/$DIR/"; [ -f "out/$DIR/thumb.jpg" ] && cp "out/$DIR/thumb.jpg" "site/media/$DIR/"
+            node src/meta.mjs "$FILE" "$DATE" "$BASEURL/media/$DIR" "site/queue/$DATE.json"
+            jq --arg k "$DATE|$FILE" '.[$k] = now' site/state/rendered.json > s.tmp && mv s.tmp site/state/rendered.json
+            ls -1dt site/media/*/ | tail -n +13 | xargs -r rm -rf
+            (cd site && git add -A && git commit -q -m "Render $DIR" && for i in 1 2 3 4 5; do git push -q origin gh-pages && break || { git pull -q --rebase origin gh-pages; sleep 3; }; done)
+            # wait until GitHub Pages serves the video
+            URL=$(jq -r .video_url "site/queue/$DATE.json")
+            for i in $(seq 1 60); do CODE=$(curl -s -o /dev/null -w '%{http_code}' -I "$URL" || true); [ "$CODE" = 200 ] && break; echo "waiting for Pages ($i): $CODE"; sleep 15; done
+            echo "::notice::$DIR ready → $URL"
+          done
