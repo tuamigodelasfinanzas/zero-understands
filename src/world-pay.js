@@ -284,8 +284,9 @@
     },
     // a wall counter (a big mechanical board): cap above, the number rolling up to n as k goes 0..1, sub below
     counterwall(p) {
-      const k = p.k ?? 1, n = Math.round((p.n ?? 0) * Math.min(1, k)), gt = p.gt ?? 0, w = p.w ?? 1100;
-      const txt = (p.pre ?? '') + n.toLocaleString('en-US') + (p.unit ?? '');
+      const k = p.k ?? 1, dec = p.dec ?? (String(p.n ?? 0).split('.')[1] || '').length, gt = p.gt ?? 0, w = p.w ?? 1100;
+      const n = (p.n ?? 0) * Math.min(1, k);   // keeps the decimals the figure is written with ($187.2, $1.26)
+      const txt = (p.pre ?? '') + n.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + (p.unit ?? '');
       return `<g transform="${S(p)}"><rect x="${-w / 2}" y="-170" width="${w}" height="340" rx="22" fill="#0A0E26"/><rect x="${-w / 2 + 14}" y="-156" width="${w - 28}" height="312" rx="14" fill="none" stroke="${p.color ?? NET.gold}" stroke-width="5"/>
         ${T(p.cap ?? '', 28, '#C9D3E6', 0, -110, 'letter-spacing="4"')}${T(txt, p.size ?? 96, p.color ?? NET.gold, 0, -10, 'font-family="monospace"')}${p.sub ? T(p.sub, 30, '#E6ECF5', 0, 96, `letter-spacing="3" opacity="${f(p.subOn ?? 1)}"`) : ''}
         ${k < 1 ? `<rect x="${-w / 2 + 30}" y="${f(-60 + 60 * fr(gt * 9))}" width="${w - 60}" height="3" fill="#fff" opacity="0.15"/>` : ''}</g>`;
