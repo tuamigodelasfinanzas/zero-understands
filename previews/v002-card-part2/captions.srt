@@ -1,0 +1,335 @@
+1
+00:00:01,400 --> 00:00:03,272
+First stop:
+
+2
+00:00:03,572 --> 00:00:05,617
+a company the coffee shop pays
+
+3
+00:00:05,617 --> 00:00:06,980
+to handle its cards.
+
+4
+00:00:07,130 --> 00:00:09,770
+It works for the shop, not for ZERO.
+
+5
+00:00:10,170 --> 00:00:12,426
+And it has no idea who he is.
+
+6
+00:00:13,276 --> 00:00:15,201
+It only reads the first digits
+
+7
+00:00:15,201 --> 00:00:16,420
+of the card number.
+
+8
+00:00:16,720 --> 00:00:18,760
+They say which network to ask,
+
+9
+00:00:19,160 --> 00:00:21,368
+and which bank is behind the card.
+
+10
+00:00:22,868 --> 00:00:24,692
+Which raises a better question.
+
+11
+00:00:24,992 --> 00:00:27,224
+Why does a coffee need a network at all?
+
+12
+00:00:28,968 --> 00:00:31,584
+Because thousands of banks issue cards,
+
+13
+00:00:31,884 --> 00:00:33,948
+and millions of shops take them.
+
+14
+00:00:34,098 --> 00:00:35,850
+Most of them have never met.
+
+15
+00:00:36,250 --> 00:00:37,952
+The network is where they
+
+16
+00:00:37,952 --> 00:00:39,178
+all agree to meet,
+
+17
+00:00:39,578 --> 00:00:41,306
+under one set of rules.
+
+18
+00:00:41,956 --> 00:00:44,091
+In the U.S., that's mostly
+
+19
+00:00:44,091 --> 00:00:45,652
+Visa or Mastercard.
+
+20
+00:00:45,952 --> 00:00:48,499
+In a single year, Visa alone
+
+21
+00:00:48,499 --> 00:00:51,136
+handled 258 billion payments.
+
+22
+00:00:51,536 --> 00:00:54,104
+That's about eight thousand every second.
+
+23
+00:00:55,504 --> 00:00:57,378
+All of it runs through four
+
+24
+00:00:57,378 --> 00:00:58,696
+giant data centers,
+
+25
+00:00:58,996 --> 00:01:00,340
+with spare power,
+
+26
+00:01:00,590 --> 00:01:02,462
+spare cooling
+
+27
+00:01:02,612 --> 00:01:04,148
+and spare connections,
+
+28
+00:01:04,298 --> 00:01:06,530
+so a question never has to wait.
+
+29
+00:01:10,880 --> 00:01:12,440
+Here's the strange part.
+
+30
+00:01:12,740 --> 00:01:14,924
+The network doesn't move money either.
+
+31
+00:01:15,124 --> 00:01:16,588
+It moves questions.
+
+32
+00:01:17,988 --> 00:01:20,268
+Last stop: ZERO's bank.
+
+33
+00:01:20,568 --> 00:01:22,440
+The one that gave him the card.
+
+34
+00:01:22,640 --> 00:01:24,561
+It has a fraction of a second
+
+35
+00:01:24,561 --> 00:01:25,952
+to answer two things.
+
+36
+00:01:26,352 --> 00:01:27,936
+Does he have enough credit?
+
+37
+00:01:28,336 --> 00:01:29,704
+And is this really him?
+
+38
+00:01:30,688 --> 00:01:33,472
+For the second one, it doesn't ask ZERO.
+
+39
+00:01:33,772 --> 00:01:35,644
+It asks his habits.
+
+40
+00:01:35,944 --> 00:01:38,788
+Visa says its own system weighs more than
+
+41
+00:01:38,788 --> 00:01:41,632
+five hundred details about every payment,
+
+42
+00:01:42,032 --> 00:01:43,904
+in about a millisecond.
+
+43
+00:01:44,454 --> 00:01:46,662
+But ZERO's card is brand new.
+
+44
+00:01:46,962 --> 00:01:48,474
+He has no habits.
+
+45
+00:01:48,774 --> 00:01:50,310
+And to a fraud machine,
+
+46
+00:01:50,710 --> 00:01:52,319
+no history can look a lot
+
+47
+00:01:52,319 --> 00:01:53,542
+like a stolen card.
+
+48
+00:01:55,154 --> 00:01:57,026
+Back in the coffee shop,
+
+49
+00:01:57,326 --> 00:01:59,822
+the clock says one point one seconds.
+
+50
+00:02:00,372 --> 00:02:02,247
+If a bank ever takes too
+
+51
+00:02:02,247 --> 00:02:03,732
+long, or goes down,
+
+52
+00:02:04,032 --> 00:02:05,904
+the network can answer for it,
+
+53
+00:02:06,004 --> 00:02:07,876
+using AI to stand in.
+
+54
+00:02:07,976 --> 00:02:10,064
+But ZERO's bank isn't down.
+
+55
+00:02:10,564 --> 00:02:12,436
+It's just not sure.
+
+56
+00:02:13,186 --> 00:02:15,058
+Then the evidence adds up.
+
+57
+00:02:15,358 --> 00:02:16,534
+A real chip,
+
+58
+00:02:16,934 --> 00:02:19,166
+one only the real card can make.
+
+59
+00:02:19,266 --> 00:02:20,538
+A tiny amount.
+
+60
+00:02:20,938 --> 00:02:22,607
+A coffee shop a few blocks
+
+61
+00:02:22,607 --> 00:02:23,698
+from his address.
+
+62
+00:02:25,286 --> 00:02:26,846
+Credit: yes.
+
+63
+00:02:27,146 --> 00:02:28,539
+And now look at what the
+
+64
+00:02:28,539 --> 00:02:29,642
+bank actually does.
+
+65
+00:02:30,042 --> 00:02:31,866
+It doesn't send any money.
+
+66
+00:02:32,166 --> 00:02:34,568
+It puts a hold on four seventy-five
+
+67
+00:02:34,568 --> 00:02:36,078
+of ZERO's credit line.
+
+68
+00:02:36,378 --> 00:02:38,250
+A promise.
+
+69
+00:02:39,650 --> 00:02:41,810
+And the promise works both ways.
+
+70
+00:02:42,110 --> 00:02:43,982
+If the coffee never showed up,
+
+71
+00:02:44,382 --> 00:02:46,422
+ZERO could dispute the charge,
+
+72
+00:02:46,522 --> 00:02:48,059
+and the money would be pulled
+
+73
+00:02:48,059 --> 00:02:49,066
+back from the shop.
+
+74
+00:02:50,150 --> 00:02:52,358
+The answer rides back the same way.
+
+75
+00:02:52,658 --> 00:02:53,474
+Bank,
+
+76
+00:02:53,774 --> 00:02:55,646
+network,
+
+77
+00:02:55,846 --> 00:02:57,142
+the shop's company,
+
+78
+00:02:57,342 --> 00:02:58,422
+the terminal.
+
+79
+00:02:59,722 --> 00:03:01,594
+Two seconds.
+
+80
+00:03:03,422 --> 00:03:05,150
+ZERO thinks he just paid.
+
+81
+00:03:05,450 --> 00:03:06,386
+He didn't.
+
+82
+00:03:06,886 --> 00:03:08,830
+Nobody has paid anybody.
+
+83
+00:03:09,330 --> 00:03:11,202
+Not yet.
+
+84
+00:03:11,502 --> 00:03:13,758
+So when does the money actually move?
