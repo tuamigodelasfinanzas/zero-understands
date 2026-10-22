@@ -1,4 +1,2 @@
-episodes/v001-package/part2.mjs
-episodes/v001-package/part1.mjs
-episodes/v001-package/part3.mjs
+episodes/v001-package/full.mjs
 # preview request: the workflow renders every episode listed above (one per line, in parallel)
