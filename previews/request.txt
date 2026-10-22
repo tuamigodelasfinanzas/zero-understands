@@ -1,3 +1,4 @@
-episodes/v001-package/full.mjs
-# preview request: the workflow renders every episode listed above (one per line, in parallel)
-# 2026-10-22T19:25:51Z retry
+# Shorts of video 001 (2026-10-22T22:04:36Z)
+episodes/v001-package/short-label.mjs
+episodes/v001-package/short-hub.mjs
+episodes/v001-package/short-kentucky.mjs
