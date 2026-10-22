@@ -10,6 +10,6 @@ Fully automated animated videos: ZERO and PIX, drawn from the character Bible (`
 
 **Render locally**: `ZERO_VOICE=false ZERO_FPS=6 ZERO_STILLS=1 node src/render.mjs episodes/001-phone/long.mjs out/test` (no voice, low fps, a still every second in `out/test/work`).
 
-**Thumbnails**: `node tools/thumbs.mjs "<video title>"` makes three thumbnail concepts (curiosity, consequence, scale) in the channel's style and recommends one; see `docs/miniaturas.md`.
+**Thumbnails**: `node tools/thumbs.mjs "<video title>"` runs the Thumbnail Engine: three concepts (curiosity, consequence, scale), each with and without text, scored and redesigned until they pass, with a primary and an alternative; see `docs/miniaturas.md`.
 
 **Pieces**: `src/puppets.js` draws ZERO, PIX and the props; `src/stage.js` animates keyframes; `src/render.mjs` makes voice, frames, sound and the MP4; `tools/make_audio.py` creates the original music and sound effects (the brand sounds come from `zero-design/sonidos`); `tools/extract.py` reads the faces from the Bible SVGs.
