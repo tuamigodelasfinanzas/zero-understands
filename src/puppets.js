@@ -85,7 +85,7 @@
     const flip = p.flip ? -1 : 1;
     const s = p.s ?? 1;
     return `<g transform="translate(${f(p.x ?? 0)} ${f(p.y ?? 0)}) rotate(${f(p.r ?? 0)}) scale(${f(s * flip)} ${f(s * squash)}) translate(-100 -208)" opacity="${p.o ?? 1}">
-      ${p.shadow === false ? '' : `<ellipse cx="100" cy="208" rx="36" ry="5.5" fill="rgba(17,17,17,0.09)"/>`}
+      ${p.shadow === false ? '' : `<ellipse cx="100" cy="208" rx="36" ry="5.5" fill="rgba(17,17,17,${p.shadowOp ?? 0.09})"/>`}
       <g transform="rotate(${f(lean)} 100 204)"${p.rim ? ` filter="url(#zrim)"` : ''}>
         ${limb([93, 160], LL, 11)}${foot(LL, -1)}${limb([107, 160], LR, 11)}${foot(LR, 1)}
         <path transform="rotate(${f(tilt * 0.3)} 100 144)" d="${BODY}" fill="${INK}"/>

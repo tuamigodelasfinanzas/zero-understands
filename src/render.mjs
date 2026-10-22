@@ -56,7 +56,8 @@ for (const [i, b] of ep.beats.entries()) for (const s of b.sfx || []) {
   let at = beat.start + (s.t ?? 0) + (s.u != null ? s.u * beat.dur : 0) + (s.l != null && beat.lines[s.l] ? beat.lines[s.l].start - beat.start : 0);
   if (s.end != null) at = beat.start + beat.dur - s.end;
   const f = path.join(SFX, s.s + '.wav');
-  if (fs.existsSync(f)) sfx.push({ file: f, at, gain: s.g ?? 0.8 }); else console.warn('::warning::missing sfx ' + s.s);
+  // bed: true makes an ambience (rain, engine...) stop with a short fade at the end of its beat instead of running on
+  if (fs.existsSync(f)) sfx.push({ file: f, at, gain: s.g ?? 0.8, ...(s.bed ? { dur: beat.start + beat.dur - at } : {}) }); else console.warn('::warning::missing sfx ' + s.s);
 }
 
 // 3) frames
@@ -77,7 +78,7 @@ const page = await browser.newPage({ viewport: { width: W, height: H } });
 page.on('pageerror', e => console.error('page error: ' + e.message));
 await page.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>${font()}*{margin:0;padding:0}html,body{width:${W}px;height:${H}px;overflow:hidden;background:#fff}</style></head><body><div id="stage"></div></body></html>`);
 await page.evaluate(d => { window.DATA = d; }, { ep, beats, w: W, h: H, fps: FPS, life: process.env.ZERO_LIFE === '0' ? false : true, rim: process.env.ZERO_RIM !== '0' });
-for (const f of ['faces.js', 'puppets.js', 'stage.js']) await page.addScriptTag({ path: path.join(ROOT, 'src', f) });
+for (const f of ['faces.js', 'puppets.js', 'world.js', 'stage.js']) await page.addScriptTag({ path: path.join(ROOT, 'src', f) });
 await page.waitForFunction('window.ready === true');
 await page.evaluate('document.fonts.ready');
 
@@ -102,7 +103,7 @@ if (ep.thumb) {
   const tep = Object.assign({}, ep, { beats: [ep.thumb], captions: false, format: 'long' });
   await tp.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>${font()}*{margin:0;padding:0}</style></head><body><div id="stage"></div></body></html>`);
   await tp.evaluate(d => { window.DATA = d; }, { ep: tep, beats: [{ i: 0, start: 0, dur: 1, lines: [] }], w: 1920, h: 1080, fps: FPS });
-  for (const f of ['faces.js', 'puppets.js', 'stage.js']) await tp.addScriptTag({ path: path.join(ROOT, 'src', f) });
+  for (const f of ['faces.js', 'puppets.js', 'world.js', 'stage.js']) await tp.addScriptTag({ path: path.join(ROOT, 'src', f) });
   await tp.waitForFunction('window.ready === true'); await tp.evaluate('document.fonts.ready');
   await tp.evaluate(() => window.frame(0.99));
   await tp.screenshot({ path: path.join(outDir, 'thumb-full.png') });

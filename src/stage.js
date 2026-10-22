@@ -179,6 +179,8 @@
         if (st.blink === false) st.blink = 0;
         const sp = speaking(beat, 'zero', gt);
         if (sp >= 0 && st.bounce !== false) st.squash = (st.squash ?? 1) * (1 + 0.03 * Math.sin(sp * 20));
+        // dark worlds need a darker contact shadow under ZERO so he stands on the floor instead of floating (ep.zshadow)
+        if (st.shadowOp == null && ep.zshadow != null) st.shadowOp = ep.zshadow;
         svg = zero(Object.assign(LIFE && st.life !== false ? alive(a, st, beat, lt, gt, sp) : { ...st }, { rim: RIM && !(tr.zoom > 1.8) ? st.rim ?? 1 : 0 }));   // no rim inside zoom transitions: huge filter regions stall the renderer
       } else if (a.type === 'pix') {
         const sp = speaking(beat, 'pix', gt);
@@ -187,7 +189,8 @@
         if (sp >= 0) st.s = (st.s ?? 1) * (1 + 0.04 * Math.abs(Math.sin(sp * 9)));
         svg = pix(st);
       } else if (PROPS[a.type]) {
-        const inner = PROPS[a.type](st);
+        // props get the clock too, so the world can live on its own (steam, rain, rollers, passers-by)
+        const inner = PROPS[a.type](Object.assign({ gt, lt }, st));
         svg = `<g transform="translate(${st.x ?? 0} ${st.y ?? 0}) rotate(${st.r ?? 0}) scale(${(st.sc ?? 1) * (st.fx ? -1 : 1)} ${st.sc ?? 1})" opacity="${st.o ?? 1}">${inner}</g>`;
       }
       // parallax: depth < 1 sits behind (moves and zooms less with the camera), > 1 is foreground
@@ -201,12 +204,12 @@
     const gray = cam.gray ? `filter="url(#gray)"` : '';
     let html = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
       <defs><filter id="zrim" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
-        <feMorphology in="SourceAlpha" operator="dilate" radius="2.4" result="d"/>
+        <feMorphology in="SourceAlpha" operator="dilate" radius="${ep.rimWidth ?? 2.4}" result="d"/>
         <feFlood flood-color="#FFF4E3"/><feComposite in2="d" operator="in" result="rim"/>
         <feGaussianBlur in="d" stdDeviation="7" result="b"/>
-        <feFlood flood-color="#FFF4E3" flood-opacity="0.32"/><feComposite in2="b" operator="in" result="glow"/>
+        <feFlood flood-color="#FFF4E3" flood-opacity="${ep.rimGlow ?? 0.32}"/><feComposite in2="b" operator="in" result="glow"/>
         <feMerge><feMergeNode in="glow"/><feMergeNode in="rim"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      <filter id="gray"><feColorMatrix type="saturate" values="${1 - (cam.gray ?? 0)}"/></filter></defs>
+      <filter id="gray"><feColorMatrix type="saturate" values="${1 - (cam.gray ?? 0)}"/></filter>${window.WORLD?.defs ?? ''}</defs>
       <rect width="${W}" height="${H}" fill="${bg}"/>
       <g ${gray}><g transform="${shake} translate(${W / 2} ${H / 2}) scale(${cz}) translate(${-cx} ${-cy})">${world}</g>${overlay}</g>`;
     if (cam.flash) html += `<rect width="${W}" height="${H}" fill="#fff" opacity="${cam.flash}"/>`;
