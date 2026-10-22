@@ -86,6 +86,8 @@ export default {
   tags: ['how it works', 'logistics', 'packages'],
   music: 'curious', musicGain: 0.06,
   voices: { narr: { voice: 'en-US-AndrewNeural', rate: '-6%' } },
+  // approved thumbnails (A main, B/C alternatives)
+  thumbnail: 'content/thumbs/v001-package.json',
   // a softer rim (ZERO belongs to the scene instead of looking cut out) and a real contact shadow on dark floors
   rimGlow: 0.14, rimWidth: 2.0, zshadow: 0.38,
   beats: [
