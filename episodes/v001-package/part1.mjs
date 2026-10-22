@@ -19,7 +19,7 @@ const kitchen = (o = {}) => [
   P('interior', { x: 0, y: G, wall: '#2E3458', floor: '#3B3149', vx: 1400, paper: true }, 'int', -20),
   P('nightWindow', { x: 330, y: 430, w: 380, h: 320, seed: 2 }, 'win', -15),
   P('pool', { x: 330, y: 430, rx: 420, ry: 320, kind: 'cool', op: 0.35 }, 'winglow', -16),
-  P('cat', [{ x: 440, y: 590, s: 0.85, mode: 'sit', ...(o.cat || {}) }, ...(o.catKeys || [])], 'cat', -14),
+  P('cat', [{ x: 440, y: 590, s: 0.85, mode: 'sit', look: 0.9, ...(o.cat || {}) }, ...(o.catKeys || [])], 'cat', -14),
   P('kitchen', { x: 1000, y: G, w: 760 }, 'kit', -12),
   P('fridge', o.fridgeKeys || { x: 1560, y: G }, 'fridge', -11),
   P('calendar', [{ x: 1890, y: 470, s: 1, circ: 1 }, ...(o.calKeys || [])], 'cal', -12),
@@ -42,6 +42,8 @@ const shop = (o = {}) => [
   P('interior', { x: 0, y: G, wall: '#2F5260', floor: '#2C3340', vx: 1200 }, 'floor', -21),
   P('storefront', { x: 300, y: 470, w: 640, h: 440, txt: 'OPEN LATE' }, 'street', -16),
   P('bench', { x: 300, y: G - 10, s: 0.9 }, 'bench', -9),
+  // background joke: a customer on the bench who watches ZERO the whole time, over her newspaper
+  P('person', { x: 230, y: 900, s: 1.6, pose: 'sit', shirt: '#7A5A6E', skin: '#8E6450', hair: '#1E1820', seed: 7, look: 0.8 }, 'watcher', -8),
   P('menuboard', [{ x: 1040, y: 230, hl: -1 }, ...(o.menuKeys || [])], 'menu', -15),
   P('wallclock', { x: 1420, y: 200, s: 0.75, h: 6, m: o.min ?? 47, s0: 5 }, 'clock', -15),
   P('pool', { x: 1040, y: 330, rx: 520, ry: 300, kind: 'cool', op: 0.4 }, 'menuglow', -16),
@@ -49,6 +51,8 @@ const shop = (o = {}) => [
   P('pendant', { x: 1220, y: 60, cord: 300, len: 620, spread: 640, color: '#2D6E7E' }, 'lamp2', -10),
   P('mouth', [{ x: 2480, y: 700, w: 360, h: 520, push: 0, light: 'red' }, ...(o.mouthKeys || [])], 'mouth', -14),
   P('plate', { x: 2480, y: 110, txt: 'OUTBOUND', w: 300, size: 30 }, 'plate', -14),
+  // background joke: the rule ZERO is about to break
+  P('plate', { x: 2700, y: 500, txt: 'DO NOT RIDE THE BELT', w: 260, size: 17, fill: '#F4EEE2', color: '#C63D46' }, 'rule', -14),
   P('conveyor', { x: 1940, y: 700, w: 1000, speed: 40, legs: 230, lamp: true }, 'belt', -6),
   P('person', [{ x: 1250, y: G - 30, s: 2.3, pose: 'yawn', shirt: '#2D6E7E', skin: '#B9876A', cap: '#1F4F5C', seed: 2, look: -0.6, ...(o.clerk || {}) }, ...(o.clerkKeys || [])], 'clerk', -8),
   P('counter', [{ x: 1000, y: G, w: 700, kg: o.kg ?? '0.00 kg', paid: false }, ...(o.counterKeys || [])], 'counter', -4),
@@ -131,7 +135,7 @@ export default {
       actors: [P('rect', { x: 960, y: 540, w: 2400, h: 1400, fill: '#6B4A35' }, 'table', -10), P('pool', { x: 960, y: 540, rx: 900, ry: 700, kind: 'warm', op: 0.5 }, 'tp', -9),
         P('topbox', [{ x: 960, y: 560, s: 2.2, tape: 1, bow: false, heart: false }, { t: 0.15, bow: true, e: 'step' }, { t: 0.4, heart: true, e: 'step' }], 'tb', 0),
         P('arm', [{ x: 0, y: 0, x0: 1500, y0: 1300, x1: 1300, y1: 900, w: 34 }, { t: 0.3, x1: 760, y1: 820, e: 'out' }, { t: 0.6, x1: 840, y1: 860 }], 'a1', 1), vig(0.6)],
-      sfx: [sfx('pop', 0.15, { g: 0.7 })],
+      sfx: [sfx('click', 0.15, { g: 0.6 })],
     },
     {
       lines: [], min: 0.6, bg: '#151833',
@@ -150,7 +154,7 @@ export default {
       lines: [], min: 0.9, bg: '#151833',
       cam: cam({ z: 2.4, x: 440, y: 520 }),
       actors: [...kitchen({ cat: { mode: 'jump', y: 560 }, catKeys: [{ t: 0.5, mode: 'sit', y: 590 }] }), vig(0.7)],
-      sfx: [sfx('boing', 0.0, { g: 0.3 })],
+      sfx: [sfx('whoosh', 0.0, { g: 0.25 })],
     },
     // ===== s04a: insert on the clock, then pull back to reveal the store; ZERO comes in from the rain =====
     {
@@ -164,7 +168,7 @@ export default {
     {
       lines: [N('ZERO pays for the fastest thing on the menu.')], min: 3.6, bg: '#10131F',
       cam: cam({ z: 1.1, x: 1000, y: 470 }, { end: 0, z: 1.16, x: 1020, y: 460, e: 'lin' }),
-      actors: [...shop({ menuKeys: [{ l: 0, t: 1.4, hl: 2, e: 'step' }], clerkKeys: [{ l: 0, t: 1.0, pose: 'stand', look: -1 }, { l: 0, t: 2.0, pose: 'type' }], counterKeys: [{ l: 0, t: 2.6, paid: true, e: 'step' }] }),
+      actors: [...shop({ kg: '1.20 kg', menuKeys: [{ l: 0, t: 1.4, hl: 2, e: 'step' }], clerkKeys: [{ l: 0, t: 1.0, pose: 'stand', look: -1 }, { l: 0, t: 2.0, pose: 'type' }], counterKeys: [{ l: 0, t: 2.6, paid: true, e: 'step' }] }),
         P('giftbox', { x: 820, y: 609, s: BOX, label: false }, 'box', -3),
         zero([{ x: 600, face: 0, look: [3, -2] }, { l: 0, t: 1.0, pose: 'point', hr: [150, 96], look: [6, -7], headR: -8, face: 0, e: 'back' }, { l: 0, t: 2.4, pose: 'neutral', look: [8, 0], headR: 0, face: 6 }]), vig(0.65)],
       sfx: [sfx('ping', 1.75, { g: 0.4 }), sfx('coin', 2.95, { g: 0.6 })],
@@ -173,7 +177,7 @@ export default {
     {
       lines: [N('Next day.'), N('By morning.', { gap: 0.2 })], min: 2.8, bg: '#10131F',
       cam: cam({ z: 2.4, x: 860, y: 470 }, { l: 0, t: 0.32, shake: 7, e: 'step' }, { l: 0, t: 0.6, shake: 0 }),
-      actors: [...shop({ counterKeys: [{ paid: true }] }),
+      actors: [...shop({ kg: '1.20 kg', counterKeys: [{ paid: true }] }),
         P('giftbox', [{ x: 820, y: 609, s: BOX, label: false, stamp: 0 }, { l: 0, t: 0.3, stamp: 1, e: 'step' }, { l: 1, label: true, e: 'step' }], 'box', -3),
         P('stamp', [{ x: 880, y: -200, s: 1.2 }, { l: 0, t: 0, y: -200 }, { l: 0, t: 0.3, y: 560, e: 'in' }, { l: 0, t: 0.55, y: 540 }, { l: 0, t: 1.0, y: -260, e: 'in' }], 'stamp', 6),
         P('arm', [{ x: 0, y: 0, x0: 1300, y0: 200, x1: 1300, y1: 200, w: 30, color: '#2D6E7E', hand: '#B9876A', o: 0 }, { l: 1, t: -0.3, o: 1, e: 'step' }, { l: 1, x1: 790, y1: 540, e: 'out' }, { l: 1, t: 0.5, x1: 1300, y1: 200, e: 'in' }], 'clerkarm', 7),
@@ -244,6 +248,7 @@ export default {
       cam: cam({ z: 1.0, x: 960, y: 540, shake: 1.2 }, { l: 4, z: 1.05, x: 960, y: 560 }, { end: 0, z: 1.25, x: 990, y: 620, e: 'io' }),
       actors: [...tunnel({ tunKeys: [{ l: 4, t: 0.9, flick: 1, e: 'step' }, { l: 4, t: 1.6, flick: 0, e: 'step' }] }),
         P('pool', { x: 700, y: 560, rx: 520, ry: 420, kind: 'pix', op: 0.7 }, 'pixlight', 1),
+        P('plate', [{ x: 1080, y: 430, s: 0.15, txt: 'NO PASSENGERS', w: 300, size: 30, fill: '#F4EEE2', color: '#C63D46' }, { t: 2.4, x: 2300, y: 120, s: 2.2, e: 'in' }], 'nopax', -5),
         P('giftbox', { x: 1000, y: 930, s: BOX * 1.3, label: true, stamp: 1 }, 'box', 2),
         P('drip', [{ x: 1040, y: 160, len: 610, period: 1.3, o: 0 }, { l: 4, t: 0.6, o: 1, e: 'step' }], 'drip', 3),
         zero([{ x: 1000, y: 930 - 120 * BOX * 1.3 + 125, face: 0, fl: [120, 196], fr: [134, 200], hl: [84, 166], hr: [118, 166], look: [-4, -2] },
