@@ -32,6 +32,25 @@ Sin ordenador: **Actions → Thumbnails → Run workflow** con el título, o sub
 - **Título ≠ texto:** el título explica qué se descubre; la miniatura crea la emoción. El director descarta cualquier texto que repita la mayoría de las palabras del título.
 - **Sin cifras inventadas:** el texto automático nunca pone números como hechos. Si una miniatura lleva una cifra, va en `THUMBNAIL_TEXT` y tiene que estar en la hoja de fuentes del vídeo (FACT).
 
+## 2b. Regla fija desde el vídeo 001: una micro-historia, no una escena
+
+Validada por Chiño el 22-10-2026 con la A del vídeo 001 (`cutaway`). Vale para toda miniatura nueva.
+
+- **Secuencia:** ZERO → OBJETO → SISTEMA ENORME → PREGUNTA. El objeto acaba de empezar su viaje y ZERO lo está viendo pasar o interactuando con él (lo acaba de soltar, lo persigue con el cuerpo, intenta alcanzarlo). ZERO no mira a cámara salvo que haya un motivo fuerte, y su cuerpo lleva la mirada hacia el objeto y el sistema.
+- **ZERO simple, mundo rico.** La calidad sube con la luz, la profundidad, la escala, la maquinaria y el movimiento, nunca añadiendo detalle a ZERO.
+- **El objeto es el detonante:** un poco más grande y con el color de acento sobre fondo oscuro, como un faro. Movimiento sutil y elegante (inclinación por el tirón, estela tenue, líneas de velocidad), nunca efectos de cómic.
+- **ZERO ve lo que nosotros no:** parte del sistema se enseña en corte (pared abierta, casa de muñecas) para ver el mecanismo escondido. Se revela lo justo para fascinar y se esconde lo justo para que haga falta hacer clic. Nunca como infografía.
+- **Escala:** ZERO pequeño frente al sistema enorme que hace falta para un objeto simple. Capas: delante ZERO, después el objeto, después la máquina de entrada y al fondo la operación gigante.
+- **Tiempo o tensión:** si el tema tiene un plazo o una presión (de noche, en segundos, cada mes), se integra en la imagen, como el reloj junto al texto, sin añadir más texto.
+- **Vida de fondo:** paquetes, luces que parpadean, gente diminuta, vehículos. Nunca compite con la historia principal.
+- **PIX solo con función:** revela, ilumina, escanea o señala. Si no aporta, fuera.
+- **Luz que guía:** ZERO, luego el objeto, luego el sistema escondido y por último el texto. El fondo visible, más oscuro y suave.
+- **1 ZERO, 1 OBJETO, 1 ACCIÓN, 1 SISTEMA ENORME, 1 PREGUNTA.**
+- **Convenciones del canal:** ZERO = simple · mundo = rico · PIX = revela · amarillo/acento = lo importante · mecanismos escondidos = curiosidad · cortes = descubrimiento · diferencia de escala = sorpresa.
+- **Mejorar, no rehacer:** cuando ya hay una miniatura aprobada, se conserva lo que funciona y se mejora.
+
+Control final (además de las comprobaciones automáticas): ¿ZERO se ve al instante? ¿Y el objeto? ¿El objeto va claramente hacia algún sitio? ¿ZERO interactúa? ¿El sistema parece mucho más grande de lo que ZERO esperaba? ¿Hay presión de tiempo o tensión? ¿El texto se lee al instante? ¿Plantea una pregunta en vez de dar la respuesta? ¿Funciona a 160×90? ¿Es para adultos? ¿Parece una historia animada y no una infografía? ¿Es inconfundiblemente Zero Understands? Si alguna respuesta importante es no, se rehace la composición.
+
 ## 3. Composición estándar (igual en todo el canal)
 
 Capas, de atrás adelante: **mundo** (desenfocado, más oscuro) → **luz** (un charco detrás de ZERO y otro en la idea principal) → **idea principal** → **ZERO** → primer plano → **PIX** → viñeta → **texto**.
