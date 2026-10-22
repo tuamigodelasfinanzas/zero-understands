@@ -1,10 +1,12 @@
 // Short · Why does cleaning suddenly feel fun? (related to the long video on procrastination; loops on the sweeping)
-import { GS, N, PX, zero, pix, prop, popIn, yellow, blue, sfx } from '../../src/kit.mjs';
+import { GS, N, PX, zero, pix, prop, popIn, yellow, blue, sfx, lookCam, tilt } from '../../src/kit.mjs';
+import { roomS, minimalS } from '../../src/sets.mjs';
 
 const broom = { type: 'broom', s: 0.38 };
 const sweep = (n, t0 = 0, dt = 0.5) => Array.from({ length: n }, (_, i) => [{ t: t0 + i * dt, hr: [118, 106], lean: -4, e: 'io' }, { t: t0 + i * dt + dt / 2, hr: [146, 110], lean: 4, e: 'io' }]).flat();
 const room = (o = {}) => [
-  prop('floor', { x: 0, y: GS }, { id: 'floor', z: 0 }),
+  ...roomS({ lamp: false, plantX: 120, ...(o.night ? { night: true } : {}) }),
+  prop('shadow', { x: 760, y: GS + 4, w: 230, op: 0.12 }, { id: 'dsh', z: 4 }),
   prop('desk', { x: 760, y: GS - 172, w: 420 }, { id: 'desk', z: 6 }),
   prop('laptop', { x: 850, y: GS - 172, s: 0.7, fx: 1 }, { id: 'laptop', z: 6 }),
   prop('sticky', [{ x: 380, y: 800, s: 0.9, txt: 'ESSAY|DUE|TOMORROW', tilt: -5 }, ...(o.sticky || [])], { id: 'note', z: 2 }),
@@ -34,15 +36,17 @@ export default {
         popIn('bubble', { l: 1, t: 2.2 }, { x: 620, y: 830, txt: 'WHERE DO I START?', size: 36, w: 440 }, { z: 9, keys: FADE }),
         popIn('text', { l: 2, t: 1.2 }, { x: 620, y: 700, txt: 'PROGRESS!', size: 70, color: '#2E9E5B', stroke: 4 }, { z: 9 })],
       cam: CAM,
-      sfx: [sfx('tension', 0.2, { l: 1 }), sfx('pop', 0.9, { l: 1 }), sfx('pop', 1.5, { l: 1 }), sfx('pop', 2.2, { l: 1 }), sfx('cheer', 1.2, { l: 2, g: 0.4 })] },
+      sfx: [sfx('tension', 0.2, { l: 1 }), sfx('pop', 0.9, { l: 1 }), sfx('pop', 1.5, { l: 1 }), sfx('pop', 2.2, { l: 1 }), sfx('cheer', 1.2, { l: 2, g: 0.4 })],
+      tout: { type: 'wipe', dur: 0.5 } },
     { lines: [N('Psychologists call it productive procrastination.'), N('Clean room. Same unfinished essay.')],
-      actors: [prop('floor', { x: 0, y: GS }),
+      tin: { type: 'wipe', dur: 0.5 }, tout: { type: 'wipe', dur: 0.5 },
+      actors: [...minimalS({ wall: '#FBE3DF', floor: '#F3D2CC', trim: '#FDEFEC' }),
         yellow('PRODUCTIVE', 540, 330, { l: 0, t: 0.8 }, { size: 110 }),
         yellow('PROCRASTINATION', 540, 470, { l: 0, t: 1.2 }, { size: 96 }),
         prop('paper', [{ x: 540, y: 960, s: 0, title: 'ESSAY', lines: 0 }, { l: 1, t: 0.6, s: 1.4, e: 'back' }], { z: 4 }),
-        zero([{ x: 820, y: GS, s: 2.4, pose: 'proud', face: 2, holdR: null }, { l: 1, t: 1.6, face: 1, look: [-8, -4] }])],
+        zero([{ x: 820, y: GS, s: 2.4, pose: 'proud', face: 2, holdR: null }, { l: 1, t: 1.6, face: 1, look: [-8, -4] }, ...lookCam({ l: 1, t: 2.6 }, { face: 4, tilt: -8 })])],
       sfx: [sfx('pop', 0.8, { l: 0 }), sfx('pop', 0.6, { l: 1 }), sfx('dun', 1.6, { l: 1, g: 0.5 })] },
-    { lines: [N('The trick: make the first step so small it feels silly.'), N('Not "write the essay." Just "open the document."')],
+    { tin: { type: 'wipe', dur: 0.5 }, lines: [N('The trick: make the first step so small it feels silly.'), N('Not "write the essay." Just "open the document."')],
       actors: [...room({ sticky: [{ l: 1, t: 0, txt: 'WRITE|THE|ESSAY' }, { l: 1, t: 1.8, txt: 'OPEN|THE|FILE', fill: '#DDEBFF', e: 'step' }] }),
         zero([{ x: 560, y: GS, s: 2.6, pose: 'type', face: 0, look: [6, 2] }, { l: 1, t: 1.8, face: 2 }]),
         prop('cloud', [{ x: 800, y: 1100, s: 0.45, mood: 1 }, { l: 1, t: 1.8, s: 0.45 }, { l: 1, t: 2.4, s: 0, e: 'in' }], { z: 7 })],

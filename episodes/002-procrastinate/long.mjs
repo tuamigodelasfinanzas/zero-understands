@@ -11,13 +11,11 @@ const NIGHT = '#2B2F4A';
 const room = (o = {}) => [
   ...deskSet(),
   prop('sticky', [{ x: 1520, y: 330, s: 1.1, txt: o.note ?? 'ESSAY|DUE|TOMORROW', tilt: -5, fill: o.noteFill }, ...(o.noteKeys || [])], { id: 'note', z: 2 }),
-  prop('pencup', { x: 1240, y: G - 172, s: 0.7, messy: o.messy ?? true }, { id: 'pens', z: 6 }),
-  prop('plant', { x: 1500, y: G - 90, s: 0.9 }, { id: 'plant', z: 2 }),
 ];
 const future = (k, o = {}) => zero(Array.isArray(k) ? k.map((x, i) => i ? x : { o: 0.5, ...x }) : { o: 0.5, ...k }, { id: o.id || 'fz' });
 const futureLabel = (x, y, at = 0.2) => blue('FUTURE ZERO', x, y, at, { size: 54 });
 
-export default {
+const ep = {
   id: '002-procrastinate',
   format: 'long',
   title: "Why You Always Procrastinate (It's Not Laziness)",
@@ -460,3 +458,38 @@ Sources: Tim Pychyl, Carleton University (procrastination as emotion regulation)
     },
   ],
 };
+export default ep;
+
+// ---------- visual direction pass (docs/direccion-visual.md) ----------
+// The approved rule-compliant opening replaces the old first eight beats; chapter sets by colour meaning, integrated
+// transitions at the chapter turns, a WOW (space) moment for the brain scan, slow pushes on long explanations.
+import opening from './opening.mjs';
+import { minimal as L1, space as L3 } from '../../src/sets.mjs';
+{
+  const B = ep.beats;
+  const swap = (i, set) => { B[i].actors = [...set, ...B[i].actors.filter(a => a.id !== 'floor')]; };
+  const tint = (wall, floor, trim) => L1({ wall, floor, trim });
+  const CORAL = tint('#FBE3DF', '#F3D2CC', '#FDEFEC'), GREEN = tint('#E3F2E8', '#D3E8DA', '#EEF8F1'), PURPLE = tint('#ECE6F8', '#DDD3F0', '#F5F1FC'), CREAM = tint('#FFF4E3', '#EADCC6', '#F7EBD8');
+  for (const i of [13, 14, 15, 34, 35]) swap(i, CORAL);          // the bad feeling, the loop
+  for (const i of [21, 22, 23]) swap(i, CREAM);                  // money today vs later
+  for (const i of [26, 29, 30]) swap(i, PURPLE);                 // Future ZERO, a stranger
+  for (const i of [27, 28]) { swap(i, L3()); B[i].bg = '#241C3A'; }
+  for (const i of [36, 37, 38, 41, 42, 43, 44]) swap(i, GREEN);  // what helps
+  const tr = (i, spec) => { B[i].tout = spec; B[i + 1].tin = spec; };
+  tr(9, { type: 'iris', x: 960, y: 560, dur: 0.5 });
+  tr(18, { type: 'zoom', x: 960, y: 500, z: 9, dur: 0.6, color: '#FFFFFF' });
+  tr(20, { type: 'wipe', dur: 0.5 });
+  tr(23, { type: 'wipe', dur: 0.5 });
+  tr(25, { type: 'iris', x: 960, y: 560, dur: 0.5 });
+  tr(26, { type: 'fall', dur: 0.7 });
+  tr(28, { type: 'fall', dur: 0.7 });
+  tr(30, { type: 'wipe', dur: 0.5 });
+  tr(33, { type: 'iris', x: 960, y: 560, dur: 0.5 });
+  tr(35, { type: 'wipe', dur: 0.5 });
+  tr(44, { type: 'iris', x: 960, y: 560, dur: 0.5 });
+  for (const b of B) if (!b.cam && (b.lines || []).length >= 2 && !b.bg) b.cam = [{ z: 1, x: 960, y: 540 }, { u: 1, z: 1.07, x: 960, y: 560, e: 'io' }];
+  // the opening (hook, time passing, night, the question in space, the promise) replaces beats 0-7 and zooms into "Look at ZERO"
+  const open = opening.beats.slice(0, 5);
+  B.splice(0, 8, ...open);
+  B[5].tin = { type: 'zoom', x: 960, y: 540, z: 6, dur: 0.6, color: '#FFFFFF' };
+}
