@@ -1,0 +1,29 @@
+name: Voice test
+
+# Renders voice-test/hook.txt with several edge-tts voices and commits the MP3s back to this branch.
+# Only runs on the working branch, never on main.
+on:
+  push:
+    branches: [claude/project-thread-vhna56]
+    paths: [voice-test/hook.txt, .github/workflows/voice-test.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  voices:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -q edge-tts
+      - name: Render voices
+        run: |
+          for v in en-US-AndrewNeural en-US-BrianMultilingualNeural en-GB-RyanNeural en-US-ChristopherNeural; do
+            edge-tts --voice "$v" --rate=-6% -f voice-test/hook.txt --write-media "voice-test/edge-$v.mp3"
+          done
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add voice-test/*.mp3
+          git commit -m "Voice test MP3s [skip ci]" && git push
