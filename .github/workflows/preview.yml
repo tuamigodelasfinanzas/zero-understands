@@ -1,6 +1,6 @@
 name: Preview render
 
-# Renders the episode named in previews/request.txt (with the real edge-tts voices, which the sandbox can't reach)
+# Renders the episodes named in previews/request.txt (one per line, in parallel) (with the real edge-tts voices, which the sandbox can't reach)
 # and commits the MP4 back to this branch under previews/. Only runs on the working branch, never on main.
 on:
   push:
@@ -11,9 +11,23 @@ permissions:
   contents: write
 
 jobs:
+  list:
+    runs-on: ubuntu-latest
+    outputs:
+      eps: ${{ steps.l.outputs.eps }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: l
+        # every non-comment line ending in .mjs is an episode
+        run: echo "eps=$(grep -v '^\s*#' previews/request.txt | grep -E '\.mjs\s*$' | sed 's/\s*$//' | jq -R . | jq -cs .)" >> "$GITHUB_OUTPUT"
   render:
+    needs: list
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        ep: ${{ fromJson(needs.list.outputs.eps) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,20 +40,26 @@ jobs:
           sudo apt-get install -y -qq ffmpeg >/dev/null
           pip install -q edge-tts numpy
       - name: Render
+        env:
+          EP: ${{ matrix.ep }}
         run: |
-          EP=$(head -1 previews/request.txt)
           NAME=$(basename "$(dirname "$EP")")-$(basename "$EP" .mjs)
           node src/render.mjs "$EP" "out/$NAME"
           mkdir -p "previews/$NAME"
-          cp out/$NAME/*.mp4 out/$NAME/timing.json out/$NAME/captions.srt out/$NAME/thumb.jpg "previews/$NAME/"
+          cp out/$NAME/*.mp4 out/$NAME/timing.json out/$NAME/captions.srt "previews/$NAME/"
+          if [ -f "out/$NAME/thumb.jpg" ]; then cp "out/$NAME/thumb.jpg" "previews/$NAME/"; fi
+          echo "NAME=$NAME" >> "$GITHUB_ENV"
       - name: Commit
-        # another run may have pushed to the branch meanwhile: start from its latest state and add only our files
+        # other renders push to the branch meanwhile: start from its latest state, add only our folder, retry on a race
         run: |
-          mkdir -p /tmp/keep && cp -r previews /tmp/keep/
+          mkdir -p /tmp/keep && cp -r "previews/$NAME" /tmp/keep/
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin "$GITHUB_REF_NAME"
-          git reset -q --hard "origin/$GITHUB_REF_NAME"
-          cp -r /tmp/keep/previews .
-          git add previews
-          git commit -m "Preview render [skip ci]" && git push origin "HEAD:$GITHUB_REF_NAME"
+          for i in 1 2 3 4 5; do
+            git fetch -q origin "$GITHUB_REF_NAME" && git reset -q --hard "origin/$GITHUB_REF_NAME"
+            mkdir -p previews && rm -rf "previews/$NAME" && cp -r "/tmp/keep/$NAME" previews/
+            git add previews && git commit -q -m "Preview render: $NAME [skip ci]" || exit 0
+            git push -q origin "HEAD:$GITHUB_REF_NAME" && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
