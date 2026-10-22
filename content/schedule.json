@@ -1,9 +1,13 @@
 {
-  "_doc": "One row per upload. GitHub Actions renders each row the day before (or the same day if it was missed); Make publishes it on its date at 17:00 Madrid. Calendar: Mon Short, Wed long video, Thu related Short, Sat Short.",
+  "_doc": "One row per upload. GitHub Actions renders each row the day before (or the same day if it was missed); Make publishes it on its date at 20:00 Madrid (Make uploads it as private at 17:00 the day before). Calendar: Mon Short, Wed long video, Thu related Short, Sat Short.",
   "items": [
     { "date": "2026-10-24", "file": "episodes/001-phone/short-2.mjs" },
     { "date": "2026-10-26", "file": "episodes/001-phone/short-1.mjs" },
     { "date": "2026-10-28", "file": "episodes/001-phone/long.mjs" },
-    { "date": "2026-10-29", "file": "episodes/001-phone/short-3.mjs" }
+    { "date": "2026-10-29", "file": "episodes/001-phone/short-3.mjs" },
+    { "date": "2026-10-31", "file": "episodes/003-buttons/short.mjs" },
+    { "date": "2026-11-02", "file": "episodes/004-price/short.mjs" },
+    { "date": "2026-11-04", "file": "episodes/002-procrastinate/long.mjs" },
+    { "date": "2026-11-05", "file": "episodes/002-procrastinate/short.mjs" }
   ]
 }

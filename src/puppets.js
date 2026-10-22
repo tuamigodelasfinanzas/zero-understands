@@ -218,6 +218,26 @@
     siren(p) { const on = (p.on ?? 0) > 0.5; return `<g transform="scale(${p.s ?? 1})"><path d="M -50 0 L -40 -70 A 40 40 0 0 1 40 -70 L 50 0 Z" fill="${on ? RED : '#8a2a31'}" stroke="${INK}" stroke-width="6"/><rect x="-66" y="0" width="132" height="22" rx="6" fill="${INK}"/>${on ? `<g stroke="${RED}" stroke-width="8" stroke-linecap="round"><path d="M -80 -60 l -40 -20"/><path d="M 80 -60 l 40 -20"/><path d="M 0 -120 v -40"/></g>` : ''}</g>`; },
     mask(p) { return `<rect x="-3000" y="-3000" width="6000" height="6000" fill="${p.fill ?? INK}" opacity="${p.op ?? 0.6}"/>`; },
     zzz(p) { return T('z z z', p.size ?? 60, G2); },
+    sticky(p) { // sticky note with up to 3 lines (txt "A|B")
+      const ls = String(p.txt ?? '').split('|'), fs = p.size ?? 34;
+      return `<g transform="scale(${p.s ?? 1}) rotate(${p.tilt ?? -4})"><rect x="-110" y="-100" width="220" height="200" fill="${p.fill ?? YEL}" stroke="${INK}" stroke-width="5"/><path d="M 60 100 L 110 50 L 110 100 Z" fill="${AMBER}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>${ls.map((l, i) => `<text x="0" y="${f((i - (ls.length - 1) / 2) * fs * 1.15 + fs * 0.35)}" text-anchor="middle" font-family="${FONT}" font-weight="700" font-size="${fs}" fill="${p.color ?? INK}">${esc(l)}</text>`).join('')}</g>`;
+    },
+    paper(p) { // a document page; lines 0..1 = how much of it is written
+      const n = Math.round((p.lines ?? 0) * 8);
+      return `<g transform="scale(${p.s ?? 1}) rotate(${p.tilt ?? 0})"><rect x="-130" y="-170" width="260" height="340" rx="8" fill="${WHITE}" stroke="${INK}" stroke-width="7"/>${p.title ? `<text x="0" y="-118" text-anchor="middle" font-family="${FONT}" font-weight="700" font-size="${p.size ?? 40}" fill="${INK}">${esc(p.title)}</text>` : ''}${Array.from({ length: n }, (_, i) => `<rect x="-96" y="${-80 + i * 30}" width="${i % 3 === 2 ? 120 : 192}" height="10" rx="5" fill="${G2}"/>`).join('')}</g>`;
+    },
+    broom(p) { // drawn so ZERO's hand holds it near the top
+      return `<g transform="scale(${p.s ?? 1}) rotate(${p.r2 ?? 0})"><rect x="-6" y="-40" width="12" height="230" rx="6" fill="#C98B4A" stroke="${INK}" stroke-width="4"/><path d="M -40 190 L 40 190 L 56 260 L -56 260 Z" fill="${YEL}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/><path d="M -30 210 v 44 M 0 210 v 48 M 30 210 v 44" stroke="${AMBER}" stroke-width="4"/></g>`;
+    },
+    tag(p) { // price tag
+      return `<g transform="scale(${p.s ?? 1}) rotate(${p.tilt ?? 0})"><path d="M -150 -70 L 110 -70 L 170 0 L 110 70 L -150 70 Z" fill="${p.fill ?? WHITE}" stroke="${INK}" stroke-width="7" stroke-linejoin="round"/><circle cx="120" cy="0" r="12" fill="${WHITE}" stroke="${INK}" stroke-width="5"/>${`<g transform="translate(-20 0)">${T(p.txt ?? '$10', p.size ?? 76, p.color ?? INK)}</g>`}</g>`;
+    },
+    cloud(p) { // the bad feeling: a grey cloud with a grumpy face; mood 0 grumpy, 1 sad
+      const m = p.mood ?? 0;
+      return `<g transform="scale(${p.s ?? 1})"><path d="M -150 60 Q -210 60 -200 0 Q -200 -60 -130 -60 Q -110 -130 -30 -120 Q 30 -170 90 -110 Q 170 -120 180 -40 Q 230 0 190 50 Q 180 70 140 60 Z" fill="${p.fill ?? '#8C8C99'}" stroke="${INK}" stroke-width="7" stroke-linejoin="round"/><path d="M -70 -42 L -24 -26 M 70 -42 L 24 -26" stroke="${INK}" stroke-width="8" stroke-linecap="round" opacity="${1 - m}"/><circle cx="-44" cy="-6" r="10" fill="${INK}"/><circle cx="44" cy="-6" r="10" fill="${INK}"/><path d="M -30 ${f(34 - m * 6)} Q 0 ${f(18 + m * 20)} 30 ${f(34 - m * 6)}" stroke="${INK}" stroke-width="7" fill="none" stroke-linecap="round"/>${p.rain ? [-110, -40, 30, 100].map((x, i) => `<path d="M ${x} ${80 + ((p.rain * 120 + i * 37) % 80)} l -8 26" stroke="${BLUE}" stroke-width="7" stroke-linecap="round"/>`).join('') : ''}</g>`;
+    },
+    plant(p) { return `<g transform="scale(${p.s ?? 1})"><path d="M -50 0 L 50 0 L 40 90 L -40 90 Z" fill="#C98B4A" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/><path d="M 0 0 C -10 -60 -70 -90 -80 -60 C -80 -30 -30 -20 0 0 M 0 0 C 10 -80 70 -110 80 -80 C 85 -40 30 -20 0 0" fill="#2E9E5B" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/></g>`; },
+    pencup(p) { return `<g transform="scale(${p.s ?? 1})">${[[-24, YEL, -10], [0, BLUE, 0], [24, RED, 10]].map(([x, c, r]) => `<rect x="${x - 7}" y="-90" width="14" height="80" fill="${c}" stroke="${INK}" stroke-width="4" transform="rotate(${p.messy ? r * 3 : 0} ${x} -10)"/>`).join('')}<rect x="-45" y="-20" width="90" height="80" rx="8" fill="${WHITE}" stroke="${INK}" stroke-width="6"/></g>`; },
   };
 
   window.PUPPETS = { zero, pix, PROPS, POSES, COLORS: { INK, WHITE, YEL, AMBER, RED, BLUE, G1, G2 }, FONT, esc };
