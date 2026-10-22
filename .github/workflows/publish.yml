@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       date:
-        description: "Optional: render the row of this date (YYYY-MM-DD) even if it was already rendered"
+        description: "Optional: render the rows of these dates (YYYY-MM-DD, comma-separated) even if already rendered"
         required: false
         default: ""
       preview:
