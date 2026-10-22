@@ -53,6 +53,111 @@
   const inHand = (kind, h, dx = 52, dy = -96, rot = -8) => (x, y, s, m) => `<g ${tr(x + (m ? -dx : dx) * s, y + dy * s, 1, m ? -rot : rot)}>${obj(kind, h * s / 1.5)}</g>`;
 
   const THEROES = {
+    // ---------------------------------------------------------------- the channel's signature: ZERO SEES WHAT WE DON'T
+    // ZERO has just put the thing on the belt; it shoots off into a wall that is cut open (dollhouse section) to show the
+    // enormous hidden machine behind it: scan, sort, routes branching, an overhead line, docks, and at the far end the
+    // door where it leaves at dawn. The clock hangs by the text (time is the hook). Reads at phone size as
+    // ZERO -> yellow box -> huge machine -> question. opts: obj, clock [h, m], dawn (far door colour), pix (true/false)
+    cutaway(ctx) {
+      const o = ctx.opts, a = ctx.accent ?? '#4FA8FF', m = ctx.m;
+      const belt = 548;                                   // top of the front belt
+      const X0 = 640, Y0 = 286, IX = 676, IY = 318;       // cut edge and the inner corner of the wall thickness
+      const vp = [1030, 430];                             // vanishing point of the hidden hall
+      const BW = [880, 362, 1180, 486];                   // its back wall: x0, y0, x1, y1 (floor line)
+      const dawn = o.dawn ?? '#FFB27A';
+      // a strip (belt) in perspective from A to B, width wa -> wb, lighter top edge
+      const strip = (ax, ay, bx, by, wa, wb, c = '#424C7C', top = '#7A86B8') => {
+        const d = Math.hypot(bx - ax, by - ay), nx = -(by - ay) / d, ny = (bx - ax) / d;
+        const P = (x, y, w, k) => `${f(x + nx * w * k)} ${f(y + ny * w * k)}`;
+        return `<path d="M ${P(ax, ay, wa, -0.5)} L ${P(bx, by, wb, -0.5)} L ${P(bx, by, wb, 0.5)} L ${P(ax, ay, wa, 0.5)} Z" fill="${c}"/><path d="M ${P(ax, ay, wa, -0.5)} L ${P(bx, by, wb, -0.5)} L ${P(bx, by, wb, -0.2)} L ${P(ax, ay, wa, -0.2)} Z" fill="${top}"/>`;
+      };
+      const along = (ax, ay, bx, by, wa, wb, ts, seed) => ts.map((t, i) => { const w = wa + (wb - wa) * t; return `<g ${tr(ax + (bx - ax) * t, ay + (by - ay) * t - w * 0.2)}>${box(w * 0.9, w * 0.7, brown[(seed + i) % 4], { depth: w * 0.12 })}</g>`; }).join('');
+      const tiny = (x, y, s, seed, pose) => `<g ${tr(x, y, s)}>${person(['#5C6B8A', '#6E5C7A', '#4E6A6A'][seed % 3], { vest: '#FF9E45', seed, pose, shadow: false })}</g>`;
+      const blink = (x, y, c, r = 4) => `${pool(x, y, r * 4, r * 4, c, 0.6)}<circle cx="${f(x)}" cy="${f(y)}" r="${r}" fill="${tint(c, 0.4)}"/>`;
+
+      // ---- the hidden hall (everything inside is clipped to the cut) ----
+      let hall = `<rect x="${IX}" y="${IY}" width="${W - IX + 60}" height="${700 - IY}" fill="#1A2148"/>`;
+      // ceiling, floor, left wall, back wall
+      hall += `<path d="M ${IX} ${IY} L ${W + 60} ${IY} L ${W + 60} ${IY + 8} L ${BW[2]} ${BW[1]} L ${BW[0]} ${BW[1]} Z" fill="#161C3E"/>`;
+      hall += `<path d="M ${IX} 720 L ${IX} 660 L ${BW[0]} ${BW[3]} L ${BW[2]} ${BW[3]} L ${W + 60} 660 L ${W + 60} 720 Z" fill="${K.linear('#232A4C', '#1A2040')}"/>`;
+      hall += Array.from({ length: 9 }, (_, i) => { const x = IX + i * 90; return `<path d="M ${f(x)} 660 L ${f(BW[0] + (x - IX) / (W + 60 - IX) * (BW[2] - BW[0]))} ${BW[3]}" stroke="#2C3458" stroke-width="2"/>`; }).join('');
+      hall += `<path d="M ${IX} ${IY} L ${BW[0]} ${BW[1]} L ${BW[0]} ${BW[3]} L ${IX} 660 Z" fill="#1B2246"/>`;
+      hall += `<rect x="${BW[0]}" y="${BW[1]}" width="${BW[2] - BW[0]}" height="${BW[3] - BW[1]}" fill="#1E2550"/>`;
+      // the far door, open on the dawn: the only warm-pink light in the frame (this is where "by morning" happens)
+      const dx0 = 944, dx1 = 1116, dy0 = 394;
+      hall += pool((dx0 + dx1) / 2, BW[3] - 30, 240, 120, dawn, 0.7);
+      hall += `<rect x="${dx0 - 10}" y="${dy0 - 10}" width="${dx1 - dx0 + 20}" height="${BW[3] - dy0 + 10}" fill="#0E1230"/><rect x="${dx0}" y="${dy0}" width="${dx1 - dx0}" height="${BW[3] - dy0}" fill="${K.linear('#FFE6B8', dawn)}"/>`;
+      hall += `<rect x="${dx0}" y="${BW[3] - 14}" width="${dx1 - dx0}" height="14" fill="${shade(dawn, 0.35)}"/>`;
+      hall += `<g ${tr(1006, BW[3] - 6, 0.13)} opacity="0.9">${K.truck('#2A2F4A', { cab: '#1E2340' })}</g><g ${tr(1074, BW[3] - 4, 0.1)} opacity="0.75">${K.truck('#2A2F4A', { cab: '#1E2340' })}</g>`;
+      hall += `<path d="M ${dx0} ${BW[3]} L ${dx1} ${BW[3]} L ${dx1 + 120} 660 L ${dx0 - 90} 660 Z" fill="${K.linear(dawn, dawn, true, 0.45, 0)}"/>`;
+      // docks along the right wall, trucks backed in
+      hall += `<path d="M ${W + 60} ${IY + 8} L ${BW[2]} ${BW[1]} L ${BW[2]} ${BW[3]} L ${W + 60} 660 Z" fill="#1A2045"/>`;
+      hall += [[1196, 0.55], [1240, 0.8]].map(([x, k]) => `<g ${tr(x, 540 + (k - 0.55) * 160)}><rect x="${-22 * k}" y="${-92 * k}" width="${44 * k}" height="${92 * k}" fill="${tint('#2A3260', 0.1)}"/><rect x="${-17 * k}" y="${-80 * k}" width="${34 * k}" height="${80 * k}" fill="${K.linear('#FFD9A8', '#E8945C')}" opacity="0.85"/>${blink(0, -100 * k, '#3DDC84', 3)}</g>`).join('');
+      // ceiling lamps receding, and their light on the floor
+      for (let i = 0; i < 4; i++) { const t = i / 4, x = 760 + (vp[0] - 760) * t * 0.9, y = IY + 30 + (BW[1] + 10 - IY - 30) * t, k = 1 - t * 0.7; hall += `${K.cone(x, y, 16 * k, 150 * k, 150 * k, '#FFD58A', 0.18)}<rect x="${f(x - 16 * k)}" y="${f(y - 3)}" width="${f(32 * k)}" height="${f(6 * k)}" rx="3" fill="#FFE7A8"/>`; }
+      for (let i = 0; i < 3; i++) { const t = i / 3, x = 1230 - (1230 - vp[0]) * t * 0.6, y = IY + 26 + (BW[1] + 6 - IY - 26) * t, k = 1 - t * 0.6; hall += `<rect x="${f(x - 14 * k)}" y="${f(y - 3)}" width="${f(28 * k)}" height="${f(5 * k)}" rx="3" fill="#FFE7A8" opacity="0.8"/>`; }
+      // a second line high up, far away: the hall keeps going
+      hall += strip(IX, 352, BW[0] + 40, BW[1] + 8, 14, 8, '#2A3158', '#3A4470') + along(IX, 352, BW[0] + 40, BW[1] + 8, 14, 8, [0.2, 0.5, 0.8], 1);
+      // the overhead line: parcels climb a ramp and cross the hall up high
+      hall += strip(800, 520, 900, 388, 30, 22) + strip(900, 388, W + 60, 376, 22, 26);
+      hall += Array.from({ length: 7 }, (_, i) => `<rect x="${f(930 + i * 60)}" y="390" width="5" height="${f(BW[3] - 390 + (i * 60) * 0.06)}" fill="#151A38"/>`).join('');
+      hall += along(800, 520, 900, 388, 30, 22, [0.35, 0.8], 1) + along(900, 388, W + 60, 376, 22, 26, [0.12, 0.3, 0.48, 0.66, 0.84], 2);
+      // straight on toward the dawn door, and the big route curving to the docks
+      hall += strip(780, 548, dx0 + 50, BW[3] - 6, 40, 16) + along(780, 548, dx0 + 50, BW[3] - 6, 40, 16, [0.3, 0.58, 0.8], 3);
+      hall += strip(770, 556, 1060, 600, 46, 44) + strip(1060, 600, W + 60, 590, 44, 50) + along(770, 556, 1060, 600, 46, 44, [0.35, 0.75], 0) + along(1060, 600, W + 60, 590, 44, 50, [0.25, 0.7], 2);
+      // the belt coming out of the scanner
+      hall += strip(IX - 10, belt + 4, 800, belt - 2, 36, 34);
+      // the sorter where the routes split: a diverter with three route lights
+      hall += `<g ${tr(800, 536)}><rect x="-34" y="-58" width="68" height="40" rx="6" fill="#2C3460"/><rect x="-34" y="-58" width="68" height="8" rx="4" fill="#3E4880"/>${blink(-18, -38, '#3DDC84', 4)}${blink(0, -38, C.YEL, 4)}${blink(18, -38, a, 4)}<rect x="-6" y="-18" width="12" height="20" fill="#232A50"/></g>`;
+      hall += `<g ${tr(806, 548, 1, -24)}><rect x="0" y="-5" width="54" height="10" rx="5" fill="#FF9E45"/></g>`;
+      // a forklift with a pallet, tiny night-shift workers
+      hall += `<g ${tr(918, 520, 0.42)}>${K.shadow(0, 0, 70, 0.4)}<rect x="-50" y="-70" width="80" height="54" rx="10" fill="#E07B39"/><rect x="-40" y="-110" width="40" height="42" fill="none" stroke="#2A2F45" stroke-width="7"/><rect x="34" y="-150" width="8" height="150" fill="#2A2F45"/><rect x="40" y="-14" width="56" height="8" fill="#2A2F45"/><g ${tr(68, -14)}>${box(56, 44, brown[1], { depth: 8 })}</g><circle cx="-30" cy="-12" r="13" fill="#15182A"/><circle cx="16" cy="-12" r="13" fill="#15182A"/>${blink(-30, -116, C.YEL, 5)}</g>`;
+      hall += tiny(870, 506, 0.34, 1, 'walk') + tiny(1130, 492, 0.24, 4) + tiny(1186, 640, 0.5, 2, 'walk') + tiny(1010, 534, 0.3, 5);
+      // blinking operational lights
+      hall += blink(BW[0] + 20, BW[1] + 20, C.RED, 3) + blink(BW[2] - 24, BW[1] + 24, '#3DDC84', 3) + blink(1240, IY + 40, C.YEL, 3);
+      // depth haze toward the back
+      hall += `<rect x="${IX}" y="${IY}" width="${W + 60 - IX}" height="${660 - IY}" fill="${K.radial('#1A2350', 0.35)}"/>`;
+      hall += pool(1000, 470, 320, 170, a, 0.32);
+
+      const clipId = 'cutclip';
+      // the visible warehouse steps back: darker and softer than the story in front of it
+      let back = `<rect x="-60" y="-60" width="${X0 + 160}" height="780" fill="${K.linear('#0A0D1E', '#0A0D1E', false, 0.38, 0)}"/>`;
+      back += `<defs><clipPath id="${clipId}"><rect x="${IX}" y="${IY}" width="${W + 60 - IX}" height="${640 - IY}"/></clipPath></defs>`;
+      // the building's wall, the cut through it (lighter section), and the wall thickness
+      back += `<rect x="${X0 - 30}" y="${Y0 - 40}" width="${W - X0 + 120}" height="${640 - Y0 + 40}" fill="#1A2140"/>`;
+      back += `<g clip-path="url(#${clipId})">${hall}</g>`;
+      back += `<path d="M ${X0} ${Y0} L ${W + 60} ${Y0} L ${W + 60} ${IY} L ${IX} ${IY} Z" fill="#3A4470"/><path d="M ${X0} ${Y0} L ${IX} ${IY} L ${IX} 640 L ${X0} 640 Z" fill="#323C66"/>`;
+      back += `<path d="M ${X0 - 12} ${Y0 - 12} L ${W + 60} ${Y0 - 12} L ${W + 60} ${Y0} L ${X0} ${Y0} L ${X0} 640 L ${X0 - 12} 640 Z" fill="#8C96BE"/><rect x="${X0 - 12}" y="640" width="${W - X0 + 80}" height="12" fill="#8C96BE"/><rect x="${X0 - 12}" y="652" width="${W - X0 + 80}" height="6" fill="#5A6390"/>`;
+      // the front belt into the scanner tunnel at the cut
+      back += `<g ${tr(-60, belt)}>${K.conveyor(IX + 140, '#3A4160', { legs: 80 })}</g>`;
+      back += Array.from({ length: 6 }, (_, i) => `<rect x="${f(560 + i * 34)}" y="${belt - 7}" width="18" height="3" rx="1.5" fill="#8C96BE" opacity="${f(0.25 + i * 0.05)}"/>`).join('');
+      // scanner tunnel: hazard frame, blue light inside, a sheet of scan light across the belt
+      const sx0 = 612, sx1 = 724, sy = 430;
+      back += `${pool(668, 490, 120, 90, a, 0.6)}<rect x="${sx0}" y="${sy}" width="${sx1 - sx0}" height="${belt - sy}" fill="#090B18"/>`;
+      back += `<rect x="${sx0 + 10}" y="${sy + 18}" width="${sx1 - sx0 - 20}" height="${belt - sy - 18}" fill="${K.linear(a, '#0B1030', true, 0.75, 0.1)}"/>`;
+      back += `${K.hazard(sx0 - 14, sy - 22, sx1 - sx0 + 28, 22, C.YEL, '#14151C', 14)}${K.hazard(sx0 - 14, sy - 22, 14, belt - sy + 22, C.YEL, '#14151C', 14)}`;
+      back += `<rect x="${sx0 + 30}" y="${sy + 8}" width="4" height="${belt - sy - 8}" fill="#BFE3FF" opacity="0.9"/>${K.beam(sx0 + 32, sy + 10, sx0 - 40, belt - 4, 60, '#7CC2FF', 0.35)}`;
+      back += blink(sx1 - 10, sy - 32, C.YEL, 5);
+      // the hero box, already moving: tilted back by the jolt, faint trail, speed lines
+      const bx = 482, bw = 162, bh = 122, tilt = -3;
+      back += pool(bx, belt - 80, 230, 150, '#FFC93C', 0.4);
+      back += [0.1, 0.05].map((op, i) => `<g ${tr(bx - 34 * (i + 1), belt - 2, 1, tilt)} opacity="${op}">${box(bw, bh, C.YEL, { tape: false })}</g>`).join('');
+      back += [[-46, 110], [-86, 150], [-124, 90]].map(([y, l], i) => `<rect x="${f(bx - bw / 2 - 26 - l)}" y="${belt + y - 3}" width="${l}" height="6" rx="3" fill="#FFE7A8" opacity="${0.55 - i * 0.1}"/>`).join('');
+      back += `${K.shadow(bx + 8, belt + 2, bw * 0.55, 0.45)}<g ${tr(bx, belt - 2, 1, tilt)}>${o.obj && o.obj !== 'box' ? obj(o.obj, 150, { m }) : box(bw, bh, C.YEL, { label: true })}</g>`;
+
+      // the clock hangs from the roof beside the question: 11:47 at night -> "by morning?"
+      const [hh, mm] = o.clock ?? ctx.wopts.clock ?? [11, 47];
+      const cx = o.clockAt?.[0] ?? 862, cy = o.clockAt?.[1] ?? 92, r = o.clockR ?? 54;
+      let front = `<rect x="${cx - 26}" y="-10" width="5" height="${cy - r + 10}" fill="#11131F"/><rect x="${cx + 21}" y="-10" width="5" height="${cy - r + 10}" fill="#11131F"/>`;
+      front += `<g ${tr(cx, cy)}><g transform="${m ? 'scale(-1 1)' : ''}">${K.clock(r, hh, mm, { glow: '#FFD58A' })}<g ${tr(0, r * 0.42)}>${K.label('PM', r * 0.24, '#8A90A6')}</g></g></g>`;
+
+      const pix = o.pix === false ? false : { x: 744, y: 352, s: 0.7, face: 2, scan: [960, 470], beamW: 230 };
+      return {
+        back, front, focus: [bx, belt - 90], focusR: 200, box: [370, 380, 260, 170],
+        zero: { x: 205, height: 0.42, st: { face: 3, hl: [72, 150], hr: [149, 124], fl: [82, 206], fr: [124, 202], lean: 11, headR: 4, look: [7, 0], pose: 'neutral', ...(o.zst || {}) } },
+        pix, textZone: 'tr', textBox: { x: 620, y: 30, w: 620, h: 250 },
+      };
+    },
     // ---------------------------------------------------------------- CURIOSITY: things vanish into the system
     // an object rides the belt into the mouth of the system; ZERO leans in to see where it goes
     mouth(ctx) {
