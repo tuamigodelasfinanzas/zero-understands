@@ -60,7 +60,8 @@
 
   // the air network on the US map (video 001 part 2): ZERO's expected straight line to mom (direct 0..1, cross 0..1
   // strikes it out), the real flight to the hub (zarc 0..1), every other city's flight converging (arcs 0..1, with
-  // planes flowing along them), and the four-hour circle around the hub (ring 0..1, filled only over land)
+  // planes flowing along them; frozen stops them, arcColor/hubColor recolour), and the four-hour circle around the
+  // hub (ring 0..1, filled only over land)
   const HUB = [265, 111];
   const CITIES = [[40, 32], [30, 100], [55, 150], [100, 168], [105, 88], [150, 105], [215, 52], [205, 180], [232, 204], [300, 150], [335, 212], [352, 74], [372, 52], [180, 140], [320, 100]];
   const arcPath = (a, b, lift = 34) => `M ${a[0]} ${a[1]} Q ${(a[0] + b[0]) / 2} ${Math.min(a[1], b[1]) - lift} ${b[0]} ${b[1]}`;
@@ -72,9 +73,11 @@
     if ((p.direct ?? 0) > 0) o += `<path d="M ${A[0]} ${A[1]} L ${B[0]} ${B[1]}" stroke="#E6ECF5" stroke-width="4" stroke-dasharray="12 10" pathLength="320" stroke-dashoffset="0" opacity="0.8" style="stroke-dasharray:${f(320 * p.direct)} 320"/>`;
     if ((p.cross ?? 0) > 0) { const m = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], k = p.cross * 22; o += `<path d="M ${f(m[0] - k)} ${f(m[1] - k)} L ${f(m[0] + k)} ${f(m[1] + k)} M ${f(m[0] + k)} ${f(m[1] - k)} L ${f(m[0] - k)} ${f(m[1] + k)}" stroke="#FF5A4E" stroke-width="8" stroke-linecap="round"/>`; }
     const n = Math.round(CITIES.length * (p.arcs ?? 0));
-    CITIES.slice(0, n).forEach((c, i) => { o += `<path d="${arcPath(c, HUB)}" fill="none" stroke="#7CC2FF" stroke-width="2.5" opacity="0.7"/><circle cx="${c[0]}" cy="${c[1]}" r="4" fill="#7CC2FF"/>`; const q = onArc(c, HUB, fr(gt * 0.3 + i * 0.37)); o += `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="4.5" fill="#FFFFFF"/>`; });
+    const ac = p.arcColor ?? '#7CC2FF';
+    CITIES.slice(0, n).forEach((c, i) => { o += `<path d="${arcPath(c, HUB)}" fill="none" stroke="${ac}" stroke-width="2.5" opacity="0.7"/><circle cx="${c[0]}" cy="${c[1]}" r="4" fill="${ac}"/>`; const q = onArc(c, HUB, p.frozen ? 0.15 + 0.1 * rnd(i) : fr(gt * 0.3 + i * 0.37)); o += `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="4.5" fill="#FFFFFF"/>`; });
     if ((p.zarc ?? 0) > 0) { o += `<path d="${arcPath(A, HUB, 50)}" fill="none" stroke="${YEL}" stroke-width="5" stroke-linecap="round" pathLength="300" stroke-dasharray="${f(300 * p.zarc)} 300"/>`; const q = onArc(A, HUB, p.zarc, 50); o += `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="7" fill="${YEL}"/>`; }
-    if (p.hub) o += `<circle cx="${HUB[0]}" cy="${HUB[1]}" r="9" fill="${YEL}"/><circle cx="${HUB[0]}" cy="${HUB[1]}" r="${f(9 + 22 * fr(gt * 0.8))}" fill="none" stroke="${YEL}" stroke-width="3" opacity="${f(1 - fr(gt * 0.8))}"/>${p.hubLabel ? `<g transform="translate(${HUB[0]} ${HUB[1] + 30})"><rect x="-62" y="-13" width="124" height="26" rx="5" fill="#0A1B33" opacity="0.85"/>${T(p.hubLabel, 15, YEL, 0, -4, 'letter-spacing="1"')}</g>` : ''}`;
+    const hc = p.hubColor ?? YEL;
+    if (p.hub) o += `<circle cx="${HUB[0]}" cy="${HUB[1]}" r="9" fill="${hc}"/><circle cx="${HUB[0]}" cy="${HUB[1]}" r="${f(9 + 22 * fr(gt * 0.8))}" fill="none" stroke="${hc}" stroke-width="3" opacity="${f(1 - fr(gt * 0.8))}"/>${p.hubLabel ? `<g transform="translate(${HUB[0]} ${HUB[1] + 30})"><rect x="-62" y="-13" width="124" height="26" rx="5" fill="#0A1B33" opacity="0.85"/>${T(p.hubLabel, 15, YEL, 0, -4, 'letter-spacing="1"')}</g>` : ''}`;
     return o;
   }
 
@@ -223,6 +226,7 @@
     // a wall hook with keys (swing 0..1 after being grabbed)
     keyhook(p) { const gt = p.gt ?? 0, sw = (p.swing ?? 0) * 25 * Math.sin(gt * 9) * Math.exp(-((p.since ?? 9) * 2)); return `<g transform="${S(p)}"><rect x="-60" y="-12" width="120" height="24" rx="8" fill="#8E6A52"/>${p.keys === false ? '' : `<g transform="translate(-20 10) rotate(${f(sw)})"><path d="M 0 0 V 22" stroke="#C9C9D6" stroke-width="4"/><circle cy="34" r="12" fill="none" stroke="#E8C468" stroke-width="6"/><rect x="-4" y="44" width="8" height="34" fill="#E8C468"/></g>`}<path d="M 20 10 q 0 20 14 16" stroke="#C9C9D6" stroke-width="6" fill="none"/></g>`; },
     // ZERO's present: the yellow box (the object the viewer follows through the whole system), with a bow, the heart
+    // (open 0..1 lifts the two top flaps; the bow is gone by then),
     // ZERO drew, the shipping label, a red NEXT DAY stamp (stamp 0..1), wet 0..1 (darker spots on the label)
     giftbox(p) {
       const w = p.w ?? 150, h = p.h ?? 120, c = p.color ?? YEL;
@@ -231,7 +235,8 @@
       const stamp = (p.stamp ?? 0) > 0 ? `<g transform="translate(${w * 0.22} ${-h * 0.32}) rotate(-8) scale(${f(0.55 + 0.45 * p.stamp)})" opacity="${f(Math.min(1, p.stamp * 1.5))}"><rect x="-38" y="-16" width="76" height="32" rx="4" fill="none" stroke="#D63C46" stroke-width="4"/>${T('NEXT DAY', 15, '#D63C46', 0, -2)}</g>` : '';
       const bow = p.bow === false ? '' : `<rect x="${-w * 0.07}" y="${-h}" width="${w * 0.14}" height="${h}" fill="${CORAL}" opacity="0.9"/><g transform="translate(${w * 0.04} ${-h - h * 0.16})"><ellipse cx="-18" cy="-10" rx="22" ry="13" fill="${CORAL}" transform="rotate(-25 -18 -10)"/><ellipse cx="18" cy="-10" rx="22" ry="13" fill="${CORAL}" transform="rotate(25 18 -10)"/><circle r="9" fill="${shade(CORAL, 0.2)}"/></g>`;
       const heart = p.heart ? `<path transform="translate(${-w * 0.3} ${-h * 0.25}) scale(0.7)" d="M 0 12 C -20 -4 -12 -20 0 -9 C 12 -20 20 -4 0 12 Z" fill="none" stroke="#D63C46" stroke-width="4"/>` : '';
-      return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><ellipse cx="0" cy="3" rx="${w * 0.6}" ry="8" fill="#000" opacity="0.28"/>${box(w, h, c, { tape: false })}${bow}${heart}${label}${stamp}</g>`;
+      const op = p.open ?? 0, flaps = op > 0 ? `<path d="M ${-w / 2} ${-h} L ${f(-w / 2 - w * 0.35 * op)} ${f(-h - h * 0.5 * op)} L ${f(-w * 0.05 - w * 0.3 * op)} ${f(-h - h * 0.55 * op)} L 0 ${-h} Z" fill="${shade(c, 0.12)}"/><path d="M ${w / 2} ${-h} L ${f(w / 2 + w * 0.35 * op)} ${f(-h - h * 0.5 * op)} L ${f(w * 0.05 + w * 0.3 * op)} ${f(-h - h * 0.55 * op)} L 0 ${-h} Z" fill="${shade(c, 0.05)}"/>` : '';
+      return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><ellipse cx="0" cy="3" rx="${w * 0.6}" ry="8" fill="#000" opacity="0.28"/>${box(w, h, c, { tape: false })}${op > 0 ? '' : bow}${heart}${label}${stamp}${flaps}</g>`;
     },
     // plain brown parcel (everybody else's boxes); v picks a size and shade
     parcel(p) { const v = Math.abs(p.v ?? 0), w = p.w ?? [120, 160, 100, 140, 180][v % 5], h = p.h ?? [90, 110, 80, 130, 100][v % 5], c = p.color ?? ['#A47A55', '#B88B60', '#93704F', '#AD835A', '#9C7550'][v % 5]; return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><ellipse cx="0" cy="3" rx="${w * 0.6}" ry="7" fill="#000" opacity="0.25"/>${box(w, h, c)}<rect x="${-w * 0.3}" y="${-h * 0.6}" width="${w * 0.32}" height="${h * 0.26}" fill="#F2EEE6"/></g>`; },
@@ -579,7 +584,8 @@
     // screen-space round window frame (POV shots): dark wall with a round hole r at the centre, a rim, a glint
     porthole(p) { const r = p.rr ?? 400, cx = p.cx ?? 960, cy = p.cy ?? 540; return `<g><path d="M -100 -100 H 2020 V 1180 H -100 Z M ${cx - r} ${cy} A ${r} ${r} 0 1 0 ${cx + r} ${cy} A ${r} ${r} 0 1 0 ${cx - r} ${cy} Z" fill="#1E2236" fill-rule="evenodd"/><circle cx="${cx}" cy="${cy}" r="${r + 18}" fill="none" stroke="#3A3F58" stroke-width="40"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#0B0D18" stroke-width="10"/><path d="M ${cx - r * 0.6} ${cy - r * 0.55} Q ${cx - r * 0.2} ${cy - r * 0.85} ${cx + r * 0.2} ${cy - r * 0.8}" stroke="#FFFFFF" stroke-width="10" fill="none" opacity="0.12" stroke-linecap="round"/></g>`; },
     // the hub from the air at night (top-down with a slight tilt): the main building with its piers, jets parked
-    // at the piers, tugs crawling, sodium pools on the apron; fields 0..1 tiles the roof with up to 90 football fields
+    // at the piers, tugs crawling, sodium pools on the apron; fields 0..1 tiles the roof with up to 90 football fields;
+    // city: the lights of the city around the airport (for the pull-out)
     hubaerial(p) {
       const gt = p.gt ?? 0, fl = p.fields ?? 0;
       const jetTop = (x, y, r, s = 1) => `<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})"><path d="M 0 -120 Q 10 -110 10 -80 L 10 80 Q 0 120 -10 80 L -10 -80 Q -10 -110 0 -120 Z" fill="#DCDAD4"/><path d="M -10 -10 L -110 40 L -110 56 L -10 30 Z M 10 -10 L 110 40 L 110 56 L 10 30 Z" fill="#C9C7C0"/><path d="M -6 90 L -44 110 L 44 110 L 6 90 Z" fill="#C9C7C0"/><rect x="-6" y="80" width="12" height="30" fill="#2B3A67"/></g>`;
@@ -587,7 +593,8 @@
       const jets = piers.map(([x, d], i) => [-1, 1].map(sd => [0, 1].map(j => (i + j + (sd > 0 ? 1 : 0)) % 3 === 0 ? '' : jetTop(x + sd * 190, d * (420 + j * 260), sd > 0 ? -90 : 90, 0.85)).join('')).join('')).join('');
       const tugs = Array.from({ length: 16 }, (_, i) => { const k = fr(gt * 0.03 * (0.6 + rnd(i)) + rnd(i * 3)), a = k * Math.PI * 2, rx = 1400 + rnd(i * 5) * 400, ry = 900 + rnd(i * 7) * 200; return `<circle cx="${f(Math.cos(a) * rx)}" cy="${f(Math.sin(a) * ry)}" r="7" fill="#FFB25C" opacity="${fr(gt * 2 + i * 0.3) < 0.5 ? 1 : 0.4}"/>`; }).join('');
       const fields = fl > 0 ? Array.from({ length: Math.round(90 * fl) }, (_, i) => { const c = i % 15, r = Math.floor(i / 15), x = -900 + c * 120, y = -270 + r * 90; return `<g><rect x="${x + 3}" y="${y + 3}" width="114" height="84" fill="${i % 2 ? '#3C8C4E' : '#46A05A'}"/><rect x="${x + 9}" y="${y + 9}" width="102" height="72" fill="none" stroke="#EAF4EE" stroke-width="2.5" opacity="0.8"/><path d="M ${x + 60} ${y + 9} V ${y + 81}" stroke="#EAF4EE" stroke-width="2.5" opacity="0.8"/></g>`; }).join('') : '';
-      return `<g transform="scale(1 ${p.tiltY ?? 0.62})"><rect x="-6000" y="-5000" width="12000" height="10000" fill="#141729"/><rect x="-3000" y="-1500" width="6000" height="3000" rx="200" fill="#1E2236"/>
+      const city = p.city ? Array.from({ length: 900 }, (_, i) => { const a = rnd(i * 3) * Math.PI * 2, r = 3400 + Math.pow(rnd(i * 7), 0.7) * 14000; return `<circle cx="${f(Math.cos(a) * r)}" cy="${f(Math.sin(a) * r)}" r="${f(30 + rnd(i) * 60)}" fill="${rnd(i * 11) > 0.8 ? '#FFFFFF' : '#FFC27A'}" opacity="0.5"/>`; }).join('') : '';
+      return `<g transform="scale(1 ${p.tiltY ?? 0.62})"><rect x="-30000" y="-30000" width="60000" height="60000" fill="#0B0E1E"/>${city}<rect x="-6000" y="-5000" width="12000" height="10000" fill="#141729"/><rect x="-3000" y="-1500" width="6000" height="3000" rx="200" fill="#1E2236"/>
         ${Array.from({ length: 24 }, (_, i) => `<ellipse cx="${f(-2600 + rnd(i * 11) * 5200)}" cy="${f(-1300 + rnd(i * 17) * 2600)}" rx="260" ry="260" fill="url(#wSodium)" opacity="0.4"/>`).join('')}
         <path d="M -3000 1100 H 3000 M -3000 -1100 H 3000" stroke="#C9A84A" stroke-width="8" opacity="0.4"/>
         ${piers.map(([x, d]) => `<rect x="-90" y="${d > 0 ? 260 : -900}" width="180" height="640" fill="#2E3354" transform="translate(${x} 0)"/>`).join('')}
@@ -642,14 +649,14 @@
     // a diverter paddle beside a belt: post and an arm that swings by ang degrees (0 = parked along the belt edge)
     paddle(p) { const a = p.ang ?? 0; return `<g transform="${S(p)}"><rect x="-14" y="-160" width="28" height="160" fill="#4A5270"/><circle cy="-160" r="22" fill="#5C6684"/><g transform="translate(0 -160) rotate(${f(a)})"><rect x="0" y="-16" width="240" height="32" rx="10" fill="#E8B83C"/>${[0, 1, 2, 3, 4].map(i => `<path d="M ${20 + i * 44} -16 l 22 0 l -22 32 l -22 0 Z" fill="#1B1E33"/>`).join('')}</g></g>`; },
     // the camera tunnel over the belt, side cutaway: a hood lined with camera heads (top, back, floor rail) that all
-    // flash (flash 0..1) and draw their sight lines to the label; a strip of status LEDs runs along the hood
+    // flash (flash 0..1) and draw their sight lines to the label (red: the read failed); a strip of status LEDs runs along the hood
     camtunnel(p) {
       const gt = p.gt ?? 0, fl = p.flash ?? 0, w = p.w ?? 560, h = p.h ?? 440, ty = p.ty ?? -120;
       const heads = [...[-200, -100, 0, 100, 200].map(x => [x, -h + 50, 90]), ...[-160, 0, 160].map(x => [x, -h * 0.55, 0]), ...[-210, 210].map(x => [x, -40, x < 0 ? -40 : 220])];
-      const cam_ = ([x, y]) => `<g transform="translate(${x} ${y})"><rect x="-24" y="-18" width="48" height="36" rx="6" fill="#3A3F5C"/><circle r="12" fill="#0B0D18"/><circle r="7" fill="${fl > 0.2 ? '#E6F4FF' : '#3A7BD5'}"/><circle cx="-3" cy="-3" r="2.5" fill="#FFFFFF" opacity="0.8"/></g>`;
-      const lines = fl > 0.05 ? heads.map(([x, y]) => `<path d="M ${x} ${y} L ${p.lx ?? 0} ${ty}" stroke="#7CC2FF" stroke-width="3" opacity="${f(0.8 * fl)}"/>`).join('') : '';
+      const cam_ = ([x, y]) => `<g transform="translate(${x} ${y})"><rect x="-24" y="-18" width="48" height="36" rx="6" fill="#3A3F5C"/><circle r="12" fill="#0B0D18"/><circle r="7" fill="${fl > 0.2 ? (p.red ? '#FFD0C8' : '#E6F4FF') : (p.red ? '#E85B4E' : '#3A7BD5')}"/><circle cx="-3" cy="-3" r="2.5" fill="#FFFFFF" opacity="0.8"/></g>`;
+      const lines = fl > 0.05 ? heads.map(([x, y]) => `<path d="M ${x} ${y} L ${p.lx ?? 0} ${ty}" stroke="${p.red ? '#FF8A7A' : '#7CC2FF'}" stroke-width="3" opacity="${f(0.8 * fl)}"/>`).join('') : '';
       return `<g transform="${S(p)}"><rect x="${-w / 2 - 30}" y="${-h - 40}" width="${w + 60}" height="${h + 40}" rx="20" fill="#4A5270"/><rect x="${-w / 2}" y="${-h}" width="${w}" height="${h}" fill="#0C0F1E"/>
-        <rect x="${-w / 2}" y="${-h}" width="${w}" height="${h}" fill="#CFE8FF" opacity="${f(0.45 * fl)}"/>${heads.map(cam_).join('')}${lines}
+        <rect x="${-w / 2}" y="${-h}" width="${w}" height="${h}" fill="${p.red ? '#FF8A7A' : '#CFE8FF'}" opacity="${f(0.45 * fl + (p.red ? 0.12 : 0))}"/>${heads.map(cam_).join('')}${lines}
         ${Array.from({ length: 14 }, (_, i) => `<rect x="${-w / 2 + 10 + i * (w - 20) / 14}" y="${-h - 28}" width="${(w - 20) / 14 - 8}" height="10" rx="3" fill="${fr(gt * 1.5 - i / 14) < 0.15 ? '#7CC2FF' : '#23304E'}"/>`).join('')}
         ${T(p.txt ?? 'DIMENSION · WEIGHT · LABEL', 18, '#9AA3B5', 0, -h - 58, 'letter-spacing="2"')}</g>`;
     },
@@ -657,7 +664,7 @@
     strips(p) { const gt = p.gt ?? 0, h = p.h ?? 440; return `<g>${Array.from({ length: 6 }, (_, i) => `<path d="M ${i * 14} ${-h} L ${i * 14 + 12} ${-h} L ${f(i * 14 + 12 + Math.sin(gt * 2 + i) * 4 + (p.push ?? 0) * 40)} 0 L ${f(i * 14 + Math.sin(gt * 2 + i) * 4 + (p.push ?? 0) * 40)} 0 Z" fill="#9FC4D8" opacity="0.3"/>`).join('')}</g>`; },
     // a hanging monitor: dark screen, lines of system text (l1, l2), ok: 0..1 shows the green check
     monitor(p) { const w = p.w ?? 460, h = p.h ?? 250; return `<g transform="${S(p)}"><path d="M -80 ${-h / 2} V -2000 M 80 ${-h / 2} V -2000" stroke="#1B1E33" stroke-width="8"/><rect x="${-w / 2 - 16}" y="${-h / 2 - 16}" width="${w + 32}" height="${h + 32}" rx="14" fill="#1B1E33"/><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="#0A1B33"/><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="url(#wGrid)" opacity="0.4"/>
-      ${p.l1 ? T(p.l1, p.size ?? 34, '#7CC2FF', 0, -h / 2 + 50) : ''}${p.l2 ? T(p.l2, p.size ?? 34, YEL, 0, -h / 2 + 110) : ''}${(p.ok ?? 0) > 0 ? `<g transform="translate(0 ${h / 2 - 50}) scale(${f(p.ok)})"><circle r="30" fill="#2E9E5B"/><path d="M -14 0 L -4 10 L 16 -12" stroke="#FFFFFF" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>` : ''}</g>`; },
+      ${p.l1 ? T(p.l1, p.size ?? 34, p.c1 ?? '#7CC2FF', 0, -h / 2 + 50) : ''}${p.l2 ? T(p.l2, p.size ?? 34, YEL, 0, -h / 2 + 110) : ''}${(p.ok ?? 0) > 0 ? `<g transform="translate(0 ${h / 2 - 50}) scale(${f(p.ok)})"><circle r="30" fill="#2E9E5B"/><path d="M -14 0 L -4 10 L 16 -12" stroke="#FFFFFF" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>` : ''}</g>`; },
     // the maze: belts crossing at several heights and angles, each carrying parcels at its own pace (background)
     beltmaze(p) {
       const gt = p.gt ?? 0;
@@ -718,6 +725,147 @@
       const parcels = p.empty ? '' : Array.from({ length: Math.floor(L / 220) }, (_, i) => { const d = ((i * 220 + gt * sp) % L + L) % L; return `<g transform="translate(${f(d)} -4) scale(0.6)" opacity="${f(Math.min(1, (L - d) / 60))}">${PROPS.parcel({ v: (i + (p.seed ?? 0)) % 5 })}</g>`; }).join('');
       return `<g><g transform="rotate(${f(a)})"><rect x="0" y="0" width="${f(L)}" height="30" fill="#8C93AA"/><rect x="0" y="-70" width="${f(L)}" height="16" fill="#6C7590"/>${parcels}<rect x="0" y="-74" width="${f(L)}" height="104" fill="#9FC4D8" opacity="0.08"/></g>
         ${p.txt ? `<g transform="translate(40 -150)"><rect x="-80" y="-34" width="160" height="68" rx="8" fill="#1B1E33"/><rect x="-72" y="-26" width="144" height="52" rx="5" fill="none" stroke="${p.tc ?? '#7CC2FF'}" stroke-width="3"/>${T(p.txt, 34, p.tc ?? '#7CC2FF', 0, -4, 'letter-spacing="3"')}</g>` : ''}</g>`;
+    },
+
+    // ===== video 001, part 3: the money, the problem, the big picture, the delivery =====
+    // fifty cities on a night-blue page: mesh 0..1 draws the point-to-point routes (coral tangle, 1,225 of them),
+    // star 0..1 draws the hub routes (yellow, fifty), A and B are ZERO's city and mom's (direct 0..1 joins them)
+    netdiagram(p) {
+      const gt = p.gt ?? 0, n = 50, mesh = p.mesh ?? 0, star = p.star ?? 0;
+      const pts = Array.from({ length: n }, (_, i) => { const a = rnd(i * 3 + 1) * Math.PI * 2, r = 0.25 + 0.75 * Math.sqrt(rnd(i * 5 + 2)); return [f(Math.cos(a) * r * 760), f(Math.sin(a) * r * 360)]; });
+      pts[0] = [-700, 40]; pts[1] = [700, -60];
+      let m = '';
+      if (mesh > 0) { const tot = n * (n - 1) / 2, k = Math.round(tot * mesh); let c = 0; for (let i = 0; i < n && c < k; i++) for (let j = i + 1; j < n && c < k; j++, c++) m += `M ${pts[i][0]} ${pts[i][1]} L ${pts[j][0]} ${pts[j][1]} `; }
+      const hubs = star > 0 ? pts.slice(0, Math.round(n * star)).map(q => `M 0 0 L ${q[0]} ${q[1]}`).join(' ') : '';
+      return `<g transform="${S(p)}">${m ? `<path d="${m}" stroke="#FF6B5B" stroke-width="1.6" opacity="${f(0.35 * (p.mop ?? 1))}" fill="none"/>` : ''}
+        ${hubs ? `<path d="${hubs}" stroke="${YEL}" stroke-width="4" opacity="0.85" fill="none"/>` : ''}${(p.direct ?? 0) > 0 ? `<path d="M ${pts[0][0]} ${pts[0][1]} L ${f(pts[0][0] + (pts[1][0] - pts[0][0]) * p.direct)} ${f(pts[0][1] + (pts[1][1] - pts[0][1]) * p.direct)}" stroke="#E6ECF5" stroke-width="6" stroke-dasharray="16 12"/>` : ''}
+        ${pts.slice(2).map((q, i) => `<circle cx="${q[0]}" cy="${q[1]}" r="9" fill="#7CC2FF" opacity="${f(p.dots ?? 1)}"/>`).join('')}
+        ${star > 0 ? `<circle r="${f(22 + 4 * Math.sin(gt * 5))}" fill="${YEL}"/><circle r="70" fill="url(#wPix)"/>` : ''}
+        <g transform="translate(${pts[0][0]} ${pts[0][1]})"><circle r="16" fill="${INK}" stroke="${WHITE}" stroke-width="5"/></g>
+        <g transform="translate(${pts[1][0]} ${pts[1][1]}) scale(${f(1.6 + 0.15 * Math.sin(gt * 6))})"><path d="M 0 12 C -20 -4 -12 -20 0 -9 C 12 -20 20 -4 0 12 Z" fill="${RED}"/></g></g>`;
+    },
+    // a plane in silhouette that fills with coins (fill 0..1); more coins rise into it from below
+    coinplane(p) {
+      const gt = p.gt ?? 0, fl = p.fill ?? 0, shape = 'M -700 -40 L 520 -60 Q 700 -56 720 0 Q 700 50 520 56 L -620 56 Q -700 40 -700 -40 Z M -640 -40 L -720 -260 L -600 -260 L -480 -50 Z M -120 20 L -420 210 L -300 210 L 160 20 Z';
+      const coins = Array.from({ length: 260 }, (_, i) => { const x = -720 + rnd(i * 3) * 1440, y = 220 - (i / 260) * 500 + rnd(i) * 30; return i / 260 < fl ? `<g transform="translate(${f(x)} ${f(y)})"><ellipse rx="22" ry="9" fill="${AMBER}"/><ellipse rx="22" ry="9" cy="-4" fill="${YEL}"/></g>` : ''; }).join('');
+      const rising = (p.rise ?? 1) > 0 ? Array.from({ length: 14 }, (_, i) => { const k = fr(gt * 0.5 + i / 14), x = -600 + rnd(i * 7) * 1200; return `<g transform="translate(${f(x)} ${f(520 - k * 420)})" opacity="${f(1 - k)}"><circle r="16" fill="${YEL}" stroke="${AMBER}" stroke-width="4"/></g>`; }).join('') : '';
+      return `<g transform="${S(p)}"><defs><clipPath id="wCoinPlane"><path d="${shape}"/></clipPath></defs><path d="${shape}" fill="#13203A"/><g clip-path="url(#wCoinPlane)">${coins}</g><path d="${shape}" fill="none" stroke="#7CC2FF" stroke-width="6" stroke-linejoin="round"/>${rising}</g>`;
+    },
+    // the hub being built: a side elevation that rises block by block (grow 0..1), a tower crane with a swinging
+    // load, coins pouring like concrete from a hopper; a year plate
+    buildgrow(p) {
+      const gt = p.gt ?? 0, g = p.grow ?? 0, cols = 12, rows = 4, bw = 150, bh = 110, n = Math.round(cols * rows * g);
+      const blocks = Array.from({ length: n }, (_, i) => { const c = i % cols, r = Math.floor(i / cols); return `<rect x="${-cols * bw / 2 + c * bw + 3}" y="${-(r + 1) * bh + 3}" width="${bw - 6}" height="${bh - 6}" fill="${r % 2 ? '#3E4466' : '#464D72'}"/>${r === rows - 1 ? `<rect x="${-cols * bw / 2 + c * bw + 3}" y="${-(r + 1) * bh + 3}" width="${bw - 6}" height="8" fill="#FFB25C" opacity="0.6"/>` : ''}`; }).join('');
+      const sw = Math.sin(gt * 1.2) * 6;
+      const crane = `<g transform="translate(${cols * bw / 2 - 120} 0)"><rect x="-14" y="-820" width="28" height="820" fill="#D9A43A"/>${Array.from({ length: 16 }, (_, i) => `<path d="M -14 ${-i * 50} L 14 ${-i * 50 - 50}" stroke="#A97F2A" stroke-width="5"/>`).join('')}<rect x="-700" y="-850" width="900" height="26" fill="#D9A43A"/><rect x="120" y="-880" width="80" height="60" fill="#5C6684"/><g transform="translate(-520 -824) rotate(${f(sw)})"><path d="M 0 0 V 300" stroke="#1B1E33" stroke-width="4"/><rect x="-60" y="300" width="120" height="70" fill="#464D72"/></g></g>`;
+      const pour = (p.pour ?? 1) > 0 ? Array.from({ length: 18 }, (_, i) => { const k = fr(gt * 0.9 + i / 18); return `<circle cx="${f(-300 + Math.sin(i * 2.1) * 30)}" cy="${f(-900 + k * (900 - rows * bh * g))}" r="12" fill="${YEL}" stroke="${AMBER}" stroke-width="3" opacity="${f(1 - k * 0.4)}"/>`; }).join('') + `<path d="M -380 -1000 L -220 -1000 L -260 -920 L -340 -920 Z" fill="#5C6684"/>` : '';
+      return `<g transform="${S(p)}"><rect x="-4000" y="0" width="8000" height="2000" fill="#23273B"/><rect x="${-cols * bw / 2 - 20}" y="-6" width="${cols * bw + 40}" height="10" fill="#3A3F5C"/>${blocks}${crane}${pour}
+        ${p.year ? `<g transform="translate(${-cols * bw / 2 + 140} 80)"><rect x="-110" y="-38" width="220" height="76" rx="8" fill="#1B1E33"/><rect x="-102" y="-30" width="204" height="60" rx="5" fill="none" stroke="${YEL}" stroke-width="3"/>${T(p.year, 40, YEL, 0, -4, 'letter-spacing="4"')}</g>` : ''}</g>`;
+    },
+    // the night as the product: the sky goes from dusk to night to dawn (prog 0..1), the moon crosses, and a clock
+    // ring above the hub sweeps from 6 PM to 6 AM; icons mark evening pickup, the sort, the morning delivery
+    skyclock(p) {
+      const gt = p.gt ?? 0, k = p.prog ?? 0;
+      const sky = k < 0.5 ? mix('#3A2E5C', '#070A1C', k * 2) : mix('#070A1C', '#4A3E6C', (k - 0.5) * 2), low = k < 0.5 ? mix('#E8825A', '#1E2348', k * 2) : mix('#1E2348', '#F0A86A', (k - 0.5) * 2);
+      const ma = Math.PI * (1 - k), mx = Math.cos(ma) * 900, my = -Math.sin(ma) * 600 - 100;
+      const hand = -90 + k * 360, ic = (a, name, on) => { const r = 330, x = Math.cos(a * Math.PI / 180) * r, y = Math.sin(a * Math.PI / 180) * r; return `<g transform="translate(${f(x)} ${f(-560 + y)}) scale(0.7)" opacity="${on ? 1 : 0.35}">${icons[name](on ? YEL : '#9AA3B5')}</g>`; };
+      return `<g><defs><linearGradient id="wSkyClock" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky}"/><stop offset="1" stop-color="${low}"/></linearGradient></defs><rect x="-4000" y="-3000" width="8000" height="3000" fill="url(#wSkyClock)"/>
+        <g transform="translate(${f(mx)} ${f(my)})"><circle r="60" fill="#F4EEDC"/><circle cx="22" cy="-14" r="52" fill="${sky}" opacity="0.92"/></g>
+        <g transform="translate(0 -560)"><circle r="260" fill="none" stroke="#E6ECF5" stroke-width="10" opacity="0.5"/>${Array.from({ length: 12 }, (_, i) => `<path d="M 0 -240 V -210" stroke="#E6ECF5" stroke-width="8" opacity="0.6" transform="rotate(${i * 30})"/>`).join('')}<path d="M 0 0 L 0 -200" stroke="${YEL}" stroke-width="14" stroke-linecap="round" transform="rotate(${f(hand + 90)})"/><circle r="16" fill="${YEL}"/></g>
+        ${ic(-90, 'truck', k < 0.3)}${ic(90, 'hub', k >= 0.3 && k < 0.75)}${ic(200, 'house', k >= 0.75)}
+        <rect x="-4000" y="0" width="8000" height="2000" fill="#141729"/><rect x="-1500" y="-150" width="2500" height="150" fill="#141830"/>${Array.from({ length: 80 }, (_, i) => rnd(i * 7) > 0.45 ? `<rect x="${-1490 + i * 31}" y="-100" width="14" height="12" fill="#FFCF8A" opacity="0.55"/>` : '').join('')}</g>`;
+    },
+    // a lightning storm over the ramp: bolts on their own schedule (or flash 0..1 keyed), a coral rim on the clouds
+    lightning(p) {
+      const gt = p.gt ?? 0, auto = fr(gt / 2.7), fl = Math.max(p.flash ?? 0, auto < 0.05 ? 1 - auto / 0.05 : 0), x = (rnd(Math.floor(gt / 2.7)) - 0.5) * 2400;
+      const clouds = Array.from({ length: 9 }, (_, i) => `<ellipse cx="${-2000 + i * 500 + Math.sin(gt * 0.2 + i) * 40}" cy="${-700 + (i % 3) * 60}" rx="420" ry="160" fill="#14172A" opacity="0.9"/>`).join('');
+      return `<g>${clouds}${fl > 0.05 ? `<path d="M ${f(x)} -760 l -60 220 l 70 0 l -90 260 l 40 -10 l -80 260" fill="none" stroke="#FFFFFF" stroke-width="10" opacity="${f(fl)}"/><rect x="-4000" y="-3000" width="8000" height="5000" fill="#DDE6FF" opacity="${f(0.35 * fl)}"/>` : ''}
+        <rect x="-4000" y="-3000" width="8000" height="5000" fill="#FF5A4E" opacity="${f(p.coral ?? 0)}" style="mix-blend-mode:multiply"/></g>`;
+    },
+    // the remote reading desk: a person seen from behind with a headset at a screen that shows the photo of the
+    // wet label; a countdown ring (cd 0..1 left) with its number n; zip: what the person typed, ok turns it green
+    telecode(p) {
+      const cd = p.cd ?? 1, ok = p.ok ?? 0, r = 90;
+      const arc = cd > 0 ? `<path d="M 0 ${-r} A ${r} ${r} 0 ${cd > 0.5 ? 1 : 0} 1 ${f(Math.sin(cd * 2 * Math.PI) * r)} ${f(-Math.cos(cd * 2 * Math.PI) * r)}" fill="none" stroke="${cd < 0.35 ? CORAL : YEL}" stroke-width="16" stroke-linecap="round"/>` : '';
+      return `<g transform="${S(p)}"><rect x="-4000" y="-3000" width="8000" height="3000" fill="#1A1C2E"/><rect x="-4000" y="0" width="8000" height="2000" fill="#22263A"/>
+        <ellipse cx="0" cy="-420" rx="900" ry="520" fill="url(#wCool)" opacity="0.45"/>
+        <g transform="translate(0 -420)"><rect x="-470" y="-290" width="940" height="560" rx="20" fill="#0B0D18"/><rect x="-440" y="-260" width="880" height="500" fill="#E9EEF5"/><g transform="translate(-130 -10) scale(0.62)">${PROPS.biglabel({ wet: p.wet ?? 0.7, gt: p.gt })}</g>
+          <g transform="translate(300 -110)"><circle r="${r}" fill="none" stroke="#C9CED8" stroke-width="16"/>${arc}${T(String(p.n ?? 10), 84, cd < 0.35 ? CORAL : '#1B1E33', 0, -6)}</g>
+          <g transform="translate(300 110)"><rect x="-130" y="-46" width="260" height="92" rx="10" fill="${ok > 0 ? '#2E9E5B' : '#FFFFFF'}" stroke="#9AA3B5" stroke-width="4"/>${T(p.zip ?? '', 54, ok > 0 ? '#FFFFFF' : '#1B1E33', 0, -6, 'letter-spacing="6"')}</g>
+          <rect x="-40" y="270" width="80" height="120" fill="#0B0D18"/></g>
+        <rect x="-900" y="-30" width="1600" height="40" rx="8" fill="#2E2A3A"/>
+        <g transform="translate(-600 360) scale(2.4)">${PROPS.person({ gt: p.gt, pose: 'type', shirt: '#3E4A66', skin: '#7A5440', hair: '#1E1820', seed: 8, eyes: false, flip: false })}</g>
+        <g transform="translate(-626 -90)"><path d="M -50 -10 Q 0 -80 50 -10" fill="none" stroke="#1B1E33" stroke-width="10"/><rect x="40" y="-20" width="22" height="40" rx="8" fill="#1B1E33"/></g></g>`;
+    },
+    // a stylized world at night (equirectangular, 1000 x 500 at s 1): continents in system blue, hubs (Louisville,
+    // Memphis, Leipzig) that light up (lou/mem/lei 0..1) with their own arcs; dens multiplies the arcs (December);
+    // breath -1..1 pulls the planes in toward the hubs (-1) or out to the cities (1); snow 0..1
+    worldmap(p) {
+      const gt = p.gt ?? 0, P_ = (lon, lat) => [f((lon + 180) / 360 * 1000 - 500), f((90 - lat) / 180 * 500 - 250)];
+      const land = [
+        [[-168, 66], [-140, 70], [-95, 72], [-80, 68], [-60, 60], [-55, 50], [-67, 45], [-75, 38], [-81, 31], [-80, 25], [-90, 30], [-97, 26], [-105, 22], [-110, 23], [-117, 32], [-124, 40], [-125, 48], [-135, 58], [-150, 60], [-165, 62]],
+        [[-55, 82], [-25, 82], [-20, 70], [-45, 60], [-55, 68]],
+        [[-80, 10], [-62, 10], [-50, 0], [-35, -7], [-40, -22], [-55, -35], [-68, -55], [-75, -45], [-72, -20], [-81, -5]],
+        [[-10, 36], [-9, 44], [-2, 49], [5, 53], [9, 57], [5, 62], [15, 70], [30, 70], [40, 65], [40, 45], [28, 41], [20, 40], [15, 38], [10, 44], [3, 42]],
+        [[-5, 50], [1, 51], [-2, 57], [-6, 58], [-5, 54]],
+        [[-17, 21], [-5, 36], [10, 37], [32, 31], [43, 12], [51, 12], [40, -15], [35, -25], [20, -35], [12, -18], [9, 4], [-8, 5], [-17, 14]],
+        [[40, 45], [40, 65], [60, 70], [100, 77], [140, 72], [170, 66], [160, 58], [140, 50], [130, 35], [120, 22], [108, 10], [100, 2], [95, 15], [80, 8], [72, 20], [60, 25], [50, 28], [35, 32], [28, 41]],
+        [[114, -22], [130, -12], [142, -11], [153, -27], [146, -39], [135, -35], [115, -34]]];
+      const hubs = [['lou', -85.7, 38.2, 'LOUISVILLE', '#FFC93C'], ['mem', -90.0, 35.1, 'MEMPHIS', '#B48CFF'], ['lei', 12.4, 51.3, 'LEIPZIG', '#FF9E45']];
+      const dens = p.dens ?? 1, br = p.breath ?? 0;
+      const arcs = hubs.map(([key, lon, lat, , col], hi) => { const on = p[key] ?? 0; if (on <= 0) return ''; const H = P_(lon, lat), m = Math.round(14 * dens * on);
+        return Array.from({ length: m }, (_, i) => { const cl = hi === 2 ? [-10 + rnd(i * 3 + hi) * 50, 36 + rnd(i * 5 + hi) * 24] : [-122 + rnd(i * 3 + hi) * 52, 27 + rnd(i * 5 + hi) * 20]; const C = P_(cl[0], cl[1]), c = [(H[0] + C[0]) / 2, Math.min(H[1], C[1]) - 18];
+          const kk = br !== 0 ? (br > 0 ? br : 1 + br) : fr(gt * 0.25 + rnd(i + hi * 50)), t = br < 0 ? 1 - kk : kk, q = [(1 - t) ** 2 * H[0] + 2 * (1 - t) * t * c[0] + t * t * C[0], (1 - t) ** 2 * H[1] + 2 * (1 - t) * t * c[1] + t * t * C[1]];
+          return `<path d="M ${H[0]} ${H[1]} Q ${f(c[0])} ${f(c[1])} ${C[0]} ${C[1]}" stroke="${col}" stroke-width="0.8" fill="none" opacity="0.6"/><circle cx="${f(q[0])}" cy="${f(q[1])}" r="1.6" fill="#FFFFFF"/>`; }).join(''); }).join('');
+      const dots = hubs.map(([key, lon, lat, name, col]) => { const on = p[key] ?? 0; if (on <= 0) return ''; const H = P_(lon, lat), dy = key === 'mem' ? 12 : -10; return `<circle cx="${H[0]}" cy="${H[1]}" r="${f(3 + 1.5 * on)}" fill="${col}"/><circle cx="${H[0]}" cy="${H[1]}" r="${f(4 + 10 * fr(gt * 0.8))}" fill="none" stroke="${col}" stroke-width="0.8" opacity="${f(1 - fr(gt * 0.8))}"/>${(p.labels ?? 1) ? `<g opacity="${f(on)}">${T(name, 7, col, H[0] + (key === 'lei' ? 0 : key === 'mem' ? -26 : 24), H[1] + dy, 'letter-spacing="0.5"')}</g>` : ''}`; }).join('');
+      const snow = (p.snow ?? 0) > 0 ? Array.from({ length: 120 }, (_, i) => { const k = fr(gt * 0.06 * (0.5 + rnd(i)) + rnd(i * 7)); return `<circle cx="${f(-500 + rnd(i * 3) * 1000 + Math.sin(gt + i) * 4)}" cy="${f(-250 + k * 500)}" r="${f(0.8 + rnd(i) * 1.2)}" fill="#FFFFFF" opacity="${f(0.7 * p.snow)}"/>`; }).join('') : '';
+      return `<g transform="${S(p)}"><rect x="-600" y="-300" width="1200" height="600" fill="#060B1A"/>${land.map(pl => `<polygon points="${pl.map(q => P_(q[0], q[1]).join(',')).join(' ')}" fill="#12284A" stroke="#2F5E9E" stroke-width="1.2" stroke-linejoin="round"/>`).join('')}
+        ${Array.from({ length: 160 }, (_, i) => { const pl = land[[0, 0, 0, 3, 3, 6, 6, 6][i % 8]], a = pl[Math.floor(rnd(i) * pl.length)], b = pl[Math.floor(rnd(i * 3) * pl.length)], q = P_(a[0] + (b[0] - a[0]) * rnd(i * 5) * 0.6, a[1] + (b[1] - a[1]) * rnd(i * 7) * 0.6); return `<circle cx="${q[0]}" cy="${q[1]}" r="0.9" fill="#FFCF8A" opacity="0.5"/>`; }).join('')}
+        ${arcs}${dots}${snow}</g>`;
+    },
+    // a neighbourhood at dawn from above: blocks with houses, trees, the street grid; the van follows its route
+    // (prog 0..1) and only ever turns right; each right turn gets a badge as it passes; warm light from the east;
+    // rider: ZERO sits on the van's roof
+    neighborhood(p) {
+      const gt = p.gt ?? 0, k = p.prog ?? 0, B = 420, S2 = 120;
+      const route = [[-1100, -270], [-270, -270], [-270, 270], [-810, 270], [-810, 810], [270, 810]].map(([x, y]) => [x, y]);
+      const len = route.slice(1).reduce((s, q, i) => s + Math.hypot(q[0] - route[i][0], q[1] - route[i][1]), 0);
+      let d = k * len, pos = route[0], ang = 0, seg = 0;
+      for (let i = 1; i < route.length; i++) { const l = Math.hypot(route[i][0] - route[i - 1][0], route[i][1] - route[i - 1][1]); ang = Math.atan2(route[i][1] - route[i - 1][1], route[i][0] - route[i - 1][0]) * 180 / Math.PI; if (d <= l) { pos = [route[i - 1][0] + (route[i][0] - route[i - 1][0]) * d / l, route[i - 1][1] + (route[i][1] - route[i - 1][1]) * d / l]; seg = i; break; } d -= l; pos = route[i]; seg = i; }
+      const blocks = [];
+      for (let bx = -4; bx <= 3; bx++) for (let by = -3; by <= 3; by++) { const x = bx * (B + S2) + S2 / 2 - 0, y = by * (B + S2) + S2 / 2 + 0;
+        blocks.push(`<rect x="${x}" y="${y}" width="${B}" height="${B}" fill="#2E4A3E"/>${[0, 1, 2, 3].map(h => { const hx = x + 40 + (h % 2) * 210, hy = y + 40 + Math.floor(h / 2) * 210, c = ['#C9555A', '#5C6684', '#8C6844', '#4E7A8C'][Math.floor(rnd(bx * 31 + by * 7 + h) * 4)]; return `<rect x="${hx + 8}" y="${hy + 10}" width="130" height="110" fill="#000" opacity="0.25"/><rect x="${hx}" y="${hy}" width="130" height="110" fill="${c}"/><path d="M ${hx} ${hy + 55} H ${hx + 130}" stroke="${shade(c, 0.25)}" stroke-width="6"/>`; }).join('')}${rnd(bx * 13 + by) > 0.4 ? `<circle cx="${x + 190}" cy="${y + 190}" r="34" fill="#3F7A5E"/>` : ''}`); }
+      const badges = route.slice(1, -1).map((q, i) => i + 1 < seg ? `<g transform="translate(${q[0] + 60} ${q[1] - 60})"><circle r="36" fill="${YEL}"/><path d="M -12 14 V -4 Q -12 -12 -4 -12 H 12 M 4 -20 L 12 -12 L 4 -4" stroke="#1B1E33" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>` : '').join('');
+      return `<g transform="${S(p)}"><rect x="-6000" y="-6000" width="12000" height="12000" fill="#3A3F5C"/>${blocks.join('')}
+        <polyline points="${route.map(q => q.join(',')).join(' ')}" fill="none" stroke="${YEL}" stroke-width="10" stroke-dasharray="26 18" opacity="0.8"/>${badges}
+        <g transform="translate(${f(pos[0])} ${f(pos[1])}) rotate(${f(ang)})"><rect x="-70" y="-38" width="150" height="76" rx="12" fill="#000" opacity="0.3" transform="translate(8 10)"/><rect x="-70" y="-38" width="150" height="76" rx="12" fill="#4A5270"/><rect x="40" y="-34" width="34" height="68" rx="8" fill="#1B1E33"/><rect x="-60" y="-28" width="90" height="56" rx="6" fill="#5C6684"/>${p.rider ? `<g transform="rotate(90) scale(0.42)">${PROPS.zerotop({ r: 0, look: p.look ?? 0 })}</g>` : ''}</g>
+        <rect x="-6000" y="-6000" width="12000" height="12000" fill="url(#wWarm)" opacity="${f(0.25 + 0.15 * Math.sin(gt * 0.3))}"/></g>`;
+    },
+    // mom's front door in the morning: siding, a window with a lamp on, a porch light, the door (open 0..1 shows
+    // only warm light, never her), a doormat, a plant; the step at y = 0
+    doorstep(p) {
+      const open = p.open ?? 0, c = p.wall ?? '#7A8CA8';
+      return `<g><rect x="-4000" y="-3000" width="8000" height="3000" fill="${c}"/>${Array.from({ length: 70 }, (_, i) => `<rect x="-4000" y="${-3000 + i * 44}" width="8000" height="4" fill="${shade(c, 0.12)}"/>`).join('')}
+        <g transform="translate(-620 -560)"><rect x="-180" y="-160" width="360" height="300" fill="#2A2638"/><rect x="-166" y="-146" width="332" height="272" fill="#FFE2A6" opacity="0.8"/><path d="M -166 -146 Q -60 -40 -100 126 L -166 126 Z M 166 -146 Q 60 -40 100 126 L 166 126 Z" fill="#C9555A"/><rect x="-190" y="130" width="380" height="20" fill="${tint(c, 0.2)}"/></g>
+        <rect x="-230" y="-700" width="460" height="700" fill="${tint(c, 0.25)}"/><rect x="-180" y="-660" width="360" height="660" fill="#2A1E2E"/>
+        <rect x="-180" y="-660" width="${f(360 * open)}" height="660" fill="#FFE2A6"/><ellipse cx="0" cy="40" rx="${f(40 + 300 * open)}" ry="40" fill="url(#wWarm)" opacity="${f(open)}"/>
+        <g transform="translate(${f(-180 + 360 * open)} 0) scale(${f(1 - open)} 1)"><rect x="0" y="-660" width="360" height="660" fill="#3D6B58"/><rect x="40" y="-620" width="120" height="240" rx="6" fill="${shade('#3D6B58', 0.15)}"/><rect x="200" y="-620" width="120" height="240" rx="6" fill="${shade('#3D6B58', 0.15)}"/><rect x="40" y="-340" width="280" height="280" rx="6" fill="${shade('#3D6B58', 0.15)}"/><circle cx="320" cy="-330" r="14" fill="#E6C14A"/></g>
+        <g transform="translate(320 -520)"><rect x="-30" y="-50" width="60" height="90" rx="10" fill="#1B1E33"/><rect x="-20" y="-36" width="40" height="60" rx="6" fill="#FFE7A0"/><circle cy="-6" r="90" fill="url(#wWarm)" opacity="0.8"/></g>
+        <rect x="-4000" y="0" width="8000" height="2000" fill="#6B6F7A"/><rect x="-400" y="0" width="800" height="40" fill="#8C909A"/>
+        <path d="M -220 40 L 220 40 L 260 110 L -260 110 Z" fill="#7A4A3A"/>
+        <g transform="translate(560 0) scale(1.3)">${PROPS.potplant({ gt: p.gt, seed: 2, color: '#3F7A5E' })}</g>
+        <ellipse cx="400" cy="-300" rx="1200" ry="900" fill="url(#wWarm)" opacity="0.4"/></g>`;
+    },
+    // a small birthday card tucked against the box
+    bdaycard(p) { return `<g transform="${S(p)} rotate(${p.tilt ?? -8})"><rect x="-70" y="-50" width="140" height="100" rx="6" fill="#FBF8F1"/><rect x="-70" y="-50" width="140" height="100" rx="6" fill="none" stroke="#C9555A" stroke-width="4"/><text x="0" y="-4" text-anchor="middle" font-family="${FONT}" font-weight="700" font-size="22" fill="#C9555A">Happy</text><text x="0" y="24" text-anchor="middle" font-family="${FONT}" font-weight="700" font-size="22" fill="#C9555A">B-day</text></g>`; },
+    // a hard hat, held by the brim (ZERO holds it, never wears it)
+    hardhat(p) { return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><path d="M -70 0 Q -70 -80 0 -84 Q 70 -80 70 0 Z" fill="${p.color ?? '#E8B83C'}"/><path d="M -8 -82 H 8 V 0 H -8 Z" fill="${shade(p.color ?? '#E8B83C', 0.15)}"/><rect x="-96" y="-8" width="192" height="18" rx="9" fill="${shade(p.color ?? '#E8B83C', 0.1)}"/></g>`; },
+    // a recap photo: white frame, a night scene inside with one icon and a caption, a strip of tape
+    photo(p) {
+      const k = p.k ?? 'label', c = p.c ?? '#0E1A33';
+      const inner = k === 'trail' ? `${[0, 1, 2, 3, 4].map(i => `<circle cx="${-90 + i * 45}" cy="${20 - Math.sin(i / 4 * Math.PI) * 40}" r="11" fill="${YEL}"/>`).join('')}` : k === 'ten' ? `<circle r="70" fill="none" stroke="${CORAL}" stroke-width="12"/>${T('10', 64, CORAL, 0, -4)}` : `<g transform="scale(1.3)">${icons[k](YEL)}</g>`;
+      return `<g transform="${S(p)} rotate(${p.tilt ?? 0})"><rect x="-170" y="-170" width="340" height="380" fill="#000" opacity="0.3" transform="translate(10 14)"/><rect x="-170" y="-170" width="340" height="380" fill="#F4F1EA"/><rect x="-150" y="-150" width="300" height="270" fill="${c}"/><g transform="translate(0 -15)">${inner}</g>
+        ${p.txt ? T(p.txt, 26, '#1B1E33', 0, 158) : ''}<rect x="-50" y="-186" width="100" height="32" fill="#E9E2D0" opacity="0.85" transform="rotate(-4)"/></g>`;
     },
   };
   Object.assign(PROPS, W);

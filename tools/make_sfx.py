@@ -88,3 +88,17 @@ rl = np.zeros_like(x)
 for k in np.sort(rng.uniform(0, 19.8, 160)): i = int(k * SR); m = 1200; rl[i:i + m] += np.exp(-np.arange(m) / 200) * np.sin(2 * np.pi * rng.uniform(500, 1100) * np.arange(m) / SR) * rng.uniform(0.1, 0.5)
 far = np.sin(2 * np.pi * 2100 * x) * ((x % 5.3) < 0.08) * 0.05
 save('hub', fade(rum + 0.35 * rl + far + 0.08 * np.sin(2 * np.pi * 120 * x), 0.8, 1.2))
+# ---- video 001 part 3 ----
+# thunder: a crack then a long low roll
+x = t(4.0); n = rng.standard_normal(len(x))
+th = lpf(n, 1 / 8) * np.exp(-x * 9) * 3 + lpf(n, 1 / 120) * 6 * np.exp(-((x - 1.0) / 1.2) ** 2) + lpf(n, 1 / 60) * 3 * np.exp(-x * 0.9)
+save('thunder', fade(th, 0.01, 1.2))
+# doorbell: ding-dong
+x = t(1.8); d1 = np.sin(2 * np.pi * 659 * x) * np.exp(-x * 2.5); x2 = np.clip(x - 0.5, 0, None); d2 = np.sin(2 * np.pi * 523 * x2) * np.exp(-x2 * 2.2) * (x > 0.5)
+save('doorbell', d1 + d2 + 0.2 * np.sin(2 * np.pi * 1318 * x) * np.exp(-x * 5))
+# birds: morning chirps over a soft air bed
+x = t(10); bed = lpf(rng.standard_normal(len(x)), 1 / 60) * 0.6; ch = np.zeros_like(x)
+for k in np.sort(rng.uniform(0.2, 9.5, 26)):
+    i = int(k * SR); m = int(0.12 * SR); tt = np.arange(m) / SR; f0 = rng.uniform(2800, 4200)
+    ch[i:i + m] += np.sin(2 * np.pi * (f0 + 1800 * tt / 0.12) * tt) * np.sin(np.pi * tt / 0.12) * rng.uniform(0.2, 0.6)
+save('birds', fade(bed + ch, 0.8, 1.2))
