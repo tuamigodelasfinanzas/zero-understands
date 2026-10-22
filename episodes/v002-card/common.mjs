@@ -46,3 +46,12 @@ export const cafe = (o = {}) => [
 
 // ZERO holding his card in front of him (both hands), proud; the card prop follows the hands
 export const zHold = (x, extra = []) => zero([{ x, face: 2, pose: 'neutral', hl: [118, 126], hr: [128, 128], look: [6, -2] }, ...extra], { z: 5 });
+
+// inside the cable: the fibre rushing past, PIX's warm light on ZERO, ZERO sitting on the capsule
+export const fiber = (o = {}) => [P('fiber', [{ x: 0, y: 0, speed: o.speed ?? 1, vx: o.vx ?? 960, vy: o.vy ?? 470, tint: o.tint, bg: o.bg }, ...(o.k || [])], o.id ?? 'fib', -20)];
+// o.path: keys {t|l|u|end, x, y, e} that move the capsule and ZERO together; o.capK / o.zK: keys for one of them
+const seat = (y, s) => y - 38 * s + 36 * (1.17 * s);
+export const ride = (x, y, s = 1.5, o = {}) => [
+  P('capsule', [{ x, y, s, trail: o.trail ?? 0.8, ang: o.ang ?? 0, ...(o.cap || {}) }, ...(o.path || []).map(k => ({ ...k })), ...(o.capK || [])], o.cid ?? 'cap', o.cz ?? 3),
+  zero([{ x, y: seat(y, s), s: 1.17 * s, face: o.face ?? 2, fl: [120, 196], fr: [134, 200], hl: [84, 170], hr: [118, 170], look: o.look ?? [6, -2] }, ...(o.path || []).map(k => ({ ...k, ...(k.y != null ? { y: seat(k.y, s) } : {}) })), ...(o.zK || [])], { z: o.zz ?? 4, id: o.zid }),
+];

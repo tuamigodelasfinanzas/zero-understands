@@ -3,7 +3,7 @@
 // src/stage.js): the world stops, ZERO and PIX keep moving, the capsule is the only yellow thing in every shot.
 import { G, N, zero, pix, sfx, cam, lookCam, stepBack, leanIn, tilt } from '../../src/kit.mjs';
 import { brandBeat } from '../../src/zeroopen.mjs';
-import { P, vig, ui, sysOn, FREEZE, TERM, ZX, hand, cafe } from './common.mjs';
+import { P, vig, ui, sysOn, FREEZE, TERM, ZX, hand, cafe, fiber, ride } from './common.mjs';
 
 const CARD = 0.62;                       // the card in ZERO's hands (wide shots)
 const live = k => ({ ...k, live: true });
@@ -11,12 +11,6 @@ const TAP = [935, 545];
 const POUR = [4200, 300];               // the frozen-coffee insert, built away from the room                 // where the card hangs, frozen, after the tap
 const card = (k, more = []) => P('zcard', [live(k), ...more], 'card', 6);
 
-// inside the cable: the fibre rushing past, PIX's warm light on ZERO, ZERO sitting on the capsule
-const fiber = (o = {}) => [P('fiber', [{ x: 0, y: 0, speed: o.speed ?? 1, vx: o.vx ?? 960, vy: o.vy ?? 470 }, ...(o.k || [])], 'fib', -20)];
-const ride = (x, y, s = 1.5, o = {}) => [
-  P('capsule', [{ x, y, s, trail: o.trail ?? 0.8, ang: o.ang ?? 0, ...(o.cap || {}) }, ...(o.capK || [])], 'cap', 3),
-  zero([{ x, y: y - 38 * s + 36 * (1.17 * s), s: 1.17 * s, face: o.face ?? 2, fl: [120, 196], fr: [134, 200], hl: [84, 170], hr: [118, 170], look: o.look ?? [6, -2] }, ...(o.zK || [])], { z: 4 }),
-];
 
 export default {
   id: 'v002-part1',
