@@ -1,28 +1,66 @@
 {
  "title": "Where Your Package Goes While You Sleep",
+ "titleProposed": false,
+ "coreQuestion": "What happens to that box inside there, overnight?",
  "playbook": "package",
- "category": "LOGISTICS / HOW THINGS MOVE",
+ "category": "LOGISTICS",
  "world": "warehouse",
  "recommended": "A",
- "why": "curiosity gap: the viewer has to click to find out where it goes",
+ "why": "curiosity gap: the viewer has to click to find out what happens inside",
  "variants": [
   {
    "id": "A",
    "angle": "curiosity",
    "playbook": "package",
    "concept": "ZERO has just put the yellow box on the belt; it shoots off into a wall cut open on an enormous hidden machine (scan, sort, routes, docks, a door onto the dawn). 11:47 PM on the clock",
+   "category": "LOGISTICS",
+   "mystery": "What happens to that box inside there, overnight?",
+   "metaphor": "ZERO has just put the yellow box on the belt; it shoots off into a wall cut open on an enormous hidden machine (scan, sort, routes, docks, a door onto the dawn). 11:47 PM on the clock",
+   "layout": "discovery",
+   "zero": {
+    "side": "left",
+    "emotion": "waitwhat",
+    "pose": "chasing"
+   },
+   "mainObject": "box",
+   "world": "warehouse",
+   "accent": "#FF9E45",
    "family": {
-    "name": "LOGISTICS / HOW THINGS MOVE",
+    "name": "LOGISTICS",
     "bg1": "#141A33",
     "bg2": "#25304F",
     "wall": "#25304F",
     "floor": "#2A3048",
-    "accent": "#4FA8FF",
+    "accent": "#FF9E45",
+    "accent2": "#FFC93C",
     "key": "#FFE2A6",
     "grade": "#FF9E45"
    },
-   "accent": "#4FA8FF",
-   "world": "warehouse",
+   "text": {
+    "lines": [
+     "BY",
+     "MORNING?"
+    ],
+    "color": "#FFC93C"
+   },
+   "textOptions": [
+    {
+     "lines": [
+      "BY",
+      "MORNING?"
+     ]
+    },
+    {
+     "lines": [
+      "WHERE DOES",
+      "IT GO?"
+     ]
+    }
+   ],
+   "pix": {
+    "on": true,
+    "role": "reveal"
+   },
    "hero": "cutaway",
    "heroOpts": {
     "obj": "box"
@@ -33,47 +71,48 @@
      47
     ]
    },
-   "zero": {
-    "side": "left",
-    "emotion": "surprised"
+   "meta": {
+    "layout": "discovery",
+    "hidden": true,
+    "pose": "chasing",
+    "pixRole": "reveal",
+    "attention": 2
    },
-   "pix": {
-    "on": true
+   "echo": false,
+   "hook": {
+    "title": "Where Your Package Goes While You Sleep",
+    "image": "What happens to that box inside there, overnight?",
+    "text": "BY MORNING?"
    },
-   "text": {
-    "lines": [
-     "BY",
-     "MORNING?"
-    ],
-    "color": "#FFC93C"
-   }
+   "seen": 0
   },
   {
    "id": "B",
    "angle": "consequence",
    "playbook": "package",
    "concept": "ZERO himself on the sorter, label on his chest, under the red scanner",
+   "category": "LOGISTICS",
+   "mystery": "Why is ZERO himself on the sorter, with a label?",
+   "metaphor": "ZERO himself on the sorter, label on his chest, under the red scanner",
+   "layout": "danger",
+   "zero": {
+    "side": "right",
+    "emotion": "shocked",
+    "pose": "shocked"
+   },
+   "mainObject": null,
+   "world": "warehouse",
+   "accent": "#FF9E45",
    "family": {
-    "name": "LOGISTICS / HOW THINGS MOVE",
+    "name": "LOGISTICS",
     "bg1": "#141A33",
     "bg2": "#25304F",
     "wall": "#25304F",
     "floor": "#2A3048",
-    "accent": "#4FA8FF",
+    "accent": "#FF9E45",
+    "accent2": "#FFC93C",
     "key": "#FFE2A6",
     "grade": "#FF9E45"
-   },
-   "accent": "#4FA8FF",
-   "world": "warehouse",
-   "hero": "scanned",
-   "heroOpts": {},
-   "worldOpts": {},
-   "zero": {
-    "side": "right",
-    "emotion": "shocked"
-   },
-   "pix": {
-    "on": true
    },
    "text": {
     "lines": [
@@ -81,34 +120,68 @@
      "SLEEPS"
     ],
     "color": "#FF6B5B"
-   }
+   },
+   "textOptions": [
+    {
+     "lines": [
+      "NO ONE",
+      "SLEEPS"
+     ]
+    },
+    {
+     "lines": [
+      "IT NEVER",
+      "STOPS"
+     ]
+    }
+   ],
+   "pix": {
+    "on": false,
+    "role": "warn"
+   },
+   "hero": "scanned",
+   "heroOpts": {},
+   "worldOpts": {},
+   "meta": {
+    "layout": "danger",
+    "pixRole": "warn",
+    "attention": 2
+   },
+   "echo": false,
+   "hook": {
+    "title": "Where Your Package Goes While You Sleep",
+    "image": "Why is ZERO himself on the sorter, with a label?",
+    "text": "NO ONE SLEEPS"
+   },
+   "seen": 0
   },
   {
    "id": "C",
    "angle": "scale",
    "playbook": "package",
    "concept": "From a catwalk: endless belts, thousands of parcels, a plane at the door",
+   "category": "LOGISTICS",
+   "mystery": "How does one building move all this in one night?",
+   "metaphor": "From a catwalk: endless belts, thousands of parcels, a plane at the door",
+   "layout": "scale",
+   "zero": {
+    "side": "right",
+    "emotion": "lookingup",
+    "pose": "lookingup"
+   },
+   "mainObject": null,
+   "world": "hub",
+   "accent": "#FF9E45",
    "family": {
-    "name": "LOGISTICS / HOW THINGS MOVE",
+    "name": "LOGISTICS",
     "bg1": "#141A33",
     "bg2": "#25304F",
     "wall": "#25304F",
     "floor": "#2A3048",
-    "accent": "#4FA8FF",
+    "accent": "#FF9E45",
+    "accent2": "#FFC93C",
     "key": "#FFE2A6",
     "grade": "#FF9E45"
-   },
-   "accent": "#4FA8FF",
-   "world": "hub",
-   "hero": "hub",
-   "heroOpts": {},
-   "worldOpts": {},
-   "zero": {
-    "side": "right",
-    "emotion": "impressed"
-   },
-   "pix": {
-    "on": true
    },
    "text": {
     "lines": [
@@ -116,15 +189,50 @@
      "ONE NIGHT?"
     ],
     "color": "#FFC93C"
-   }
+   },
+   "textOptions": [
+    {
+     "lines": [
+      "ALL THIS IN",
+      "ONE NIGHT?"
+     ]
+    },
+    {
+     "lines": [
+      "THIS IS",
+      "ONE BUILDING"
+     ]
+    }
+   ],
+   "pix": {
+    "on": false,
+    "role": "illuminate"
+   },
+   "hero": "hub",
+   "heroOpts": {},
+   "worldOpts": {},
+   "meta": {
+    "layout": "scale",
+    "pixRole": "illuminate",
+    "attention": 1
+   },
+   "echo": false,
+   "hook": {
+    "title": "Where Your Package Goes While You Sleep",
+    "image": "How does one building move all this in one night?",
+    "text": "ALL THIS IN ONE NIGHT?"
+   },
+   "seen": 0
   }
  ],
+ "primary": "A1",
+ "alternative": "B1",
  "qa": {
-  "A": {
+  "A1": {
    "pass": true,
    "checks": [
     {
-     "q": "ZERO is immediately visible (30-50 % of the height)",
+     "q": "ZERO is immediately visible (28-52 % of the height)",
      "pass": true,
      "value": "43%"
     },
@@ -132,6 +240,21 @@
      "q": "ZERO is not in the dead centre",
      "pass": true,
      "value": 205
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "chasing"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "What happens to that box inside there, overnight?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "reveal"
     },
     {
      "q": "Text is 2-5 words",
@@ -159,16 +282,29 @@
      "value": "605,30,635,263"
     },
     {
-     "q": "Nothing important under the YouTube timestamp",
+     "q": "PIX does not cover the text",
      "pass": true,
      "value": ""
     },
     {
-     "q": "PIX does not cover the text",
+     "q": "Nothing important under the YouTube timestamp",
      "pass": true,
      "value": ""
     }
    ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 10,
+    "zeroVisibility": 9.7,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 9,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "chasing",
    "boxes": {
     "zero": [
      111.25600000000001,
@@ -194,13 +330,96 @@
      70,
      70
     ]
-   }
+   },
+   "notes": [],
+   "text": [
+    "BY",
+    "MORNING?"
+   ],
+   "pix": true
   },
-  "B": {
+  "A2": {
    "pass": true,
    "checks": [
     {
-     "q": "ZERO is immediately visible (30-50 % of the height)",
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "43%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 205
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "chasing"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "What happens to that box inside there, overnight?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "reveal"
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 9,
+    "zeroVisibility": 9.7,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 9,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "chasing",
+   "boxes": {
+    "zero": [
+     111.25600000000001,
+     344.04,
+     187.48799999999997,
+     309.96
+    ],
+    "text": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hero": [
+     370,
+     380,
+     260,
+     170
+    ],
+    "pix": [
+     709,
+     317,
+     70,
+     70
+    ]
+   },
+   "notes": [],
+   "text": null,
+   "pix": true
+  },
+  "B1": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
      "pass": true,
      "value": "45%"
     },
@@ -208,6 +427,21 @@
      "q": "ZERO is not in the dead centre",
      "pass": true,
      "value": 950
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "shocked"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "Why is ZERO himself on the sorter, with a label?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
     },
     {
      "q": "Text is 2-5 words",
@@ -235,16 +469,29 @@
      "value": "40,36,561,312"
     },
     {
-     "q": "Nothing important under the YouTube timestamp",
+     "q": "PIX does not cover the text",
      "pass": true,
      "value": ""
     },
     {
-     "q": "PIX does not cover the text",
+     "q": "Nothing important under the YouTube timestamp",
      "pass": true,
      "value": ""
     }
    ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 9,
+    "zeroVisibility": 9.7,
+    "mobile": 10,
+    "hierarchy": 9,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 9,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "shocked",
    "boxes": {
     "zero": [
      851.792,
@@ -264,19 +511,92 @@
      330,
      460
     ],
-    "pix": [
-     275,
-     375,
-     90,
-     90
-    ]
-   }
+    "pix": null
+   },
+   "notes": [],
+   "text": [
+    "NO ONE",
+    "SLEEPS"
+   ],
+   "pix": false
   },
-  "C": {
+  "B2": {
    "pass": true,
    "checks": [
     {
-     "q": "ZERO is immediately visible (30-50 % of the height)",
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "45%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 950
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "shocked"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "Why is ZERO himself on the sorter, with a label?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 9,
+    "zeroVisibility": 9.7,
+    "mobile": 10,
+    "hierarchy": 9,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 9,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "shocked",
+   "boxes": {
+    "zero": [
+     851.792,
+     227.27999999999997,
+     196.416,
+     324.72
+    ],
+    "text": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hero": [
+     780,
+     100,
+     330,
+     460
+    ],
+    "pix": null
+   },
+   "notes": [],
+   "text": null,
+   "pix": false
+  },
+  "C1": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
      "pass": true,
      "value": "47%"
     },
@@ -284,6 +604,21 @@
      "q": "ZERO is not in the dead centre",
      "pass": true,
      "value": 980
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "lookingup"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "How does one building move all this in one night?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
     },
     {
      "q": "Text is 2-5 words",
@@ -311,16 +646,29 @@
      "value": "40,36,654,237"
     },
     {
-     "q": "Nothing important under the YouTube timestamp",
+     "q": "PIX does not cover the text",
      "pass": true,
      "value": ""
     },
     {
-     "q": "PIX does not cover the text",
+     "q": "Nothing important under the YouTube timestamp",
      "pass": true,
      "value": ""
     }
    ],
+   "score": {
+    "clarity": 9,
+    "curiosity": 9,
+    "zeroVisibility": 6.7,
+    "mobile": 9.2,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 8,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "lookingup",
    "boxes": {
     "zero": [
      877.328,
@@ -340,13 +688,86 @@
      560,
      300
     ],
-    "pix": [
-     600,
-     380,
-     80,
-     80
-    ]
-   }
+    "pix": null
+   },
+   "notes": [],
+   "text": [
+    "ALL THIS IN",
+    "ONE NIGHT?"
+   ],
+   "pix": false
+  },
+  "C2": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "47%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 980
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "lookingup"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "How does one building move all this in one night?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 8,
+    "zeroVisibility": 6.7,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 8,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "lookingup",
+   "boxes": {
+    "zero": [
+     877.328,
+     324.52000000000004,
+     205.344,
+     339.47999999999996
+    ],
+    "text": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hero": [
+     120,
+     260,
+     560,
+     300
+    ],
+    "pix": null
+   },
+   "notes": [],
+   "text": null,
+   "pix": false
   }
  }
 }

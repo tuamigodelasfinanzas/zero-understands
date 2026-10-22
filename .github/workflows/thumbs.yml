@@ -1,7 +1,7 @@
 name: Thumbnails
 
-# Generates the three thumbnail concepts (A curiosity, B consequence, C scale) for a video and commits them to
-# previews/thumbs/<name>/ on the branch it ran on: A.jpg B.jpg C.jpg, thumb.jpg (recommended), sheet.jpg, plan.json.
+# Runs the Thumbnail Engine for a video and commits the result to previews/thumbs/<name>/ on the branch it ran on:
+# A1 A2 B1 B2 C1 C2.jpg (with / without text), thumb.jpg (primary), alt.jpg, A/B/C.jpg, sheet.jpg, plan.json.
 # Two ways to run it:
 #   - Actions > Thumbnails > Run workflow, with just the video title (or a variables file in content/thumbs/)
 #   - push a new or changed content/thumbs/*.json (the variables of docs/miniaturas.md)
