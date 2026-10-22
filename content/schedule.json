@@ -2,6 +2,10 @@
   "_doc": "One row per upload. GitHub Actions renders each row the day before (or the same day if it was missed); Make publishes it on its date at 20:00 Madrid (Make uploads it as private at 17:00 the day before). Calendar: Mon Short, Wed long video, Thu related Short, Sat Short.",
   "items": [
     {
+      "date": "2026-10-24",
+      "file": "episodes/005-phantom/short.mjs"
+    },
+    {
       "date": "2026-10-26",
       "file": "episodes/001-phone/short-1.mjs"
     },
