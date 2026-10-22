@@ -179,7 +179,7 @@
         if (st.blink === false) st.blink = 0;
         const sp = speaking(beat, 'zero', gt);
         if (sp >= 0 && st.bounce !== false) st.squash = (st.squash ?? 1) * (1 + 0.03 * Math.sin(sp * 20));
-        svg = zero(Object.assign(LIFE && st.life !== false ? alive(a, st, beat, lt, gt, sp) : { ...st }, { rim: RIM ? st.rim ?? 1 : 0 }));
+        svg = zero(Object.assign(LIFE && st.life !== false ? alive(a, st, beat, lt, gt, sp) : { ...st }, { rim: RIM && !(tr.zoom > 1.8) ? st.rim ?? 1 : 0 }));   // no rim inside zoom transitions: huge filter regions stall the renderer
       } else if (a.type === 'pix') {
         const sp = speaking(beat, 'pix', gt);
         st.talk = sp >= 0 ? 0.5 + 0.5 * Math.sin(sp * 19) : 0;

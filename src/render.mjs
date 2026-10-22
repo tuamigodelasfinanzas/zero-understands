@@ -74,6 +74,7 @@ try { ({ chromium } = require('playwright')); } catch { ({ chromium } = require(
 const exe = process.env.ZERO_CHROME || (fs.existsSync('/opt/pw-browsers/chromium-1194/chrome-linux/chrome') ? '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' : undefined);
 const browser = await chromium.launch({ executablePath: exe, args: ['--font-render-hinting=none'] });
 const page = await browser.newPage({ viewport: { width: W, height: H } });
+page.on('pageerror', e => console.error('page error: ' + e.message));
 await page.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>${font()}*{margin:0;padding:0}html,body{width:${W}px;height:${H}px;overflow:hidden;background:#fff}</style></head><body><div id="stage"></div></body></html>`);
 await page.evaluate(d => { window.DATA = d; }, { ep, beats, w: W, h: H, fps: FPS, life: process.env.ZERO_LIFE === '0' ? false : true, rim: process.env.ZERO_RIM !== '0' });
 for (const f of ['faces.js', 'puppets.js', 'stage.js']) await page.addScriptTag({ path: path.join(ROOT, 'src', f) });
@@ -90,7 +91,7 @@ for (let k = 0; k < N; k++) {
   const buf = await page.screenshot({ type: 'jpeg', quality: 92 });
   if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r));
   if (stills && k % Math.round(FPS * stills) === 0) fs.writeFileSync(path.join(work, `still-${String(k).padStart(5, '0')}.jpg`), buf);
-  if (k % (FPS * 10) === 0) console.log(`frame ${k}/${N}`);
+  if (k % (FPS * 10) === 0 || process.env.ZERO_DEBUG) console.log(`frame ${k}/${N}`);
 }
 ff.stdin.end();
 await new Promise((res, rej) => ff.on('close', c => c === 0 ? res() : rej(new Error('ffmpeg ' + c))));

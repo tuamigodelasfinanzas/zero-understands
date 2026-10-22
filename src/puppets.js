@@ -273,6 +273,10 @@
     planet(p) { return `<g transform="scale(${p.s ?? 1})"><circle r="90" fill="${p.fill ?? PURPLE}" stroke="${INK}" stroke-width="6"/><ellipse rx="150" ry="30" fill="none" stroke="${p.ring ?? YEL}" stroke-width="10" transform="rotate(-14)"/><path d="M -40 -50 q 30 10 40 -6" stroke="#fff" stroke-width="8" fill="none" opacity="0.4" stroke-linecap="round"/></g>`; },
     coin(p) { return `<g transform="scale(${p.s ?? 1}) rotate(${p.roll ?? 0})"><circle r="34" fill="${YEL}" stroke="${INK}" stroke-width="6"/><circle r="22" fill="none" stroke="${AMBER}" stroke-width="5"/>${T('$', 30, AMBER)}</g>`; },
     bulb(p) { const on = p.on ?? 1; return `<g transform="scale(${p.s ?? 1})"><circle r="${f(70 + 40 * on)}" fill="${YEL}" opacity="${f(0.22 * on)}"/><path d="M -34 10 C -60 -20 -40 -70 0 -70 C 40 -70 60 -20 34 10 L 26 34 L -26 34 Z" fill="${on > 0.3 ? YEL : WHITE}" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/><rect x="-24" y="34" width="48" height="26" rx="6" fill="${G2}" stroke="${INK}" stroke-width="5"/></g>`; },
+    lights(p) { // marquee row of bulbs (casino, stage); ph 0..1 chases the lit ones along the row
+      const n = p.n ?? 9, gap = p.gap ?? 120, ph = p.ph ?? 0;
+      return Array.from({ length: n }, (_, i) => { const on = ((i + Math.floor(ph * 12)) % 3 === 0) || p.all; return `<circle cx="${(i - (n - 1) / 2) * gap}" cy="0" r="${on ? 30 : 16}" fill="${YEL}" opacity="${on ? 0.25 : 0}"/><circle cx="${(i - (n - 1) / 2) * gap}" cy="0" r="14" fill="${on ? YEL : '#5A4A2A'}" stroke="${INK}" stroke-width="4"/>`; }).join('');
+    },
     tv(p) { // a screen that can turn on (on 0..1) and show a big glyph
       const on = p.on ?? 0;
       return `<g transform="scale(${p.s ?? 1})"><rect x="-150" y="-100" width="300" height="200" rx="16" fill="${INK}"/><rect x="-134" y="-86" width="268" height="172" rx="8" fill="${on > 0.5 ? (p.screen ?? BLUE) : '#2B2F3A'}"/>${on > 0.5 && p.txt ? T(p.txt, p.size ?? 60, WHITE) : ''}<path d="M -30 100 L 30 100 L 44 128 L -44 128 Z" fill="${INK}"/></g>`;
