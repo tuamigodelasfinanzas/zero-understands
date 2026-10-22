@@ -1,5 +1,5 @@
 {
- "total": 114.78799999999998,
+ "total": 116.82799999999999,
  "beats": [
   {
    "start": 0,
@@ -116,14 +116,14 @@
   },
   {
    "start": 64.99,
-   "dur": 2.68,
+   "dur": 2.77,
    "lines": [
     "To ZERO, it's a gift."
    ]
   },
   {
-   "start": 67.67,
-   "dur": 10.12,
+   "start": 67.76,
+   "dur": 10.93,
    "lines": [
     "To the system, it's this.",
     "A barcode.",
@@ -133,43 +133,43 @@
    ]
   },
   {
-   "start": 77.78,
+   "start": 78.69,
    "dur": 5.41,
    "lines": [
     "Every time the box passes a scanner, the system learns where it is."
    ]
   },
   {
-   "start": 83.19,
+   "start": 84.11,
    "dur": 2.84,
    "lines": [
     "That's what tracking really is."
    ]
   },
   {
-   "start": 86.04,
+   "start": 86.95,
    "dur": 3.25,
    "lines": [
     "Not a GPS inside your box."
    ]
   },
   {
-   "start": 89.29,
+   "start": 90.2,
    "dur": 3.12,
    "lines": [
     "A trail of scans."
    ]
   },
   {
-   "start": 92.41,
+   "start": 93.32,
    "dur": 4.88,
    "lines": [
     "From the counter, the box goes to a truck heading for the airport."
    ]
   },
   {
-   "start": 97.3,
-   "dur": 6.44,
+   "start": 98.21,
+   "dur": 7.57,
    "lines": [
     "It's raining.",
     "The box doesn't care.",
@@ -177,7 +177,7 @@
    ]
   },
   {
-   "start": 103.73,
+   "start": 105.77,
    "dur": 7.18,
    "lines": [
     "Somebody is paying for this truck,",
@@ -186,7 +186,7 @@
    ]
   },
   {
-   "start": 110.92,
+   "start": 112.96,
    "dur": 3.87,
    "lines": [
     "Keep that in mind."
