@@ -1,0 +1,67 @@
+1
+00:00:00,200 --> 00:00:02,204
+This building sorts more than four
+
+2
+00:00:02,204 --> 00:00:04,208
+hundred thousand packages an hour.
+
+3
+00:00:04,508 --> 00:00:06,812
+Five point two million square feet.
+
+4
+00:00:07,712 --> 00:00:09,968
+Roughly ninety football fields,
+
+5
+00:00:10,268 --> 00:00:11,708
+under one roof.
+
+6
+00:00:12,658 --> 00:00:15,394
+Some planes don't even stop on the ramp.
+
+7
+00:00:16,294 --> 00:00:17,807
+They pull right up to the
+
+8
+00:00:17,807 --> 00:00:19,078
+building, nose first,
+
+9
+00:00:19,378 --> 00:00:21,418
+like a car into a garage.
+
+10
+00:00:22,968 --> 00:00:25,392
+Every box goes through a tunnel of cameras
+
+11
+00:00:25,392 --> 00:00:27,528
+that reads the label from every side.
+
+12
+00:00:28,428 --> 00:00:30,300
+Nobody opens your box.
+
+13
+00:00:30,600 --> 00:00:32,448
+Nobody even looks at it.
+
+14
+00:00:33,598 --> 00:00:35,657
+There are more than a hundred and fifty
+
+15
+00:00:35,657 --> 00:00:37,822
+miles of conveyor belts in this building.
+
+16
+00:00:38,748 --> 00:00:41,268
+ZERO decides to follow his box.
+
+17
+00:00:43,448 --> 00:00:45,776
+ZERO does not follow his box.

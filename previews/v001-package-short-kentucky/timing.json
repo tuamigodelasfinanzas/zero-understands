@@ -1,0 +1,65 @@
+{
+ "total": 48.244,
+ "beats": [
+  {
+   "start": 0,
+   "dur": 3.68,
+   "lines": [
+    "This box has to cross the country by morning."
+   ]
+  },
+  {
+   "start": 3.68,
+   "dur": 3.56,
+   "lines": [
+    "So why is its plane flying to Kentucky?"
+   ]
+  },
+  {
+   "start": 7.24,
+   "dur": 3.98,
+   "lines": [
+    "And so are planes from all over the country."
+   ]
+  },
+  {
+   "start": 11.22,
+   "dur": 6.37,
+   "lines": [
+    "Louisville is within a four-hour flight of ninety-five percent of the people in the United States."
+   ]
+  },
+  {
+   "start": 17.6,
+   "dur": 5.27,
+   "lines": [
+    "That's not an accident.",
+    "That's why the hub is here."
+   ]
+  },
+  {
+   "start": 22.87,
+   "dur": 14,
+   "lines": [
+    "Picture fifty cities.",
+    "To connect every city directly to every other city, you need one thousand two hundred and twenty-five routes.",
+    "Send everything through one hub, and you need fifty."
+   ]
+  },
+  {
+   "start": 36.87,
+   "dur": 6.53,
+   "lines": [
+    "Fewer routes means fuller planes.",
+    "The plane to each city doesn't carry one box."
+   ]
+  },
+  {
+   "start": 43.4,
+   "dur": 4.85,
+   "lines": [
+    "It carries every box, from every city, that's going there tonight."
+   ]
+  }
+ ]
+}

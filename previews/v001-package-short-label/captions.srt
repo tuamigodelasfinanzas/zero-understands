@@ -1,0 +1,95 @@
+1
+00:00:00,200 --> 00:00:01,931
+What happens when the machines
+
+2
+00:00:01,931 --> 00:00:03,200
+can't read your label?
+
+3
+00:00:03,950 --> 00:00:05,822
+It got wet in the rain.
+
+4
+00:00:06,722 --> 00:00:08,930
+The box is pulled out of the flow.
+
+5
+00:00:09,230 --> 00:00:11,102
+Now what?
+
+6
+00:00:12,252 --> 00:00:14,023
+Now, a photo of the label
+
+7
+00:00:14,023 --> 00:00:15,228
+goes to a person.
+
+8
+00:00:15,528 --> 00:00:17,400
+A real one.
+
+9
+00:00:17,700 --> 00:00:19,865
+When UPS showed how this works, that
+
+10
+00:00:19,865 --> 00:00:21,729
+person had about ten seconds to
+
+11
+00:00:21,729 --> 00:00:23,172
+figure out the ZIP code.
+
+12
+00:00:23,572 --> 00:00:25,296
+If even that fails, someone
+
+13
+00:00:25,296 --> 00:00:26,764
+checks the box by hand.
+
+14
+00:00:27,614 --> 00:00:29,270
+Three seconds left.
+
+15
+00:00:29,570 --> 00:00:31,442
+Got it.
+
+16
+00:00:32,742 --> 00:00:35,526
+And sometimes the problem isn't one label.
+
+17
+00:00:36,426 --> 00:00:39,149
+On the night of April second, 2025, with
+
+18
+00:00:39,149 --> 00:00:41,804
+severe storms on the way, UPS suspended
+
+19
+00:00:41,804 --> 00:00:44,459
+its Next Day Air sort in Louisville and
+
+20
+00:00:44,459 --> 00:00:46,842
+canceled incoming domestic flights.
+
+21
+00:00:47,142 --> 00:00:49,251
+When the center of the network stops,
+
+22
+00:00:49,251 --> 00:00:50,790
+the whole network feels it.
+
+23
+00:00:52,190 --> 00:00:54,134
+Tonight, the storm passes.
+
+24
+00:00:55,540 --> 00:00:57,724
+ZERO's box makes its plane.

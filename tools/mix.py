@@ -24,6 +24,10 @@ def main(plan_file, out):
             if c['file'] not in cache:
                 cache[c['file']] = load(c['file'])
             s = cache[c['file']] * c.get('gain', 1.0)
+            if 'dur' in c:  # ambience beds end with their beat, with a 0.25 s fade
+                s = s[:max(0, int(c['dur'] * SR))].copy()
+                k = min(len(s), int(0.25 * SR))
+                if k: s[-k:] *= np.linspace(1, 0, k)
             i = max(0, int(c['at'] * SR))
             m = min(len(s), n - i)
             if m > 0:

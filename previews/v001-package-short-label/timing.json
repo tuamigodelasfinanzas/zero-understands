@@ -1,0 +1,74 @@
+{
+ "total": 58.790000000000006,
+ "beats": [
+  {
+   "start": 0,
+   "dur": 3.6,
+   "lines": [
+    "What happens when the machines can't read your label?"
+   ]
+  },
+  {
+   "start": 3.6,
+   "dur": 2.77,
+   "lines": [
+    "It got wet in the rain."
+   ]
+  },
+  {
+   "start": 6.37,
+   "dur": 5.53,
+   "lines": [
+    "The box is pulled out of the flow.",
+    "Now what?"
+   ]
+  },
+  {
+   "start": 11.9,
+   "dur": 15.41,
+   "lines": [
+    "Now, a photo of the label goes to a person.",
+    "A real one.",
+    "When UPS showed how this works, that person had about ten seconds to figure out the ZIP code.",
+    "If even that fails, someone checks the box by hand."
+   ]
+  },
+  {
+   "start": 27.31,
+   "dur": 5.13,
+   "lines": [
+    "Three seconds left.",
+    "Got it."
+   ]
+  },
+  {
+   "start": 32.44,
+   "dur": 3.63,
+   "lines": [
+    "And sometimes the problem isn't one label."
+   ]
+  },
+  {
+   "start": 36.08,
+   "dur": 15.71,
+   "lines": [
+    "On the night of April second, 2025, with severe storms on the way, UPS suspended its Next Day Air sort in Louisville and canceled incoming domestic flights.",
+    "When the center of the network stops, the whole network feels it."
+   ]
+  },
+  {
+   "start": 51.79,
+   "dur": 3.4,
+   "lines": [
+    "Tonight, the storm passes."
+   ]
+  },
+  {
+   "start": 55.19,
+   "dur": 3.6,
+   "lines": [
+    "ZERO's box makes its plane."
+   ]
+  }
+ ]
+}
