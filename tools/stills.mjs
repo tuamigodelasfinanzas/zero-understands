@@ -34,7 +34,7 @@ const fontFile = path.join(ROOT, 'node_modules/@fontsource/fredoka/files/fredoka
 const font = fs.existsSync(fontFile) ? `@font-face{font-family:'Fredoka';font-weight:700;src:url(data:font/woff2;base64,${fs.readFileSync(fontFile).toString('base64')}) format('woff2')}` : '';
 await page.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>${font}*{margin:0;padding:0}</style></head><body><div id="stage"></div></body></html>`);
 await page.evaluate(d => { window.DATA = d; }, { ep, beats, w: W, h: H, fps: 30 });
-for (const f of ['faces.js', 'puppets.js', 'world.js', 'stage.js']) await page.addScriptTag({ path: path.join(ROOT, 'src', f) });
+for (const f of ['faces.js', 'puppets.js', 'world.js', 'world-pay.js', 'stage.js']) await page.addScriptTag({ path: path.join(ROOT, 'src', f) });
 await page.waitForFunction('window.ready === true');
 for (const x of times) {
   const t0 = Date.now();

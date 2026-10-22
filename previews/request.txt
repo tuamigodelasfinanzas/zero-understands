@@ -1,3 +1,2 @@
-episodes/v001-package/full.mjs
+episodes/v002-card/part1.mjs
 # preview request: the workflow renders every episode listed above (one per line, in parallel)
-# 2026-10-22T19:25:51Z retry
