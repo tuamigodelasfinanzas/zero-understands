@@ -35,7 +35,7 @@
       let mid = [200, 620, 1040].map(x => `${cone(x, 210, 50, 420, 440, '#FFD58A', 0.22)}${K.lamp(x, 200, '#FFD58A', { cord: 60 })}`).join('');
       mid += [200, 620, 1040].map(x => pool(x, fl + 10, 220, 40, '#FFB867', 0.35)).join('');
       // the night-shift clock (worldOpts.clock = [h, m]): tells "while you sleep" without words
-      if (ctx.wopts.clock) mid += `<g ${tr(470, 250)}>${K.clock(44, ctx.wopts.clock[0], ctx.wopts.clock[1], { glow: '#FFD58A' })}</g>`;
+      if (ctx.wopts.clock && ctx.hero !== 'cutaway') mid += `<g ${tr(470, 250)}>${K.clock(44, ctx.wopts.clock[0], ctx.wopts.clock[1], { glow: '#FFD58A' })}</g>`;
       return { back, mid, floor: fl };
     },
     // the sorting hub seen from a catwalk: belts converging to the horizon, thousands of parcels, open doors on the night
