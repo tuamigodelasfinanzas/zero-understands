@@ -1,19 +1,20 @@
 {
  "date": "2026-11-02",
  "publish_at": "2026-11-02T19:00:00Z",
- "id": "004-price",
- "format": "short",
- "title": "Why does $9.99 feel so much cheaper than $10? #Shorts",
- "description": "It's one cent. Your brain doesn't care. ZERO is trying to understand humans.\n\n#shorts #money #psychology #animation",
+ "id": "002-procrastinate",
+ "format": "long",
+ "title": "Why You Always Procrastinate (It's Not Laziness)",
+ "description": "Why do you leave things for later, even when you know it will hurt? ZERO had an essay due tomorrow. He cleaned the whole house instead.\n\nIn this video:\n0:00 Just five minutes\n0:37 You're not lazy\n1:06 It's a feeling problem\n2:22 Now vs. later\n3:09 The planning fallacy\n3:35 Future ZERO\n4:24 Panic, guilt and the loop\n5:06 What actually helps\n\nZERO is trying to understand humans. Subscribe and he'll keep trying.\n\nSources: Tim Pychyl, Carleton University (procrastination as emotion regulation); Wohl, Pychyl & Bennett (2010), self-forgiveness and procrastination; Ersner-Hershfield et al. (2009), neural basis of the future self; present bias research in behavioral economics.",
  "tags": [
-  "shorts",
-  "money",
+  "procrastination",
   "psychology",
-  "pricing",
-  "left digit effect",
-  "animation"
+  "productivity",
+  "motivation",
+  "animation",
+  "why do we",
+  "ZERO"
  ],
- "category": "24",
- "video_url": "https://tuamigodelasfinanzas.github.io/zero-understands/media/2026-11-02-004-price-short/short.mp4",
- "thumb_url": ""
+ "category": "27",
+ "video_url": "https://tuamigodelasfinanzas.github.io/zero-understands/media/2026-11-04-002-procrastinate-long/video.mp4",
+ "thumb_url": "https://tuamigodelasfinanzas.github.io/zero-understands/media/2026-11-04-002-procrastinate-long/thumb.jpg"
 }

@@ -1,18 +1,19 @@
 {
  "date": "2026-10-31",
  "publish_at": "2026-10-31T19:00:00Z",
- "id": "003-buttons",
+ "id": "004-price",
  "format": "short",
- "title": "Why do elevators have a button that does nothing? #Shorts",
- "description": "Some buttons don't do anything. They're there for you. ZERO is trying to understand humans.\n\n#shorts #psychology #placebo #animation",
+ "title": "Why does $9.99 feel so much cheaper than $10? #Shorts",
+ "description": "It's one cent. Your brain doesn't care. ZERO is trying to understand humans.\n\n#shorts #money #psychology #animation",
  "tags": [
   "shorts",
+  "money",
   "psychology",
-  "placebo button",
-  "elevator",
+  "pricing",
+  "left digit effect",
   "animation"
  ],
  "category": "24",
- "video_url": "https://tuamigodelasfinanzas.github.io/zero-understands/media/2026-10-31-003-buttons-short/short.mp4",
+ "video_url": "https://tuamigodelasfinanzas.github.io/zero-understands/media/2026-11-02-004-price-short/short.mp4",
  "thumb_url": ""
 }
