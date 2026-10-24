@@ -1,0 +1,47 @@
+{
+  "archetype": "logistics",
+  "variant": 1,
+  "kind": "logistics",
+  "object": "giftbox",
+  "screen": {
+    "l1": "NEXT DAY",
+    "l2": "DELIVERY",
+    "l3": "TOMORROW BY 10:30 AM"
+  },
+  "clock": [
+    6,
+    47
+  ],
+  "question": [
+    "She lives on the other side of the country. So how is that even possible?"
+  ],
+  "promise": [
+    "Between this counter and her front door, something enormous happens while the country sleeps.",
+    "A truck. A plane. A building that sorts more than four hundred thousand packages an hour.",
+    "Tonight, ZERO is staying awake to see it."
+  ],
+  "VIDEO_TITLE": "Where Your Package Goes While You Sleep",
+  "VIDEO_TOPIC": "logistics",
+  "MAIN_SYSTEM": "the delivery network",
+  "KEY_MYSTERY": "the screen says PORTLAND, ME, TOMORROW 10:30 AM (F16) while the clock says 6:47 PM",
+  "CORE_QUESTION": "She lives on the other side of the country. So how is that even possible?",
+  "EVERYDAY_SITUATION": "6:47 PM, a shipping store in the rain; ZERO lands his mom's birthday present on the counter",
+  "VISUAL_ANOMALY": "the screen says PORTLAND, ME, TOMORROW 10:30 AM (F16) while the clock says 6:47 PM",
+  "ZERO_ACTION": "puts the box on the counter and pays",
+  "ZERO_REACTION": "looks at the clock, at the screen, at the box",
+  "PIX_REVEAL": "PIX scans the label; the back wall opens on the belts, scanners and trucks behind it",
+  "HIDDEN_SYSTEM": "the delivery network",
+  "ENTRY_TRANSITION": "the box rides the belt into the wall; ZERO leaps onto it",
+  "OPENING_NARRATION": [
+    "ZERO forgot his mom's birthday.",
+    "It's tomorrow.",
+    "She lives on the other side of the country. So how is that even possible?",
+    "(CLICK · ZERO UNDERSTANDS)",
+    "Between this counter and her front door, something enormous happens while the country sleeps.",
+    "A truck. A plane. A building that sorts more than four hundred thousand packages an hour.",
+    "Tonight, ZERO is staying awake to see it."
+  ],
+  "SOUND_DESIGN": "belt rumble under the room tone, scanner beeps behind the wall; silence (0.5-0.8 s) right before the question; zu-signature on the crossing",
+  "MICRO_BRAND_MOMENT": "PIX chirp → CLICK → \"ZERO UNDERSTANDS\" wordmark over the moving system, 1.2 s, no narration stop",
+  "FIRST_MAIN_STORY_BEAT": "Between this counter and her front door, something enormous happens while the country sleeps."
+}

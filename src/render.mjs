@@ -56,7 +56,8 @@ for (const [i, b] of ep.beats.entries()) for (const s of b.sfx || []) {
   let at = beat.start + (s.t ?? 0) + (s.u != null ? s.u * beat.dur : 0) + (s.l != null && beat.lines[s.l] ? beat.lines[s.l].start - beat.start : 0);
   if (s.end != null) at = beat.start + beat.dur - s.end;
   const f = path.join(SFX, s.s + '.wav');
-  if (fs.existsSync(f)) sfx.push({ file: f, at, gain: s.g ?? 0.8 }); else console.warn('::warning::missing sfx ' + s.s);
+  // bed: true makes an ambience (rain, engine...) stop with a short fade at the end of its beat instead of running on
+  if (fs.existsSync(f)) sfx.push({ file: f, at, gain: s.g ?? 0.8, ...(s.bed ? { dur: s.dur ?? beat.start + beat.dur - at } : {}) }); else console.warn('::warning::missing sfx ' + s.s);
 }
 
 // 3) frames
@@ -77,7 +78,7 @@ const page = await browser.newPage({ viewport: { width: W, height: H } });
 page.on('pageerror', e => console.error('page error: ' + e.message));
 await page.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>${font()}*{margin:0;padding:0}html,body{width:${W}px;height:${H}px;overflow:hidden;background:#fff}</style></head><body><div id="stage"></div></body></html>`);
 await page.evaluate(d => { window.DATA = d; }, { ep, beats, w: W, h: H, fps: FPS, life: process.env.ZERO_LIFE === '0' ? false : true, rim: process.env.ZERO_RIM !== '0' });
-for (const f of ['faces.js', 'puppets.js', 'stage.js']) await page.addScriptTag({ path: path.join(ROOT, 'src', f) });
+for (const f of ['faces.js', 'puppets.js', 'world.js', 'world-pay.js', 'stage.js']) await page.addScriptTag({ path: path.join(ROOT, 'src', f) });
 await page.waitForFunction('window.ready === true');
 await page.evaluate('document.fonts.ready');
 
@@ -102,7 +103,7 @@ if (ep.thumb) {
   const tep = Object.assign({}, ep, { beats: [ep.thumb], captions: false, format: 'long' });
   await tp.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>${font()}*{margin:0;padding:0}</style></head><body><div id="stage"></div></body></html>`);
   await tp.evaluate(d => { window.DATA = d; }, { ep: tep, beats: [{ i: 0, start: 0, dur: 1, lines: [] }], w: 1920, h: 1080, fps: FPS });
-  for (const f of ['faces.js', 'puppets.js', 'stage.js']) await tp.addScriptTag({ path: path.join(ROOT, 'src', f) });
+  for (const f of ['faces.js', 'puppets.js', 'world.js', 'world-pay.js', 'stage.js']) await tp.addScriptTag({ path: path.join(ROOT, 'src', f) });
   await tp.waitForFunction('window.ready === true'); await tp.evaluate('document.fonts.ready');
   await tp.evaluate(() => window.frame(0.99));
   await tp.screenshot({ path: path.join(outDir, 'thumb-full.png') });
@@ -128,5 +129,19 @@ const wav = path.join(work, 'audio.wav');
 execFileSync('python3', [path.join(ROOT, 'tools/mix.py'), path.join(work, 'mix.json'), wav], { stdio: 'inherit' });
 const out = path.join(outDir, ep.format === 'short' ? 'short.mp4' : 'video.mp4');
 execFileSync('ffmpeg', ['-y', '-v', 'error', '-i', video, '-i', wav, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', out]);
+// closed captions for YouTube (long videos keep the picture clean; viewers turn them on with CC): one cue per
+// chunk of at most ~42 characters, timed by sharing the line's spoken duration in proportion to the text
+{
+  const ts = x => { const ms = Math.round(x * 1000), h = Math.floor(ms / 3600000), m = Math.floor(ms / 60000) % 60, sec = Math.floor(ms / 1000) % 60; return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')},${String(ms % 1000).padStart(3, '0')}`; };
+  const cues = [];
+  for (const b of beats) for (const l of b.lines) {
+    // balanced split, so a long line never leaves a one-word orphan cue
+    const target = l.text.length / Math.ceil(l.text.length / 42), chunks = [];
+    for (const w of l.text.split(/\s+/)) { const c = chunks[chunks.length - 1]; if (c && (c + ' ' + w).length <= Math.max(target + 6, 0) && (c + ' ' + w).length <= 42) chunks[chunks.length - 1] = c + ' ' + w; else chunks.push(w); }
+    let at = l.start; const total = chunks.reduce((n, c) => n + c.length, 0);
+    for (const c of chunks) { const d = l.dur * c.length / total; cues.push([at, at + d, c]); at += d; }
+  }
+  fs.writeFileSync(path.join(outDir, 'captions.srt'), cues.map(([a, b, t], i) => `${i + 1}\n${ts(a)} --> ${ts(b)}\n${t}\n`).join('\n'));
+}
 fs.writeFileSync(path.join(outDir, 'timing.json'), JSON.stringify({ total, beats: beats.map(b => ({ start: +b.start.toFixed(2), dur: +b.dur.toFixed(2), lines: b.lines.map(l => l.text) })) }, null, 1));
 console.log('OK', out, total.toFixed(1) + ' s');

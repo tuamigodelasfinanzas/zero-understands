@@ -1,0 +1,3 @@
+episodes/v002-card/short-trust.mjs
+episodes/v002-card/short-cut.mjs
+# preview request: the workflow renders every episode listed above (one per line, in parallel)

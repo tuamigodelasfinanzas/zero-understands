@@ -1,0 +1,108 @@
+{
+ "total": 93.352,
+ "beats": [
+  {
+   "start": 0,
+   "dur": 5.6,
+   "lines": [
+    "ZERO just got his first credit card.",
+    "This is its first coffee."
+   ]
+  },
+  {
+   "start": 5.6,
+   "dur": 5.2,
+   "lines": []
+  },
+  {
+   "start": 10.8,
+   "dur": 7.58,
+   "lines": [
+    "That café has never met ZERO.",
+    "His bank has never met the café.",
+    "So who decides to trust him?"
+   ]
+  },
+  {
+   "start": 18.38,
+   "dur": 5,
+   "lines": []
+  },
+  {
+   "start": 23.38,
+   "dur": 3.6,
+   "lines": []
+  },
+  {
+   "start": 26.98,
+   "dur": 1.2,
+   "lines": []
+  },
+  {
+   "start": 28.18,
+   "dur": 12.15,
+   "lines": [
+    "Between this tap and that cup, a tiny message will cross three companies,",
+    "survive a fraud test,",
+    "and come back with a yes or a no.",
+    "ZERO is riding it."
+   ]
+  },
+  {
+   "start": 40.33,
+   "dur": 11.29,
+   "lines": [
+    "First surprise:",
+    "that card has no battery.",
+    "The terminal's radio field wakes up its chip for a split second,",
+    "just long enough to say one thing."
+   ]
+  },
+  {
+   "start": 51.62,
+   "dur": 2.77,
+   "lines": [
+    "To ZERO, it's his money."
+   ]
+  },
+  {
+   "start": 54.39,
+   "dur": 12.19,
+   "lines": [
+    "To the system, it's this.",
+    "A card number.",
+    "An amount.",
+    "Which shop.",
+    "And a code that only works once."
+   ]
+  },
+  {
+   "start": 66.59,
+   "dur": 7.88,
+   "lines": [
+    "Copy that code,",
+    "and it's useless a second later.",
+    "That's why a chip card is so hard to clone."
+   ]
+  },
+  {
+   "start": 74.46,
+   "dur": 11.27,
+   "lines": [
+    "Pay with a phone instead,",
+    "and even the card number is fake.",
+    "It's a stand-in called a token.",
+    "Visa says it has handed out more than sixteen billion of them."
+   ]
+  },
+  {
+   "start": 85.73,
+   "dur": 7.62,
+   "lines": [
+    "ZERO thinks it's going straight to his bank.",
+    "It isn't.",
+    "Not even close."
+   ]
+  }
+ ]
+}

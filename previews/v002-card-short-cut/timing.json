@@ -1,0 +1,33 @@
+{
+ "total": 27.066,
+ "beats": [
+  {
+   "start": 0,
+   "dur": 6.35,
+   "lines": [
+    "You pay four seventy-five for a coffee.",
+    "The coffee shop doesn't get four seventy-five."
+   ]
+  },
+  {
+   "start": 6.35,
+   "dur": 10.44,
+   "lines": [
+    "The biggest slice goes to your bank.",
+    "The network takes one.",
+    "The shop's card company takes one.",
+    "Ten or fifteen cents a coffee."
+   ]
+  },
+  {
+   "start": 16.79,
+   "dur": 10.28,
+   "lines": [
+    "So who pays for it?",
+    "The shop builds it into its prices.",
+    "For everyone.",
+    "Even people who pay in cash."
+   ]
+  }
+ ]
+}

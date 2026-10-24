@@ -1,0 +1,163 @@
+1
+00:00:01,100 --> 00:00:03,308
+ZERO forgot his mom's birthday.
+
+2
+00:00:03,608 --> 00:00:05,480
+It's tomorrow.
+
+3
+00:00:10,530 --> 00:00:12,027
+She lives on the other side
+
+4
+00:00:12,027 --> 00:00:12,858
+of the country.
+
+5
+00:00:13,158 --> 00:00:15,078
+So how is that even possible?
+
+6
+00:00:25,478 --> 00:00:27,648
+Between this counter and her front
+
+7
+00:00:27,648 --> 00:00:29,690
+door, something enormous happens
+
+8
+00:00:29,690 --> 00:00:31,286
+while the country sleeps.
+
+9
+00:00:31,586 --> 00:00:32,546
+A truck.
+
+10
+00:00:32,946 --> 00:00:33,906
+A plane.
+
+11
+00:00:34,106 --> 00:00:36,192
+A building that sorts more than four
+
+12
+00:00:36,192 --> 00:00:38,162
+hundred thousand packages an hour.
+
+13
+00:00:38,362 --> 00:00:41,386
+Tonight, ZERO is staying awake to see it.
+
+14
+00:00:42,536 --> 00:00:43,808
+Three questions.
+
+15
+00:00:44,108 --> 00:00:45,878
+How does the system know where
+
+16
+00:00:45,878 --> 00:00:46,940
+this box is going?
+
+17
+00:00:47,240 --> 00:00:48,680
+Who pays for a plane to fly
+
+18
+00:00:48,680 --> 00:00:49,640
+through the night?
+
+19
+00:00:49,940 --> 00:00:51,092
+And what happens when
+
+20
+00:00:51,092 --> 00:00:52,244
+something goes wrong?
+
+21
+00:00:52,544 --> 00:00:54,680
+Because tonight, something will.
+
+22
+00:00:56,630 --> 00:00:58,502
+To ZERO, it's a gift.
+
+23
+00:00:59,352 --> 00:01:01,296
+To the system, it's this.
+
+24
+00:01:01,596 --> 00:01:03,468
+A barcode.
+
+25
+00:01:03,618 --> 00:01:04,698
+An address,
+
+26
+00:01:04,798 --> 00:01:06,670
+a service level,
+
+27
+00:01:06,770 --> 00:01:08,642
+a deadline.
+
+28
+00:01:09,542 --> 00:01:12,003
+Every time the box passes a scanner,
+
+29
+00:01:12,003 --> 00:01:14,054
+the system learns where it is.
+
+30
+00:01:14,954 --> 00:01:16,898
+That's what tracking really is.
+
+31
+00:01:17,798 --> 00:01:20,150
+Not a GPS inside your box.
+
+32
+00:01:21,050 --> 00:01:22,922
+A trail of scans.
+
+33
+00:01:24,172 --> 00:01:26,317
+From the counter, the box goes to a
+
+34
+00:01:26,317 --> 00:01:28,156
+truck heading for the airport.
+
+35
+00:01:29,056 --> 00:01:30,928
+It's raining.
+
+36
+00:01:31,228 --> 00:01:33,100
+The box doesn't care.
+
+37
+00:01:33,500 --> 00:01:35,372
+ZERO does.
+
+38
+00:01:36,622 --> 00:01:38,710
+Somebody is paying for this truck,
+
+39
+00:01:39,010 --> 00:01:40,882
+this driver,
+
+40
+00:01:41,032 --> 00:01:42,904
+and this fuel.
+
+41
+00:01:43,854 --> 00:01:45,726
+Keep that in mind.

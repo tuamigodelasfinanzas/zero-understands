@@ -14,7 +14,7 @@
   const OBJ = {
     box: o => [box(170, 140, o.c ?? C.YEL, { label: true }), 175],
     parcel: o => [box(150, 120, o.c ?? brown[0]), 150],
-    card: o => [`<g ${tr(0, -63)}>${K.card(200, o.c ?? C.BLUE)}</g>`, 126],
+    card: o => [`<g ${tr(0, -63)}>${K.card(200, o.c ?? '#6B4FD6')}</g>`, 126],
     coin: o => [`<g ${tr(0, -60)}>${K.coin(60)}</g>`, 126],
     cash: o => [K.stack(9, 170), 100],
     ticket: o => [`<g ${tr(0, -55)}>${K.ticket(260, '#FFFFFF', { m: o.m, seat: o.seat })}</g>`, 110],

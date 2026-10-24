@@ -157,6 +157,14 @@
     return -1;
   }
 
+  // the clock a frozen beat stops at: its own moment of freezing, or (same: true) the one of the last frozen beat
+  // before it, so a freeze can hold across cuts without anything jumping
+  function frozenClock(i) {
+    const fz = ep.beats[i].freeze;
+    if (fz.gt != null) return fz.gt;
+    if (fz.same) for (let j = i - 1; j >= 0; j--) if (ep.beats[j].freeze) return frozenClock(j);
+    return D.beats[i].start + (fz.at ?? 0);
+  }
   function draw(beat, gt) {
     const lt = gt - beat.start;
     const spec = ep.beats[beat.i];
@@ -169,8 +177,13 @@
     const shake = cam.shake ? `translate(${(Math.sin(gt * 61) * cam.shake).toFixed(1)} ${(Math.cos(gt * 47) * cam.shake).toFixed(1)})` : '';
     let world = '', overlay = '';
     const actors = beat.actors.slice().sort((a, b) => a.z - b.z);
+    // frozen time (video 002): spec.freeze = { at, until, gt, tint } stops every prop that isn't live: true (their
+    // keys and their own clock), so the world holds still while ZERO and PIX keep moving; tint desaturates it
+    const fz = spec.freeze, frozen = fz && lt >= (fz.at ?? 0) && (fz.until == null || lt < fz.until);
+    const flt = frozen ? (fz.at ?? 0) : lt, fgt = frozen ? frozenClock(beat.i) : gt;
     for (const a of actors) {
-      const st = stateAt(a.keys, lt, beat);
+      const still = frozen && a.type !== 'zero' && a.type !== 'pix' && !a.keys.some(k => k.live);
+      const st = stateAt(a.keys, still ? flt : lt, beat);
       if (st.o === 0 || st.hide) continue;
       let svg = '';
       if (a.type === 'zero') {
@@ -179,6 +192,8 @@
         if (st.blink === false) st.blink = 0;
         const sp = speaking(beat, 'zero', gt);
         if (sp >= 0 && st.bounce !== false) st.squash = (st.squash ?? 1) * (1 + 0.03 * Math.sin(sp * 20));
+        // dark worlds need a darker contact shadow under ZERO so he stands on the floor instead of floating (ep.zshadow)
+        if (st.shadowOp == null && ep.zshadow != null) st.shadowOp = ep.zshadow;
         svg = zero(Object.assign(LIFE && st.life !== false ? alive(a, st, beat, lt, gt, sp) : { ...st }, { rim: RIM && !(tr.zoom > 1.8) ? st.rim ?? 1 : 0 }));   // no rim inside zoom transitions: huge filter regions stall the renderer
       } else if (a.type === 'pix') {
         const sp = speaking(beat, 'pix', gt);
@@ -187,7 +202,8 @@
         if (sp >= 0) st.s = (st.s ?? 1) * (1 + 0.04 * Math.abs(Math.sin(sp * 9)));
         svg = pix(st);
       } else if (PROPS[a.type]) {
-        const inner = PROPS[a.type](st);
+        // props get the clock too, so the world can live on its own (steam, rain, rollers, passers-by)
+        const inner = PROPS[a.type](Object.assign(still ? { gt: fgt, lt: flt } : { gt, lt }, st));
         svg = `<g transform="translate(${st.x ?? 0} ${st.y ?? 0}) rotate(${st.r ?? 0}) scale(${(st.sc ?? 1) * (st.fx ? -1 : 1)} ${st.sc ?? 1})" opacity="${st.o ?? 1}">${inner}</g>`;
       }
       // parallax: depth < 1 sits behind (moves and zooms less with the camera), > 1 is foreground
@@ -195,20 +211,22 @@
         const k = (1 + (cz - 1) * a.depth) / cz, dx = (cx - W / 2) * (1 - a.depth), dy = (cy - H / 2) * (1 - a.depth);
         svg = `<g transform="translate(${cx} ${cy}) scale(${k.toFixed(4)}) translate(${-cx} ${-cy}) translate(${dx.toFixed(1)} ${dy.toFixed(1)})">${svg}</g>`;
       }
+      if (still && fz.tint && svg && !st.ui) svg = `<g filter="url(#frz)">${svg}</g>`;
       if (st.ui) overlay += svg; else world += svg;
     }
     const bg = spec.bg ?? '#FFFFFF';
     const gray = cam.gray ? `filter="url(#gray)"` : '';
     let html = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
       <defs><filter id="zrim" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
-        <feMorphology in="SourceAlpha" operator="dilate" radius="2.4" result="d"/>
+        <feMorphology in="SourceAlpha" operator="dilate" radius="${ep.rimWidth ?? 2.4}" result="d"/>
         <feFlood flood-color="#FFF4E3"/><feComposite in2="d" operator="in" result="rim"/>
         <feGaussianBlur in="d" stdDeviation="7" result="b"/>
-        <feFlood flood-color="#FFF4E3" flood-opacity="0.32"/><feComposite in2="b" operator="in" result="glow"/>
+        <feFlood flood-color="#FFF4E3" flood-opacity="${ep.rimGlow ?? 0.32}"/><feComposite in2="b" operator="in" result="glow"/>
         <feMerge><feMergeNode in="glow"/><feMergeNode in="rim"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      <filter id="gray"><feColorMatrix type="saturate" values="${1 - (cam.gray ?? 0)}"/></filter></defs>
+      <filter id="frz" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="${(() => { const k = 1 - (fz?.tint ?? 0) * 0.75, r = 0.2126 * (1 - k), g = 0.7152 * (1 - k), b = 0.0722 * (1 - k); return `${r + k} ${g} ${b} 0 0 ${r} ${g + k} ${b} 0 0.02 ${r} ${g} ${b + k} 0 0.06 0 0 0 1 0`; })()}"/></filter>
+      <filter id="gray"><feColorMatrix type="saturate" values="${1 - (cam.gray ?? 0)}"/></filter>${window.WORLD?.defs ?? ''}</defs>
       <rect width="${W}" height="${H}" fill="${bg}"/>
-      <g ${gray}><g transform="${shake} translate(${W / 2} ${H / 2}) scale(${cz}) translate(${-cx} ${-cy})">${world}</g>${overlay}</g>`;
+      <g ${gray}><g transform="${shake} ${cam.rot ? `rotate(${cam.rot.toFixed(2)} ${W / 2} ${H / 2})` : ''} translate(${W / 2} ${H / 2}) scale(${cz}) translate(${-cx} ${-cy})">${world}</g>${overlay}</g>`;
     if (cam.flash) html += `<rect width="${W}" height="${H}" fill="#fff" opacity="${cam.flash}"/>`;
     if (cam.black) html += `<rect width="${W}" height="${H}" fill="#111" opacity="${cam.black}"/>`;
     html += tr.over || '';

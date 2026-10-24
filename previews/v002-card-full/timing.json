@@ -1,0 +1,446 @@
+{
+ "total": 482.37399999999997,
+ "beats": [
+  {
+   "start": 0,
+   "dur": 5.6,
+   "lines": [
+    "ZERO just got his first credit card.",
+    "This is its first coffee."
+   ]
+  },
+  {
+   "start": 5.6,
+   "dur": 5.2,
+   "lines": []
+  },
+  {
+   "start": 10.8,
+   "dur": 7.58,
+   "lines": [
+    "That café has never met ZERO.",
+    "His bank has never met the café.",
+    "So who decides to trust him?"
+   ]
+  },
+  {
+   "start": 18.38,
+   "dur": 5,
+   "lines": []
+  },
+  {
+   "start": 23.38,
+   "dur": 3.6,
+   "lines": []
+  },
+  {
+   "start": 26.98,
+   "dur": 1.2,
+   "lines": []
+  },
+  {
+   "start": 28.18,
+   "dur": 12.44,
+   "lines": [
+    "Between this tap and that cup, a tiny message will cross three companies,",
+    "survive a fraud test,",
+    "and come back with a yes or a no.",
+    "ZERO is riding it."
+   ]
+  },
+  {
+   "start": 40.62,
+   "dur": 11.29,
+   "lines": [
+    "First surprise:",
+    "that card has no battery.",
+    "The terminal's radio field wakes up its chip for a split second,",
+    "just long enough to say one thing."
+   ]
+  },
+  {
+   "start": 51.91,
+   "dur": 2.77,
+   "lines": [
+    "To ZERO, it's his money."
+   ]
+  },
+  {
+   "start": 54.68,
+   "dur": 12.19,
+   "lines": [
+    "To the system, it's this.",
+    "A card number.",
+    "An amount.",
+    "Which shop.",
+    "And a code that only works once."
+   ]
+  },
+  {
+   "start": 66.87,
+   "dur": 7.3,
+   "lines": [
+    "Copy that code,",
+    "and it's useless a second later.",
+    "That's why a chip card is so hard to clone."
+   ]
+  },
+  {
+   "start": 74.18,
+   "dur": 11.03,
+   "lines": [
+    "Pay with a phone instead,",
+    "and even the card number is fake.",
+    "It's a stand-in called a token.",
+    "Visa says it has handed out more than sixteen billion of them."
+   ]
+  },
+  {
+   "start": 85.2,
+   "dur": 8.05,
+   "lines": [
+    "ZERO thinks it's going straight to his bank.",
+    "It isn't.",
+    "Not even close."
+   ]
+  },
+  {
+   "start": 93.26,
+   "dur": 12.98,
+   "lines": [
+    "First stop:",
+    "a company the coffee shop pays to handle its cards.",
+    "It works for the shop, not for ZERO.",
+    "And it has no idea who he is."
+   ]
+  },
+  {
+   "start": 106.23,
+   "dur": 9.59,
+   "lines": [
+    "It only reads the first digits of the card number.",
+    "They say which network to ask,",
+    "and which bank is behind the card."
+   ]
+  },
+  {
+   "start": 115.82,
+   "dur": 5.6,
+   "lines": [
+    "Which raises a better question.",
+    "Why does a coffee need a network at all?"
+   ]
+  },
+  {
+   "start": 121.42,
+   "dur": 13.75,
+   "lines": [
+    "Because thousands of banks issue cards,",
+    "and millions of shops take them.",
+    "Most of them have never met.",
+    "The network is where they all agree to meet,",
+    "under one set of rules."
+   ]
+  },
+  {
+   "start": 135.18,
+   "dur": 13.55,
+   "lines": [
+    "In the U.S., that's mostly Visa or Mastercard.",
+    "In a single year, Visa alone handled 258 billion payments.",
+    "That's about eight thousand every second."
+   ]
+  },
+  {
+   "start": 148.72,
+   "dur": 12.4,
+   "lines": [
+    "All of it runs through four giant data centers,",
+    "with spare power,",
+    "spare cooling",
+    "and spare connections,",
+    "so a question never has to wait."
+   ]
+  },
+  {
+   "start": 161.13,
+   "dur": 3.6,
+   "lines": []
+  },
+  {
+   "start": 164.73,
+   "dur": 7.53,
+   "lines": [
+    "Here's the strange part.",
+    "The network doesn't move money either.",
+    "It moves questions."
+   ]
+  },
+  {
+   "start": 172.26,
+   "dur": 13.44,
+   "lines": [
+    "Last stop: ZERO's bank.",
+    "The one that gave him the card.",
+    "It has a fraction of a second to answer two things.",
+    "Does he have enough credit?",
+    "And is this really him?"
+   ]
+  },
+  {
+   "start": 185.69,
+   "dur": 13.53,
+   "lines": [
+    "For the second one, it doesn't ask ZERO.",
+    "It asks his habits.",
+    "Visa says its own system weighs more than five hundred details about every payment,",
+    "in about a millisecond."
+   ]
+  },
+  {
+   "start": 199.22,
+   "dur": 10.5,
+   "lines": [
+    "But ZERO's card is brand new.",
+    "He has no habits.",
+    "And to a fraud machine,",
+    "no history can look a lot like a stolen card."
+   ]
+  },
+  {
+   "start": 209.72,
+   "dur": 5.2,
+   "lines": [
+    "Back in the coffee shop,",
+    "the clock says one point one seconds."
+   ]
+  },
+  {
+   "start": 214.92,
+   "dur": 12.29,
+   "lines": [
+    "If a bank ever takes too long, or goes down,",
+    "the network can answer for it,",
+    "using AI to stand in.",
+    "But ZERO's bank isn't down.",
+    "It's just not sure."
+   ]
+  },
+  {
+   "start": 227.21,
+   "dur": 12.66,
+   "lines": [
+    "Then the evidence adds up.",
+    "A real chip,",
+    "one only the real card can make.",
+    "A tiny amount.",
+    "A coffee shop a few blocks from his address."
+   ]
+  },
+  {
+   "start": 239.87,
+   "dur": 14.82,
+   "lines": [
+    "Credit: yes.",
+    "And now look at what the bank actually does.",
+    "It doesn't send any money.",
+    "It puts a hold on four seventy-five of ZERO's credit line.",
+    "A promise."
+   ]
+  },
+  {
+   "start": 254.69,
+   "dur": 10.5,
+   "lines": [
+    "And the promise works both ways.",
+    "If the coffee never showed up,",
+    "ZERO could dispute the charge,",
+    "and the money would be pulled back from the shop."
+   ]
+  },
+  {
+   "start": 265.19,
+   "dur": 8.67,
+   "lines": [
+    "The answer rides back the same way.",
+    "Bank,",
+    "network,",
+    "the shop's company,",
+    "the terminal."
+   ]
+  },
+  {
+   "start": 273.86,
+   "dur": 4.2,
+   "lines": [
+    "Two seconds."
+   ]
+  },
+  {
+   "start": 278.06,
+   "dur": 13.72,
+   "lines": [
+    "ZERO thinks he just paid.",
+    "He didn't.",
+    "Nobody has paid anybody.",
+    "Not yet.",
+    "So when does the money actually move?"
+   ]
+  },
+  {
+   "start": 291.78,
+   "dur": 14.19,
+   "lines": [
+    "ZERO decides to wait and see.",
+    "Coffee after coffee, the terminal collects every yes of the day.",
+    "By nine PM, this one little machine is holding three hundred and twelve promises."
+   ]
+  },
+  {
+   "start": 305.97,
+   "dur": 6.18,
+   "lines": [
+    "At closing time, it sends them all at once,",
+    "in one bundle."
+   ]
+  },
+  {
+   "start": 312.15,
+   "dur": 17.99,
+   "lines": [
+    "Tonight, the network does something completely different.",
+    "It adds up who owes whom.",
+    "Every bank's millions of coffees, groceries and plane tickets become one number.",
+    "And each number is settled with one transfer,",
+    "once a business day."
+   ]
+  },
+  {
+   "start": 330.14,
+   "dur": 14.17,
+   "lines": [
+    "And then, finally, the money moves.",
+    "Not four seventy-five at a time.",
+    "In huge lumps, between banks.",
+    "Within a day or two, the coffee shop's money lands in its account."
+   ]
+  },
+  {
+   "start": 344.31,
+   "dur": 9.98,
+   "lines": [
+    "Every card payment in America works like this.",
+    "A two-second promise in the day.",
+    "A giant settling of accounts at night."
+   ]
+  },
+  {
+   "start": 354.3,
+   "dur": 7.37,
+   "lines": [
+    "And every one of them leaves a little behind on the way.",
+    "The coffee shop doesn't get four seventy-five."
+   ]
+  },
+  {
+   "start": 361.67,
+   "dur": 18.07,
+   "lines": [
+    "The biggest slice goes to ZERO's bank:",
+    "on average, around two percent of every credit card purchase.",
+    "The network takes a slice.",
+    "The shop's card company takes a slice.",
+    "On ZERO's coffee, that's maybe ten or fifteen cents."
+   ]
+  },
+  {
+   "start": 379.74,
+   "dur": 8.96,
+   "lines": [
+    "Across the country, shops paid more than 187 billion dollars in card fees in 2024."
+   ]
+  },
+  {
+   "start": 388.7,
+   "dur": 12.42,
+   "lines": [
+    "Pay with a debit card from a big bank, and the bank's slice is capped by federal law.",
+    "Credit cards have no cap.",
+    "And the fancier the card, the bigger the slice."
+   ]
+  },
+  {
+   "start": 401.12,
+   "dur": 10.34,
+   "lines": [
+    "So who really pays that?",
+    "The coffee shop builds it into its prices.",
+    "For everyone.",
+    "Including people who pay in cash."
+   ]
+  },
+  {
+   "start": 411.46,
+   "dur": 13.08,
+   "lines": [
+    "Economists estimate that cash and debit card users hand about thirty billion dollars a year to credit card users.",
+    "That's what pays for the points, the miles and the cash back."
+   ]
+  },
+  {
+   "start": 424.54,
+   "dur": 5,
+   "lines": [
+    "And ZERO?",
+    "In a few weeks, he gets a bill."
+   ]
+  },
+  {
+   "start": 429.54,
+   "dur": 19.04,
+   "lines": [
+    "If he pays it in full, the loan was free.",
+    "If he doesn't, the average rate on cards that charge interest is about twenty-two percent a year.",
+    "That's the other way the bank gets paid.",
+    "Right now, Americans owe one point two six trillion dollars on their cards."
+   ]
+  },
+  {
+   "start": 448.58,
+   "dur": 4.79,
+   "lines": [
+    "Next morning.",
+    "Eight fourteen."
+   ]
+  },
+  {
+   "start": 453.37,
+   "dur": 9.96,
+   "lines": [
+    "Two seconds.",
+    "Three companies.",
+    "A machine that's starting to learn his habits.",
+    "And not one cent moving."
+   ]
+  },
+  {
+   "start": 463.33,
+   "dur": 8.2,
+   "lines": []
+  },
+  {
+   "start": 471.53,
+   "dur": 9.45,
+   "lines": [
+    "And the bank that just lent him four seventy-five?",
+    "It's quietly hoping he pays late.",
+    "That's a whole other system."
+   ]
+  },
+  {
+   "start": 480.97,
+   "dur": 1.4,
+   "lines": []
+  }
+ ]
+}

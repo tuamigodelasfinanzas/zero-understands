@@ -1,0 +1,43 @@
+1
+00:00:00,200 --> 00:00:02,720
+You pay four seventy-five for a coffee.
+
+2
+00:00:03,020 --> 00:00:04,690
+The coffee shop doesn't get
+
+3
+00:00:04,690 --> 00:00:05,804
+four seventy-five.
+
+4
+00:00:06,554 --> 00:00:08,858
+The biggest slice goes to your bank.
+
+5
+00:00:09,158 --> 00:00:11,030
+The network takes one.
+
+6
+00:00:11,330 --> 00:00:13,610
+The shop's card company takes one.
+
+7
+00:00:13,810 --> 00:00:16,090
+Ten or fifteen cents a coffee.
+
+8
+00:00:16,990 --> 00:00:18,862
+So who pays for it?
+
+9
+00:00:19,162 --> 00:00:21,730
+The shop builds it into its prices.
+
+10
+00:00:22,030 --> 00:00:23,902
+For everyone.
+
+11
+00:00:24,202 --> 00:00:26,266
+Even people who pay in cash.
