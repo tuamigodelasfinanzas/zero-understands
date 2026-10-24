@@ -1,0 +1,40 @@
+{
+ "total": 29.096000000000004,
+ "beats": [
+  {
+   "start": 0,
+   "dur": 7.55,
+   "lines": [
+    "Every time you tap, your bank checks your habits.",
+    "More than five hundred details, in about a millisecond."
+   ]
+  },
+  {
+   "start": 7.55,
+   "dur": 9.68,
+   "lines": [
+    "But ZERO's card is brand new.",
+    "No habits.",
+    "And to a fraud machine,",
+    "that looks a lot like a stolen card."
+   ]
+  },
+  {
+   "start": 17.24,
+   "dur": 9.26,
+   "lines": [
+    "Then the evidence adds up.",
+    "A real chip.",
+    "A tiny amount.",
+    "A café near home."
+   ]
+  },
+  {
+   "start": 26.5,
+   "dur": 2.6,
+   "lines": [
+    "Credit: yes."
+   ]
+  }
+ ]
+}
