@@ -1,0 +1,10 @@
+{
+  "VIDEO_TITLE": "What Your Credit Card Does at Midnight",
+  "VIDEO_TOPIC": "Credit card interest: after paying only part of the bill the grace period closes, and every night the bank applies the daily rate (APR ÷ 365) to what you owe; the minimum payment, and who pays the interest and gets the rewards",
+  "MAIN_OBJECT": "coin",
+  "VIDEO_CATEGORY": "money",
+  "ZERO_EMOTION": "waitwhat",
+  "THUMBNAIL_TEXT": ["IT WENT", "UP?"],
+  "RECOMMENDED": "A",
+  "VARIANTS": { "B": { "text": ["WHILE HE", "SLEPT"] }, "C": { "text": ["WHO ADDED", "THIS?"] } }
+}

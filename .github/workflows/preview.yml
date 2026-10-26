@@ -4,7 +4,7 @@ name: Preview render
 # and commits the MP4 back to this branch under previews/. Only runs on the working branch, never on main.
 on:
   push:
-    branches: [claude/project-thread-vhna56, claude/project-thread-stk3r3]
+    branches: [claude/project-thread-vhna56, claude/project-thread-stk3r3, claude/project-thread-5rspw3]
     paths: [previews/request.txt]
 
 permissions:
