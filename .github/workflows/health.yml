@@ -1,0 +1,128 @@
+name: Health check (shared)
+
+# Daily traffic light for the publishing chains, sent to Telegram. It only reads: it never renders, publishes or changes
+# anything. Other repos call it with `uses: tuamigodelasfinanzas/zero-understands/.github/workflows/health.yml@main`.
+#   - ig: the Instagram token is valid, when it expires, and that it reaches the IG account
+#   - make: no Make scenario is marked invalid (Make turns a scenario off after 3 errors) and no webhook has a queue
+#     or points to an inactive scenario (a webhook still answers "Accepted" while it only queues)
+#   - pages: each URL answers 200
+#   - runs: failed GitHub Actions runs in the last 24 h
+# Red (token, Make, Pages) fails the job, so GitHub also sends its e-mail. Failed runs only warn.
+on:
+  workflow_call:
+    inputs:
+      label: { type: string, required: true }
+      ig_check: { type: boolean, default: false }
+      ig_user: { type: string, default: "" }        # if empty, the IG_USER secret
+      make_check: { type: boolean, default: false }
+      make_zone: { type: string, default: eu1 }
+      make_team: { type: string, default: "2762258" }
+      pages_urls: { type: string, default: "" }     # space-separated
+      runs_repos: { type: string, default: "" }     # space-separated owner/repo
+    secrets:
+      IG_TOKEN: { required: false }
+      IG_USER: { required: false }
+      MAKE_API_TOKEN: { required: false }
+      TELEGRAM_BOT_TOKEN: { required: false }
+      TELEGRAM_CHAT_ID: { required: false }
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check
+        env:
+          LABEL: ${{ inputs.label }}
+          IG_CHECK: ${{ inputs.ig_check }}
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          IG_USER: ${{ inputs.ig_user != '' && inputs.ig_user || secrets.IG_USER }}
+          MAKE_CHECK: ${{ inputs.make_check }}
+          MAKE_API: https://${{ inputs.make_zone }}.make.com/api/v2
+          MAKE_TEAM: ${{ inputs.make_team }}
+          MAKE_API_TOKEN: ${{ secrets.MAKE_API_TOKEN }}
+          PAGES_URLS: ${{ inputs.pages_urls }}
+          RUNS_REPOS: ${{ inputs.runs_repos }}
+          GH_TOKEN: ${{ github.token }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          set -uo pipefail
+          RED=0; WARN=0; OUT=""
+          ok()   { OUT+="✅ $1"$'\n'; }
+          bad()  { OUT+="🔴 $1"$'\n'; RED=1; }
+          warn() { OUT+="⚠️ $1"$'\n'; WARN=1; }
+          why()  { local m; m=$(printf '%s' "$2" | jq -r "$1" 2>/dev/null); echo "${m:-sin respuesta}"; }
+
+          if [ "$IG_CHECK" = true ]; then
+            T=$(printf %s "${IG_TOKEN:-}" | tr -d "[:space:]\"'")
+            if [ -z "$T" ] || [ -z "${IG_USER:-}" ]; then bad "Instagram: falta el secret del token o del usuario"
+            else
+              case "$T" in IG*) API="https://graph.instagram.com/v21.0";; *) API="https://graph.facebook.com/v21.0";; esac
+              EXP=""
+              if [ "$API" = "https://graph.facebook.com/v21.0" ]; then
+                D=$(curl -sS "$API/debug_token?input_token=$T&access_token=$T")
+                if [ "$(echo "$D" | jq -r '.data.is_valid // false')" != true ]; then
+                  bad "Instagram: token NO válido ($(why '.data.error.message // .error.message // empty' "$D" | sed "s/$T/***/g"))"; T=""
+                else
+                  E=$(echo "$D" | jq -r '.data.expires_at // 0')
+                  if [ "$E" = 0 ]; then EXP="no caduca"
+                  else
+                    DAYS=$(( (E - $(date -u +%s)) / 86400 )); EXP="caduca en $DAYS días ($(date -u -d "@$E" +%F))"
+                    [ "$DAYS" -lt 7 ] && warn "Instagram: el token caduca en $DAYS días"
+                  fi
+                fi
+              fi
+              if [ -n "$T" ]; then
+                C=$(curl -sS "$API/$IG_USER?fields=username&access_token=$T")
+                U=$(echo "$C" | jq -r '.username // empty')
+                if [ -n "$U" ]; then ok "Instagram: token OK para @$U${EXP:+, $EXP}"
+                else bad "Instagram: el token no llega a la cuenta ($(why '.error.message // empty' "$C" | sed "s/$T/***/g"))"; fi
+              fi
+            fi
+          fi
+
+          if [ "$MAKE_CHECK" = true ]; then
+            if [ -z "${MAKE_API_TOKEN:-}" ]; then bad "Make: falta el secret MAKE_API_TOKEN"
+            else
+              H="Authorization: Token $MAKE_API_TOKEN"
+              S=$(curl -sS -H "$H" "$MAKE_API/scenarios?teamId=$MAKE_TEAM&pg%5Blimit%5D=500")
+              H2=$(curl -sS -H "$H" "$MAKE_API/hooks?teamId=$MAKE_TEAM")
+              if ! echo "$S" | jq -e '.scenarios' >/dev/null || ! echo "$H2" | jq -e '.hooks' >/dev/null; then
+                bad "Make: la API no respondió bien ($(why '.message // .detail // empty' "$S"))"
+              else
+                INV=$(echo "$S" | jq -r '[.scenarios[] | select(.isinvalid == true) | .name] | join(", ")')
+                [ -n "$INV" ] && bad "Make: escenarios marcados como inválidos (Make los apaga): $INV"
+                HK=$(echo "$H2" | jq -r '[.hooks[] | select(.scenarioId != null) | select(.queueCount > 0 or .enabled != true or .scenarioIsActive != true)
+                      | "\(.name) → \(.scenarioName // "?") (activo: \(.scenarioIsActive), en cola: \(.queueCount))"] | join("; ")')
+                [ -n "$HK" ] && bad "Make: webhooks que no publican: $HK"
+                [ -z "$INV$HK" ] && ok "Make: $(echo "$S" | jq '[.scenarios[] | select(.isActive)] | length') escenarios activos, ninguno inválido, webhooks sin cola"
+              fi
+            fi
+          fi
+
+          for U in $PAGES_URLS; do
+            CODE=$(curl -s -o /dev/null -w '%{http_code}' -I "$U" || true)
+            [ "$CODE" = 200 ] && ok "Pages: ${U#https://}" || bad "Pages: ${U#https://} responde $CODE"
+          done
+
+          SINCE=$(date -u -d '24 hours ago' +%FT%TZ)
+          for R in $RUNS_REPOS; do
+            F=$(curl -sS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$R/actions/runs?status=failure&per_page=50&created=%3E%3D$SINCE")
+            N=$(echo "$F" | jq -r '.total_count // "?"')
+            if [ "$N" = 0 ]; then ok "$R: sin ejecuciones fallidas en 24 h"
+            elif [ "$N" = "?" ]; then warn "$R: no pude leer las ejecuciones ($(echo "$F" | jq -r '.message // ""'))"
+            else warn "$R: $N fallidas en 24 h: $(echo "$F" | jq -r '[.workflow_runs[].name] | group_by(.) | map("\(.[0]) ×\(length)") | join(", ")')"; fi
+          done
+
+          HEAD=$([ $RED = 1 ] && echo "🔴 Hay que mirar algo" || { [ $WARN = 1 ] && echo "⚠️ Todo publica, con avisos" || echo "✅ Todo en orden"; })
+          MSG="Salud · $LABEL · $(TZ=Europe/Madrid date '+%d/%m %H:%M')"$'\n'"$HEAD"$'\n\n'"$OUT"
+          RUN="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          printf '%s\n%s\n' "$MSG" "$RUN" | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ -n "${TELEGRAM_BOT_TOKEN:-}" ] && [ -n "${TELEGRAM_CHAT_ID:-}" ]; then
+            curl -sS -o /dev/null -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+              --data-urlencode "chat_id=$TELEGRAM_CHAT_ID" --data-urlencode "text=$MSG$RUN" --data-urlencode "disable_web_page_preview=true" \
+              || echo "::warning::Telegram no respondió"
+          else echo "::warning::Sin secrets de Telegram: el resultado solo queda aquí"; fi
+          [ $RED = 0 ] || { echo "::error::$HEAD"; exit 1; }
