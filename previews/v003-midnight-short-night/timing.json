@@ -1,0 +1,31 @@
+{
+ "total": 28.162,
+ "beats": [
+  {
+   "start": 0,
+   "dur": 6.93,
+   "lines": [
+    "ZERO paid his bill, and his balance still went up at midnight.",
+    "Here is why."
+   ]
+  },
+  {
+   "start": 6.93,
+   "dur": 11.96,
+   "lines": [
+    "Every night, your card takes the yearly rate: twenty-two point three six percent.",
+    "Divides it by three hundred sixty-five.",
+    "Six hundredths of a percent."
+   ]
+  },
+  {
+   "start": 18.89,
+   "dur": 9.27,
+   "lines": [
+    "On nine hundred seventy-five dollars, that's sixty cents.",
+    "Tonight. And tomorrow night.",
+    "While you sleep."
+   ]
+  }
+ ]
+}

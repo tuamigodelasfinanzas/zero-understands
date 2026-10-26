@@ -1,0 +1,43 @@
+1
+00:00:00,200 --> 00:00:02,500
+ZERO paid his bill, and his balance
+
+2
+00:00:02,500 --> 00:00:04,208
+still went up at midnight.
+
+3
+00:00:04,508 --> 00:00:06,380
+Here is why.
+
+4
+00:00:07,130 --> 00:00:09,915
+Every night, your card takes the yearly
+
+5
+00:00:09,915 --> 00:00:12,842
+rate: twenty-two point three six percent.
+
+6
+00:00:13,142 --> 00:00:15,974
+Divides it by three hundred sixty-five.
+
+7
+00:00:16,274 --> 00:00:18,338
+Six hundredths of a percent.
+
+8
+00:00:19,088 --> 00:00:20,972
+On nine hundred seventy-five
+
+9
+00:00:20,972 --> 00:00:22,856
+dollars, that's sixty cents.
+
+10
+00:00:23,156 --> 00:00:25,340
+Tonight. And tomorrow night.
+
+11
+00:00:25,640 --> 00:00:27,512
+While you sleep.
