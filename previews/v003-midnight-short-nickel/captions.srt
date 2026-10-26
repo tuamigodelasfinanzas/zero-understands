@@ -7,15 +7,15 @@ ZERO just earned five cents of
 cash back on his coffee.
 
 3
-00:00:04,800 --> 00:00:06,600
+00:00:04,800 --> 00:00:06,672
 But he carries a balance.
 
 4
-00:00:06,900 --> 00:00:09,007
+00:00:06,972 --> 00:00:09,079
 So that coffee starts costing him a
 
 5
-00:00:09,007 --> 00:00:10,572
+00:00:09,079 --> 00:00:10,644
 third of a cent every day.
 
 6
@@ -27,5 +27,5 @@ Seventeen days later, the nickel is gone.
 And ZERO is still holding his coffee.
 
 8
-00:00:18,852 --> 00:00:20,700
+00:00:18,852 --> 00:00:20,724
 He just earned five cents.
