@@ -87,9 +87,13 @@ jobs:
             node src/meta.mjs "$FILE" "$DATE" "$BASEURL/media/$DIR" "site/queue/$DATE.json"
             jq --arg k "$DATE|$FILE" '.[$k] = now' site/state/rendered.json > s.tmp && mv s.tmp site/state/rendered.json
             ls -1dt site/media/*/ | tail -n +13 | xargs -r rm -rf
-            (cd site && git add -A && git commit -q -m "Render $DIR" && for i in 1 2 3 4 5; do git push -q origin gh-pages && break || { git pull -q --rebase origin gh-pages; sleep 3; }; done)
-            # wait until GitHub Pages serves the video
+            (cd site && git add -A && { git diff --cached --quiet || git commit -q -m "Render $DIR"; }
+             for i in 1 2 3 4 5; do git push -q origin gh-pages && exit 0 || { git pull -q --rebase origin gh-pages; sleep $((i * 5)); }; done
+             echo "::error::$DIR could not be pushed to gh-pages"; exit 1)
+            # wait until GitHub Pages serves the video (Make downloads it from there)
             URL=$(jq -r .video_url "site/queue/$DATE.json")
+            CODE=000
             for i in $(seq 1 60); do CODE=$(curl -s -o /dev/null -w '%{http_code}' -I "$URL" || true); [ "$CODE" = 200 ] && break; echo "waiting for Pages ($i): $CODE"; sleep 15; done
+            [ "$CODE" = 200 ] || { echo "::error::$DIR is not on GitHub Pages after 15 min ($URL): Make would fail to download it"; exit 1; }
             echo "::notice::$DIR ready → $URL"
           done
