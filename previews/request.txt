@@ -1,5 +1,3 @@
-# preview request: the workflow renders every episode listed above (one per line, in parallel)
-episodes/v003-midnight/full.mjs
 episodes/v003-midnight/short-night.mjs
 episodes/v003-midnight/short-nickel.mjs
 episodes/v003-midnight/short-who.mjs
