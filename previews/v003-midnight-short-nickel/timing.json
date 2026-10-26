@@ -1,0 +1,29 @@
+{
+ "total": 21.6,
+ "beats": [
+  {
+   "start": 0,
+   "dur": 4.6,
+   "lines": [
+    "ZERO just earned five cents of cash back on his coffee."
+   ]
+  },
+  {
+   "start": 4.6,
+   "dur": 8,
+   "lines": [
+    "But he carries a balance.",
+    "So that coffee starts costing him a third of a cent every day."
+   ]
+  },
+  {
+   "start": 12.6,
+   "dur": 9,
+   "lines": [
+    "Seventeen days later, the nickel is gone.",
+    "And ZERO is still holding his coffee.",
+    "He just earned five cents."
+   ]
+  }
+ ]
+}
