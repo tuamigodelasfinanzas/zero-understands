@@ -1,0 +1,28 @@
+{
+ "total": 22.2,
+ "beats": [
+  {
+   "start": 0,
+   "dur": 4.2,
+   "lines": [
+    "Who really pays for the cash back on your credit card?"
+   ]
+  },
+  {
+   "start": 4.2,
+   "dur": 10,
+   "lines": [
+    "Ninety-four percent of card interest and fees comes from people who carry a balance.",
+    "They earn only twenty-seven percent of the rewards."
+   ]
+  },
+  {
+   "start": 14.2,
+   "dur": 8,
+   "lines": [
+    "People who pay in full earn seventy-three percent.",
+    "So who's the cash back really for?"
+   ]
+  }
+ ]
+}
