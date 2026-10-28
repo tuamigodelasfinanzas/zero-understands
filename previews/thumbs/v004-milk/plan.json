@@ -1,0 +1,759 @@
+{
+ "title": "Why Is the Milk Always at the Back of the Store?",
+ "titleProposed": false,
+ "coreQuestion": "What happens behind the STAFF ONLY curtain?",
+ "playbook": "supermarket",
+ "category": "BUSINESS",
+ "world": "supermarket",
+ "recommended": "A",
+ "why": "curiosity gap: the viewer has to click to find out what happens inside",
+ "variants": [
+  {
+   "id": "A",
+   "angle": "curiosity",
+   "playbook": "supermarket",
+   "concept": "His shopping rides the checkout belt through the curtain into the back of the shop, cut open: stock racks, a pricing machine printing new tags, a map tracking every shopper",
+   "category": "BUSINESS",
+   "mystery": "What happens behind the STAFF ONLY curtain?",
+   "metaphor": "His shopping rides the checkout belt through the curtain into the back of the shop, cut open: stock racks, a pricing machine printing new tags, a map tracking every shopper",
+   "layout": "discovery",
+   "zero": {
+    "side": "right",
+    "emotion": "waitwhat",
+    "pose": "chasing"
+   },
+   "mainObject": "milk",
+   "world": "supermarket",
+   "accent": "#FF8A3D",
+   "family": {
+    "name": "BUSINESS",
+    "bg1": "#0F1830",
+    "bg2": "#22385E",
+    "wall": "#22304A",
+    "floor": "#1E2436",
+    "accent": "#FF8A3D",
+    "accent2": "#2F80ED",
+    "key": "#FFE2A6",
+    "sky1": "#FF9E5E",
+    "sky2": "#4B3F8A",
+    "grade": "#FF8A3D"
+   },
+   "text": {
+    "lines": [
+     "WHY IS IT",
+     "ALWAYS HERE?"
+    ],
+    "color": "#FFC93C"
+   },
+   "textOptions": [
+    {
+     "lines": [
+      "WHY IS IT",
+      "ALWAYS HERE?"
+     ]
+    }
+   ],
+   "pix": {
+    "on": true,
+    "role": "reveal"
+   },
+   "hero": "cutaway",
+   "heroOpts": {
+    "interior": "retail",
+    "obj": "milk"
+   },
+   "worldOpts": {},
+   "meta": {
+    "layout": "discovery",
+    "hidden": true,
+    "pose": "chasing",
+    "pixRole": "reveal",
+    "attention": 2
+   },
+   "echo": false,
+   "hook": {
+    "title": "Why Is the Milk Always at the Back of the Store?",
+    "image": "What happens behind the STAFF ONLY curtain?",
+    "text": "WHY IS IT ALWAYS HERE?"
+   },
+   "seen": 3
+  },
+  {
+   "id": "B",
+   "angle": "consequence",
+   "playbook": "supermarket",
+   "concept": "ZERO came for one thing; his cart is a tower",
+   "category": "BUSINESS",
+   "mystery": "He came for one thing. How did the cart become a tower?",
+   "metaphor": "ZERO came for one thing; his cart is a tower",
+   "layout": "danger",
+   "zero": {
+    "side": "left",
+    "emotion": "confused",
+    "pose": "confused"
+   },
+   "mainObject": null,
+   "world": "supermarket",
+   "accent": "#FF8A3D",
+   "family": {
+    "name": "BUSINESS",
+    "bg1": "#0F1830",
+    "bg2": "#22385E",
+    "wall": "#22304A",
+    "floor": "#1E2436",
+    "accent": "#FF8A3D",
+    "accent2": "#2F80ED",
+    "key": "#FFE2A6",
+    "sky1": "#FF9E5E",
+    "sky2": "#4B3F8A",
+    "grade": "#FF8A3D"
+   },
+   "text": {
+    "lines": [
+     "THE LONG",
+     "WALK"
+    ],
+    "color": "#FF6B5B"
+   },
+   "textOptions": [
+    {
+     "lines": [
+      "THE LONG",
+      "WALK"
+     ]
+    }
+   ],
+   "pix": {
+    "on": false,
+    "role": null
+   },
+   "hero": "overload",
+   "heroOpts": {},
+   "worldOpts": {},
+   "meta": {
+    "layout": "danger",
+    "attention": 1,
+    "noText": true
+   },
+   "echo": false,
+   "hook": {
+    "title": "Why Is the Milk Always at the Back of the Store?",
+    "image": "He came for one thing. How did the cart become a tower?",
+    "text": "THE LONG WALK"
+   },
+   "seen": 0
+  },
+  {
+   "id": "C",
+   "angle": "scale",
+   "playbook": "supermarket",
+   "concept": "The milk glows at the far end of an endless aisle",
+   "category": "BUSINESS",
+   "mystery": "Why is the milk at the far end of an endless aisle?",
+   "metaphor": "The milk glows at the far end of an endless aisle",
+   "layout": "scale",
+   "zero": {
+    "side": "right",
+    "emotion": "confused",
+    "pose": "confused"
+   },
+   "mainObject": null,
+   "world": "supermarket",
+   "accent": "#FF8A3D",
+   "family": {
+    "name": "BUSINESS",
+    "bg1": "#0F1830",
+    "bg2": "#22385E",
+    "wall": "#22304A",
+    "floor": "#1E2436",
+    "accent": "#FF8A3D",
+    "accent2": "#2F80ED",
+    "key": "#FFE2A6",
+    "sky1": "#FF9E5E",
+    "sky2": "#4B3F8A",
+    "grade": "#FF8A3D"
+   },
+   "text": {
+    "lines": [
+     "WHO PUT",
+     "IT THERE?"
+    ],
+    "color": "#FFC93C"
+   },
+   "textOptions": [
+    {
+     "lines": [
+      "WHO PUT",
+      "IT THERE?"
+     ]
+    }
+   ],
+   "pix": {
+    "on": false,
+    "role": "reveal"
+   },
+   "hero": "corridor",
+   "heroOpts": {
+    "item": "shelves",
+    "end": "milk"
+   },
+   "worldOpts": {},
+   "meta": {
+    "layout": "scale",
+    "pixRole": "reveal",
+    "attention": 2
+   },
+   "echo": false,
+   "hook": {
+    "title": "Why Is the Milk Always at the Back of the Store?",
+    "image": "Why is the milk at the far end of an endless aisle?",
+    "text": "WHO PUT IT THERE?"
+   },
+   "seen": 0
+  }
+ ],
+ "primary": "A2",
+ "alternative": "B2",
+ "qa": {
+  "A1": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "43%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 1075
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "chasing"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "What happens behind the STAFF ONLY curtain?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
+    },
+    {
+     "q": "Text is 2-5 words",
+     "pass": true,
+     "value": 5
+    },
+    {
+     "q": "Text readable on a phone (font >= 84 px at 1280)",
+     "pass": true,
+     "value": 86
+    },
+    {
+     "q": "Text never covers ZERO",
+     "pass": true,
+     "value": 0
+    },
+    {
+     "q": "Text does not cover the main object",
+     "pass": true,
+     "value": "0%"
+    },
+    {
+     "q": "Text inside the safe margins",
+     "pass": true,
+     "value": "620,30,630,178"
+    },
+    {
+     "q": "PIX does not cover the text",
+     "pass": true,
+     "value": ""
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 9,
+    "curiosity": 10,
+    "zeroVisibility": 9.7,
+    "mobile": 6.9,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 9,
+    "originality": 2.5
+   },
+   "redesign": [
+    "mobile"
+   ],
+   "pose": "chasing",
+   "boxes": {
+    "zero": [
+     981.256,
+     344.04,
+     187.48799999999997,
+     309.96
+    ],
+    "text": [
+     620,
+     30,
+     630.1158066116985,
+     178.14631199860847
+    ],
+    "hero": [
+     650,
+     380,
+     260,
+     170
+    ],
+    "pix": null
+   },
+   "notes": [
+    "PIX out"
+   ],
+   "text": [
+    "WHY IS IT",
+    "ALWAYS HERE?"
+   ],
+   "pix": false
+  },
+  "A2": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "43%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 1075
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "chasing"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "What happens behind the STAFF ONLY curtain?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "reveal"
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 9,
+    "zeroVisibility": 9.7,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 9,
+    "originality": 2.5
+   },
+   "redesign": [],
+   "pose": "chasing",
+   "boxes": {
+    "zero": [
+     981.256,
+     344.04,
+     187.48799999999997,
+     309.96
+    ],
+    "text": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hero": [
+     650,
+     380,
+     260,
+     170
+    ],
+    "pix": [
+     501,
+     317,
+     70,
+     70
+    ]
+   },
+   "notes": [],
+   "text": null,
+   "pix": true
+  },
+  "B1": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "45%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 300
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "confused"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "He came for one thing. How did the cart become a tower?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
+    },
+    {
+     "q": "Text is 2-5 words",
+     "pass": true,
+     "value": 3
+    },
+    {
+     "q": "Text readable on a phone (font >= 84 px at 1280)",
+     "pass": true,
+     "value": 133
+    },
+    {
+     "q": "Text never covers ZERO",
+     "pass": true,
+     "value": 0
+    },
+    {
+     "q": "Text does not cover the main object",
+     "pass": true,
+     "value": "15%"
+    },
+    {
+     "q": "Text inside the safe margins",
+     "pass": true,
+     "value": "584,36,656,277"
+    },
+    {
+     "q": "PIX does not cover the text",
+     "pass": true,
+     "value": ""
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 8.5,
+    "curiosity": 9,
+    "zeroVisibility": 9.7,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 7,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "confused",
+   "boxes": {
+    "zero": [
+     201.792,
+     329.28,
+     196.416,
+     324.72
+    ],
+    "text": [
+     584.0910335698663,
+     36,
+     655.9089664301337,
+     276.92973452856705
+    ],
+    "hero": [
+     500,
+     240,
+     420,
+     400
+    ],
+    "pix": null
+   },
+   "notes": [],
+   "text": [
+    "THE LONG",
+    "WALK"
+   ],
+   "pix": false
+  },
+  "B2": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "45%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 300
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "confused"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "He came for one thing. How did the cart become a tower?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 10,
+    "zeroVisibility": 9.7,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 7,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "confused",
+   "boxes": {
+    "zero": [
+     201.792,
+     329.28,
+     196.416,
+     324.72
+    ],
+    "text": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hero": [
+     500,
+     240,
+     420,
+     400
+    ],
+    "pix": null
+   },
+   "notes": [],
+   "text": null,
+   "pix": false
+  },
+  "C1": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "35%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 1040
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "confused"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "Why is the milk at the far end of an endless aisle?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
+    },
+    {
+     "q": "Text is 2-5 words",
+     "pass": true,
+     "value": 4
+    },
+    {
+     "q": "Text readable on a phone (font >= 84 px at 1280)",
+     "pass": true,
+     "value": 128
+    },
+    {
+     "q": "Text never covers ZERO",
+     "pass": true,
+     "value": 0
+    },
+    {
+     "q": "Text does not cover the main object",
+     "pass": true,
+     "value": "1%"
+    },
+    {
+     "q": "Text inside the safe margins",
+     "pass": true,
+     "value": "40,36,614,265"
+    },
+    {
+     "q": "PIX does not cover the text",
+     "pass": true,
+     "value": ""
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 9,
+    "zeroVisibility": 9.8,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 7,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "confused",
+   "boxes": {
+    "zero": [
+     964.112,
+     403.08000000000004,
+     151.776,
+     250.92
+    ],
+    "text": [
+     40,
+     36,
+     613.5005804567921,
+     265.3061224489796
+    ],
+    "hero": [
+     320,
+     300,
+     280,
+     240
+    ],
+    "pix": null
+   },
+   "notes": [],
+   "text": [
+    "WHO PUT",
+    "IT THERE?"
+   ],
+   "pix": false
+  },
+  "C2": {
+   "pass": true,
+   "checks": [
+    {
+     "q": "ZERO is immediately visible (28-52 % of the height)",
+     "pass": true,
+     "value": "35%"
+    },
+    {
+     "q": "ZERO is not in the dead centre",
+     "pass": true,
+     "value": 1040
+    },
+    {
+     "q": "ZERO faces the main concept",
+     "pass": true,
+     "value": "confused"
+    },
+    {
+     "q": "One unresolved visual question (the mystery)",
+     "pass": true,
+     "value": "Why is the milk at the far end of an endless aisle?"
+    },
+    {
+     "q": "PIX only with a function",
+     "pass": true,
+     "value": "no PIX"
+    },
+    {
+     "q": "Nothing important under the YouTube timestamp",
+     "pass": true,
+     "value": ""
+    }
+   ],
+   "score": {
+    "clarity": 10,
+    "curiosity": 8,
+    "zeroVisibility": 9.8,
+    "mobile": 10,
+    "hierarchy": 10,
+    "adult": 9,
+    "brand": 10,
+    "emotion": 7,
+    "originality": 10
+   },
+   "redesign": [],
+   "pose": "confused",
+   "boxes": {
+    "zero": [
+     964.112,
+     403.08000000000004,
+     151.776,
+     250.92
+    ],
+    "text": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hero": [
+     320,
+     300,
+     280,
+     240
+    ],
+    "pix": null
+   },
+   "notes": [],
+   "text": null,
+   "pix": false
+  }
+ }
+}
