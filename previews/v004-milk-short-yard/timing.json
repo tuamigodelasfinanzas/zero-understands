@@ -1,0 +1,32 @@
+{
+ "total": 29.842,
+ "beats": [
+  {
+   "start": 0,
+   "dur": 8.84,
+   "lines": [
+    "How much of what you buy was not on your list?",
+    "One study says sixty-eight percent.",
+    "Another says eighteen."
+   ]
+  },
+  {
+   "start": 8.84,
+   "dur": 10,
+   "lines": [
+    "The first one counted items.",
+    "The second counted categories.",
+    "Different yardsticks, different answers."
+   ]
+  },
+  {
+   "start": 18.84,
+   "dur": 11,
+   "lines": [
+    "Both numbers are real.",
+    "Neither one tells you what is in your basket.",
+    "So how much of what ZERO buys was not on his list?"
+   ]
+  }
+ ]
+}
