@@ -1,0 +1,43 @@
+1
+00:00:00,200 --> 00:00:02,007
+The milk is at the back so you
+
+2
+00:00:02,007 --> 00:00:03,272
+walk past everything.
+
+3
+00:00:03,572 --> 00:00:05,444
+Is that true?
+
+4
+00:00:06,194 --> 00:00:08,615
+Researchers tracked eight thousand seven
+
+5
+00:00:08,615 --> 00:00:10,370
+hundred fifty-one cart paths.
+
+6
+00:00:10,670 --> 00:00:12,528
+Not one long trip went down
+
+7
+00:00:12,528 --> 00:00:13,766
+all twelve aisles.
+
+8
+00:00:15,694 --> 00:00:18,147
+Most people stay on the outer loop, and
+
+9
+00:00:18,147 --> 00:00:19,846
+dart in for what they need.
+
+10
+00:00:20,146 --> 00:00:21,977
+So ZERO walked to the back of
+
+11
+00:00:21,977 --> 00:00:23,050
+the store anyway.

@@ -1,0 +1,29 @@
+{
+ "total": 23.994,
+ "beats": [
+  {
+   "start": 0,
+   "dur": 5.99,
+   "lines": [
+    "The milk is at the back so you walk past everything.",
+    "Is that true?"
+   ]
+  },
+  {
+   "start": 5.99,
+   "dur": 9.5,
+   "lines": [
+    "Researchers tracked eight thousand seven hundred fifty-one cart paths.",
+    "Not one long trip went down all twelve aisles."
+   ]
+  },
+  {
+   "start": 15.49,
+   "dur": 8.5,
+   "lines": [
+    "Most people stay on the outer loop, and dart in for what they need.",
+    "So ZERO walked to the back of the store anyway."
+   ]
+  }
+ ]
+}
