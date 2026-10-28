@@ -1,0 +1,427 @@
+1
+00:00:00,400 --> 00:00:03,184
+ZERO needs one thing from the supermarket.
+
+2
+00:00:03,484 --> 00:00:04,300
+Milk.
+
+3
+00:00:14,100 --> 00:00:15,527
+The milk is the farthest
+
+4
+00:00:15,527 --> 00:00:16,716
+thing from the door.
+
+5
+00:00:17,016 --> 00:00:18,888
+Who decided that?
+
+6
+00:00:30,550 --> 00:00:32,411
+Two explanations are fighting
+
+7
+00:00:32,411 --> 00:00:33,502
+over this carton.
+
+8
+00:00:33,802 --> 00:00:35,674
+One has a villain.
+
+9
+00:00:36,174 --> 00:00:38,046
+The other has a truck.
+
+10
+00:00:40,800 --> 00:00:43,046
+Behind every dairy wall, there
+
+11
+00:00:43,046 --> 00:00:44,544
+is a room like this.
+
+12
+00:00:44,844 --> 00:00:46,716
+Cold on purpose.
+
+13
+00:00:47,116 --> 00:00:48,988
+Three degrees.
+
+14
+00:00:50,800 --> 00:00:53,368
+For milk, cold is not a preference.
+
+15
+00:00:53,668 --> 00:00:56,482
+The rule says: cooled to seven degrees
+
+16
+00:00:56,482 --> 00:00:58,852
+Celsius or less, and kept there.
+
+17
+00:00:59,252 --> 00:01:00,980
+So what happens when it isn’t?
+
+18
+00:01:03,300 --> 00:01:05,436
+One small experiment measured it.
+
+19
+00:01:05,736 --> 00:01:08,112
+About three hours at room temperature,
+
+20
+00:01:08,412 --> 00:01:10,312
+and a carton loses a whole
+
+21
+00:01:10,312 --> 00:01:11,628
+day of shelf life.
+
+22
+00:01:11,828 --> 00:01:14,005
+So how does a store keep it cold, all
+
+23
+00:01:14,005 --> 00:01:15,476
+the way from the factory?
+
+24
+00:01:17,600 --> 00:01:20,048
+It arrives in a refrigerated truck.
+
+25
+00:01:20,348 --> 00:01:22,388
+The truck backs up to a dock.
+
+26
+00:01:22,788 --> 00:01:25,092
+And the dock is at the back of the store.
+
+27
+00:01:31,300 --> 00:01:34,924
+Truck. Dock. Cold room. Dairy case.
+
+28
+00:01:35,224 --> 00:01:37,430
+A Wegmans manager told NPR
+
+29
+00:01:37,430 --> 00:01:38,872
+why that matters:
+
+30
+00:01:39,372 --> 00:01:41,253
+“We don’t have to worry about ever
+
+31
+00:01:41,253 --> 00:01:42,636
+breaking the cold chain.”
+
+32
+00:01:46,300 --> 00:01:48,340
+Now put the milk at the front door.
+
+33
+00:01:48,640 --> 00:01:50,997
+Every carton would cross the whole
+
+34
+00:01:50,997 --> 00:01:53,008
+store, past the warm shelves.
+
+35
+00:01:53,408 --> 00:01:55,732
+Ten minutes out of the cold costs
+
+36
+00:01:55,732 --> 00:01:57,704
+about an hour of shelf life.
+
+37
+00:01:58,104 --> 00:01:59,976
+So is it just plumbing?
+
+38
+00:02:03,500 --> 00:02:05,372
+But look at ZERO’s receipt.
+
+39
+00:02:05,672 --> 00:02:07,112
+He came for one thing.
+
+40
+00:02:07,512 --> 00:02:09,384
+He is leaving with four.
+
+41
+00:02:15,400 --> 00:02:17,254
+That is the other explanation:
+
+42
+00:02:17,254 --> 00:02:18,304
+the walk-through.
+
+43
+00:02:18,604 --> 00:02:20,442
+Put the milk at the back, and
+
+44
+00:02:20,442 --> 00:02:21,964
+people pass the shelves.
+
+45
+00:02:22,364 --> 00:02:23,770
+Some of them buy things
+
+46
+00:02:23,770 --> 00:02:24,932
+they never planned.
+
+47
+00:02:25,332 --> 00:02:27,204
+But how many?
+
+48
+00:02:32,400 --> 00:02:34,913
+The average American supermarket carries
+
+49
+00:02:34,913 --> 00:02:36,672
+thirty-three thousand items.
+
+50
+00:02:36,972 --> 00:02:38,263
+One of them has to sit
+
+51
+00:02:38,263 --> 00:02:39,612
+farthest from the door.
+
+52
+00:02:40,012 --> 00:02:42,076
+And the store gets to choose which.
+
+53
+00:02:46,400 --> 00:02:48,356
+For decades, one number kept
+
+54
+00:02:48,356 --> 00:02:49,544
+getting repeated.
+
+55
+00:02:49,844 --> 00:02:51,798
+Sixty to seventy percent of
+
+56
+00:02:51,798 --> 00:02:54,404
+supermarket purchases are unplanned.
+
+57
+00:02:57,300 --> 00:03:00,247
+A 1999 study followed thirty thousand
+
+58
+00:03:00,247 --> 00:03:02,556
+purchases in fourteen cities.
+
+59
+00:03:02,856 --> 00:03:05,376
+On big trips, sixty-eight percent of the
+
+60
+00:03:05,376 --> 00:03:07,392
+items were decided in the store.
+
+61
+00:03:07,792 --> 00:03:10,168
+On small trips, fifty-four.
+
+62
+00:03:12,300 --> 00:03:14,926
+A 2008 study in Dutch supermarkets
+
+63
+00:03:14,926 --> 00:03:16,548
+asked it another way.
+
+64
+00:03:16,848 --> 00:03:19,128
+For each category in the basket:
+
+65
+00:03:19,128 --> 00:03:21,480
+planned, or decided in the store?
+
+66
+00:03:21,880 --> 00:03:23,752
+Eighteen percent.
+
+67
+00:03:24,252 --> 00:03:26,484
+About one category per trip.
+
+68
+00:03:29,300 --> 00:03:32,444
+Same question. Sixty-eight and eighteen.
+
+69
+00:03:32,744 --> 00:03:35,098
+They count different things: items
+
+70
+00:03:35,098 --> 00:03:37,452
+against categories, American trips
+
+71
+00:03:37,452 --> 00:03:38,768
+against Dutch ones.
+
+72
+00:03:39,168 --> 00:03:42,000
+Both are real. Neither is the whole story.
+
+73
+00:03:44,300 --> 00:03:46,964
+And do shoppers even walk past everything?
+
+74
+00:03:47,264 --> 00:03:49,635
+Researchers tracked thousands of
+
+75
+00:03:49,635 --> 00:03:51,488
+carts in one supermarket.
+
+76
+00:03:51,888 --> 00:03:53,832
+Not one long trip went down
+
+77
+00:03:53,832 --> 00:03:55,128
+all twelve aisles.
+
+78
+00:03:55,528 --> 00:03:57,802
+Most people use the outer loop as home
+
+79
+00:03:57,802 --> 00:04:00,256
+base, and dart into the aisles they need.
+
+80
+00:04:05,300 --> 00:04:07,172
+So here is the whole picture.
+
+81
+00:04:07,472 --> 00:04:09,849
+A reason put the milk there: the
+
+82
+00:04:09,849 --> 00:04:12,152
+truck, the cold room, the rule.
+
+83
+00:04:12,552 --> 00:04:15,245
+A benefit keeps it there: whoever walks to
+
+84
+00:04:15,245 --> 00:04:17,232
+the milk passes something else.
+
+85
+00:04:26,400 --> 00:04:28,656
+Even the stores give both answers.
+
+86
+00:04:28,956 --> 00:04:31,666
+A Kroger spokesperson told NPR the cold
+
+87
+00:04:31,666 --> 00:04:33,612
+chain, and the walk-through.
+
+88
+00:04:34,012 --> 00:04:37,036
+A BJ’s dairy buyer said the same: the cold
+
+89
+00:04:37,036 --> 00:04:39,412
+chain, and “building the basket.”
+
+90
+00:04:43,400 --> 00:04:45,820
+A supermarket consultant told NPR
+
+91
+00:04:45,820 --> 00:04:48,240
+the milk has been in the back for
+
+92
+00:04:48,240 --> 00:04:50,000
+seventy to eighty years.
+
+93
+00:04:50,300 --> 00:04:52,172
+He would move it to the front.
+
+94
+00:04:52,572 --> 00:04:55,308
+In most stores, it is still back there.
+
+95
+00:04:57,400 --> 00:04:59,824
+What does that mean for ZERO’s basket?
+
+96
+00:05:00,124 --> 00:05:02,457
+In the Dutch study, shoppers who called
+
+97
+00:05:02,457 --> 00:05:04,611
+themselves fast and efficient bought
+
+98
+00:05:04,611 --> 00:05:06,944
+eighty-two percent less on impulse than
+
+99
+00:05:06,944 --> 00:05:08,140
+the average shopper.
+
+100
+00:05:08,540 --> 00:05:11,015
+Trips for something needed right away:
+
+101
+00:05:11,015 --> 00:05:12,644
+fifty-three percent less.
+
+102
+00:05:18,400 --> 00:05:21,208
+Next week, ZERO goes for milk again.
+
+103
+00:05:21,508 --> 00:05:23,476
+This time, he knows the way.
+
+104
+00:05:31,600 --> 00:05:33,033
+Some of what you buy was
+
+105
+00:05:33,033 --> 00:05:34,168
+never on your list.
+
+106
+00:05:34,468 --> 00:05:35,865
+And some of what was on it
+
+107
+00:05:35,865 --> 00:05:36,940
+never makes it home.
