@@ -26,7 +26,7 @@ console.log(`${beats.length} beats, ${t.toFixed(1)} s`); beats.forEach(b => cons
 
 let chromium;
 try { ({ chromium } = require('playwright')); } catch { ({ chromium } = require('/opt/node22/lib/node_modules/playwright')); }
-const exe = fs.existsSync('/opt/pw-browsers/chromium-1194/chrome-linux/chrome') ? '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' : undefined;
+const exe = process.env.ZERO_CHROME || (fs.existsSync('/opt/pw-browsers/chromium-1194/chrome-linux/chrome') ? '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' : undefined);
 const browser = await chromium.launch({ executablePath: exe });
 const page = await browser.newPage({ viewport: { width: W, height: H } });
 page.on('pageerror', e => console.error('page error: ' + e.message));
@@ -34,7 +34,7 @@ const fontFile = path.join(ROOT, 'node_modules/@fontsource/fredoka/files/fredoka
 const font = fs.existsSync(fontFile) ? `@font-face{font-family:'Fredoka';font-weight:700;src:url(data:font/woff2;base64,${fs.readFileSync(fontFile).toString('base64')}) format('woff2')}` : '';
 await page.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>${font}*{margin:0;padding:0}</style></head><body><div id="stage"></div></body></html>`);
 await page.evaluate(d => { window.DATA = d; }, { ep, beats, w: W, h: H, fps: 30 });
-for (const f of ['faces.js', 'puppets.js', 'world.js', 'world-pay.js', 'stage.js']) await page.addScriptTag({ path: path.join(ROOT, 'src', f) });
+for (const f of ['faces.js', 'puppets.js', 'world.js', 'world-pay.js', 'world-store.js', 'stage.js']) await page.addScriptTag({ path: path.join(ROOT, 'src', f) });
 await page.waitForFunction('window.ready === true');
 for (const x of times) {
   const t0 = Date.now();

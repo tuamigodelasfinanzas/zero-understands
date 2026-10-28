@@ -1,3 +1,4 @@
-episodes/v003-midnight/short-night.mjs
-episodes/v003-midnight/short-nickel.mjs
-episodes/v003-midnight/short-who.mjs
+episodes/v004-milk/full.mjs
+episodes/v004-milk/short-aisles.mjs
+episodes/v004-milk/short-truck.mjs
+episodes/v004-milk/short-yard.mjs

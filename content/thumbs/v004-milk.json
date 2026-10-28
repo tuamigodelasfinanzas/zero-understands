@@ -1,0 +1,10 @@
+{
+  "VIDEO_TITLE": "Why Is the Milk Always at the Back of the Store?",
+  "VIDEO_TOPIC": "Supermarket layout: the milk sits at the far end of the store; one explanation says it is a trick to make you walk past everything, the other says it is where the refrigerated truck backs in at the dock and the cold room is, plus what studies say about unplanned purchases",
+  "MAIN_OBJECT": "milk",
+  "VIDEO_CATEGORY": "business",
+  "ZERO_EMOTION": "waitwhat",
+  "THUMBNAIL_TEXT": ["WHY IS IT", "ALWAYS HERE?"],
+  "RECOMMENDED": "A",
+  "VARIANTS": { "B": { "text": ["THE LONG", "WALK"] }, "C": { "text": ["WHO PUT", "IT THERE?"] } }
+}
