@@ -1,0 +1,30 @@
+{
+ "total": 26.802,
+ "beats": [
+  {
+   "start": 0,
+   "dur": 5.8,
+   "lines": [
+    "The milk is not at the back because of you.",
+    "It is there because of a truck."
+   ]
+  },
+  {
+   "start": 5.8,
+   "dur": 9,
+   "lines": [
+    "Truck. Dock. Cold room. Dairy case.",
+    "Seven degrees or less, the whole way."
+   ]
+  },
+  {
+   "start": 14.8,
+   "dur": 12,
+   "lines": [
+    "A Wegmans manager said it plainly:",
+    "“We don’t have to worry about ever breaking the cold chain.”",
+    "So where does the milk end up? Where the truck backs in."
+   ]
+  }
+ ]
+}
